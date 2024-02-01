@@ -1,0 +1,6 @@
+# You can use the next command to install all the necessary modules:
+# `pip install -r requirements.txt`
+
+matplotlib==3.6.0
+networkx==2.8.6
+numpy==1.23.3
