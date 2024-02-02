@@ -3,7 +3,8 @@ import argparse
 import networkx as nx
 
 from utils.graph import Graph
-from src.algorithms.gamma_algorithm import *
+from src.algorithms.gamma_algorithm import GammaAlgorithm
+from src.algorithms.pqtree_algorithm import PQTreeAlgorithm
 
 
 def main() -> None:
@@ -43,7 +44,9 @@ def main() -> None:
             else:
                 print("Граф не планарный.")
         elif algoritm == "pq":
-            pass
+            gr = PQTreeAlgorithm(gr)
+            planar = gr.run()
+            print(planar)
         elif algoritm == "annealing":
             pass
 
