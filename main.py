@@ -36,7 +36,7 @@ def main() -> None:
 
         if algoritm == "gamma":
             gr = GammaAlgorithm(gr)
-            planar = gr.get_planar_laying()
+            planar = gr.run()
             if planar is not None:
                 print("Граф планарный.")
                 print(planar)

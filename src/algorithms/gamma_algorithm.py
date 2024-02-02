@@ -1,9 +1,10 @@
 import copy
 
 from utils.graph import Graph
+from utils.algorithm import Algorithm
 
 
-class GammaAlgorithm():     # TODO: Algorithm interface
+class GammaAlgorithm(Algorithm):
     def __init__(self, graph: Graph):
         self.graph = graph
 
@@ -135,7 +136,7 @@ class GammaAlgorithm():     # TODO: Algorithm interface
     # Получить плоскую укладку графа
     # Возвращаются все грани уложенного планарного графа
     # Если это невозможно(граф не планарный), то None
-    def get_planar_laying(self):
+    def run(self):
         # Если граф одновершинный, то возвращаем две грани
         if self.graph.size == 1:
             faces = []
