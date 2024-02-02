@@ -27,6 +27,9 @@ class Graph:
                 output += "-\n"
         return output
 
+    def __len__(self):
+        return self.size
+
     def add_edge(self, k, m) -> None:
         """
         Добавляет ребро между вершинами k и m в графе.
@@ -67,10 +70,10 @@ class Graph:
         """
         return sum(self.matrix[v])
 
-    def show_graph(self) -> None:
+    def show_graph(self, layout=nx.spring_layout) -> None:
         """
         Визуализировать исходный граф.
         """
         graph = nx.Graph(np.array(self.matrix), nodetype=int)
-        nx.draw(graph, with_labels=True)
+        nx.draw(graph, pos=layout(graph), with_labels=True)
         plt.show()

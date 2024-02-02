@@ -1,9 +1,21 @@
 from typing import List
+import argparse
+import networkx as nx
 
 from utils.graph import Graph
+from src.algorithms.gamma_algorithm import *
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-a', '--algorithm', type=str, default="gamma",
+                        dest='algorithm',
+                        help="Name of algoritm to use: gamma, pq, annealing")
+    # parser.add_argument(type=str, dest='filename',
+    #                     help="File containing graph")
+    args = parser.parse_args()
+
+    algoritm: str = args.algorithm
     vertexes: int = 0
     graph: List[List[int]] = []
     try:
@@ -17,7 +29,23 @@ def main() -> None:
         print("Исходный граф:")
         print(gr)
 
+        # исходный граф
         gr.show_graph()
+        # плоская визуализация
+        # gr.show_graph(nx.planar_layout)
+
+        if algoritm == "gamma":
+            gr = GammaAlgorithm(gr)
+            planar = gr.get_planar_laying()
+            if planar is not None:
+                print("Граф планарный.")
+                print(planar)
+            else:
+                print("Граф не планарный.")
+        elif algoritm == "pq":
+            pass
+        elif algoritm == "annealing":
+            pass
 
     except FileNotFoundError as e:
         print(e)

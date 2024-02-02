@@ -1,56 +1,20 @@
 import copy
 
+from utils.graph import Graph
 
-class Graph:
-    def __init__(self, m, orientation="undirected"):
-        if isinstance(m, int):
-            self.size = m
-            self.matrix = [[0] * m for _ in range(m)]
-        else:
-            self.matrix = copy.deepcopy(m)
-            self.size = len(m)
 
-        self.orientation = orientation
-
-    def __str__(self):
-        output = ""
-        for i, row in enumerate(self.matrix):
-            output += f"Вершина {i}: "
-            connected_nodes = [str(idx) for idx, val in enumerate(row) if val]
-            if connected_nodes:
-                output += ', '.join(connected_nodes) + "\n"
-            else:
-                output += "-\n"
-        return output
-
-    def add_edge(self, k, m) -> None:
-        """
-        Добавляет ребро между вершинами k и m в графе.
-
-        Args:
-        k (int): Вершина, из которой исходит ребро.
-        m (int): Вершина, в которую входит ребро.
-        """
-        if self.orientation == "directed":
-            self.matrix[k][m] = 1
-        # Если граф неориентированный, то матрица смежности симметрична
-        else:
-            self.matrix[k][m] = self.matrix[m][k] = 1
-
-    def contains_edge(self, k, m):
-        return self.matrix[k][m] == 1
-
-    def num_adjacent_nodes(self, v):
-        return sum(self.matrix[v])
+class GammaAlgorithm():     # TODO: Algorithm interface
+    def __init__(self, graph: Graph):
+        self.graph = graph
 
     # DFS алгоритм для нахождения простого цикла
     def dfs_cycle(self, result: list[int], used: list[int], parent: int, v: int) -> bool:
         used[v] = 1
 
-        for i in range(self.size):
+        for i in range(self.graph.size):
             if i == parent:
                 continue
-            if self.matrix[v][i] == 0:
+            if self.graph.matrix[v][i] == 0:
                 continue
             if used[i] == 0:
                 result.append(v)
@@ -76,7 +40,7 @@ class Graph:
 
     def get_cycle(self):
         cycle = []
-        has_cycle = self.dfs_cycle(cycle, [0] * self.size, -1, 0)
+        has_cycle = self.dfs_cycle(cycle, [0] * self.graph.size, -1, 0)
         if not has_cycle:
             return None
         else:
@@ -86,8 +50,8 @@ class Graph:
     # один из концов которых принадлежит связной компоненте, а другой G'
     def dfs_segments(self, used: list[int], laid_vertexes: list[bool], result, v: int):
         used[v] = 1
-        for i in range(self.size):
-            if self.matrix[v][i] == 1:
+        for i in range(self.graph.size):
+            if self.graph.matrix[v][i] == 1:
                 result.add_edge(v, i)
                 if used[i] == 0 and not laid_vertexes[i]:
                     self.dfs_segments(used, laid_vertexes, result, i)
@@ -95,18 +59,18 @@ class Graph:
     def get_segments(self, laid_vertexes: list[bool], edges):
         segments = []
         # Поиск однореберных сегментов
-        for i in range(self.size):
-            for j in range(i + 1, self.size):
-                if self.matrix[i][j] == 1 and not edges[i][j] and laid_vertexes[i] and laid_vertexes[j]:
-                    t = Graph(self.size)
+        for i in range(self.graph.size):
+            for j in range(i + 1, self.graph.size):
+                if self.graph.matrix[i][j] == 1 and not edges[i][j] and laid_vertexes[i] and laid_vertexes[j]:
+                    t = Graph(self.graph.size)
                     t.add_edge(i, j)
                     segments.append(t)
         # Поиск связных компонент графа G - G', дополненного ребрами из G,
         # один из концов которых принадлежит связной компоненте, а другой G'
-        used = [0] * self.size
-        for i in range(self.size):
+        used = [0] * self.graph.size
+        for i in range(self.graph.size):
             if used[i] == 0 and not laid_vertexes[i]:
-                res = Graph(self.size)
+                res = Graph(self.graph.size)
                 self.dfs_segments(used, laid_vertexes, res, i)
                 segments.append(res)
         return segments
@@ -115,8 +79,8 @@ class Graph:
     def dfs_chain(self, used: list[int], laid_vertexes: list[bool], chain: list[int], v: int):
         used[v] = 1
         chain.append(v)
-        for i in range(self.size):
-            if self.matrix[v][i] == 1 and used[i] == 0:
+        for i in range(self.graph.size):
+            if self.graph.matrix[v][i] == 1 and used[i] == 0:
                 if not laid_vertexes[i]:
                     self.dfs_chain(used, laid_vertexes, chain, i)
                 else:
@@ -125,14 +89,14 @@ class Graph:
 
     def get_chain(self, laid_vertexes: list[bool]) -> list[int]:
         result = []
-        for i in range(self.size):
+        for i in range(self.graph.size):
             if laid_vertexes[i]:
                 in_graph = False
-                for j in range(self.size):
-                    if self.contains_edge(i, j):
+                for j in range(self.graph.size):
+                    if self.graph.contains_edge(i, j):
                         in_graph = True
                 if in_graph:
-                    self.dfs_chain([0] * self.size, laid_vertexes, result, i)
+                    self.dfs_chain([0] * self.graph.size, laid_vertexes, result, i)
                     break
         return result
 
@@ -148,8 +112,8 @@ class Graph:
 
     # Проверка на то, что данный сегмент содержится в данной грани
     def is_face_contains_segment(self, face: list[int], segment, laid_vertexes: list[bool]):
-        for i in range(self.size):
-            for j in range(self.size):
+        for i in range(self.graph.size):
+            for j in range(self.graph.size):
                 if segment.contains_edge(i, j):
                     if (laid_vertexes[i] and i not in face) or (laid_vertexes[j] and j not in face):
                         return False
@@ -173,7 +137,7 @@ class Graph:
     # Если это невозможно(граф не планарный), то None
     def get_planar_laying(self):
         # Если граф одновершинный, то возвращаем две грани
-        if self.size == 1:
+        if self.graph.size == 1:
             faces = []
             outer_face = [0]
             faces.append(outer_face)
@@ -195,8 +159,8 @@ class Graph:
         int_faces.append(ext_face)
 
         # Массивы уже уложенных вершин и ребер соответственно
-        laid_vertexes = [False] * self.size
-        laid_edges = [[False] * self.size for _ in range(self.size)]
+        laid_vertexes = [False] * self.graph.size
+        laid_edges = [[False] * self.graph.size for _ in range(self.graph.size)]
 
         for i in c:
             laid_vertexes[i] = True
@@ -232,7 +196,7 @@ class Graph:
                 # Укладка выбранного сегмента
 
                 # Выделяем цепь между двумя контактными вершинами
-                chain = segments[mi].get_chain(laid_vertexes)
+                chain = GammaAlgorithm(segments[mi]).get_chain(laid_vertexes)   # Добавлено преобразование типа
                 # Целевая грань, куда будет уложен выбранный сегмент
                 face = dest_faces[mi]
 
@@ -364,32 +328,3 @@ class Faces:
         for face in self.interior:
             result += f"{face}\n"
         return result
-
-
-def main():
-    dim = 0
-    graph = []
-    try:
-        with open("D:\ВУЗ\8 семестр\Диплом\GraphEmbedding\data\input.txt", "r", encoding="utf-8") as file:
-            dim = int(file.readline())
-            for _ in range(dim):
-                row = list(map(int, file.readline().split()))
-                graph.append(row)
-
-        gr = Graph(graph)
-        print("Исходный граф:")
-        print(gr)
-        planar = gr.get_planar_laying()
-
-        if planar is not None:
-            print("Граф планарный.")
-            print(planar)
-        else:
-            print("Граф не планарный.")
-
-    except FileNotFoundError as e:
-        print(e)
-
-
-if __name__ == '__main__':
-    main()
