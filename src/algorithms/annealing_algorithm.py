@@ -83,59 +83,6 @@ class Point:
         # If none of the cases
         return False
 
-    @staticmethod
-    def do_line_segments_intersect(p, p2, q, q2):
-        def subtract_points(point1, point2):
-            return Point(point1.x - point2.x, point1.y - point2.y)
-
-        r = subtract_points(p2, p)
-        s = subtract_points(q2, q)
-
-        def cross_product(point1, point2):
-            return point1.x * point2.y - point1.y * point2.x
-
-        u_numerator = cross_product(subtract_points(q, p), r)
-        denominator = cross_product(r, s)
-
-        if u_numerator == 0 and denominator == 0:
-            # They are coLlinear
-
-            def equal_points(point1, point2):
-                return point1 == point2
-
-            # Do they touch? (Are any of the points equal?)
-            if equal_points(p, q) or equal_points(p, q2) or equal_points(p2, q) or equal_points(p2, q2):
-                return False
-
-            def all_equal(*args):
-                first_value = args[0]
-                for arg in args[1:]:
-                    if arg != first_value:
-                        return False
-                return True
-
-            # Do they overlap? (Are all the point differences in either direction the same sign)
-            return not all_equal(
-                (q.x - p.x < 0),
-                (q.x - p2.x < 0),
-                (q2.x - p.x < 0),
-                (q2.x - p2.x < 0)
-            ) and not all_equal(
-                (q.y - p.y < 0),
-                (q.y - p2.y < 0),
-                (q2.y - p.y < 0),
-                (q2.y - p2.y < 0)
-            )
-
-        if denominator == 0:
-            # lines are paralell
-            return False
-
-        u = u_numerator / denominator
-        t = cross_product(subtract_points(q, p), s) / denominator
-
-        return (t >= 0) and (t <= 1) and (u >= 0) and (u <= 1)
-
 
 class AnnealingAlgorithm(Algorithm):
     def __init__(self, graph: Graph, pos: dict):
@@ -148,7 +95,10 @@ class AnnealingAlgorithm(Algorithm):
             coordinates += f'{key}: ({value.x}, {value.y})\n'
         return coordinates
 
-    def calc_pos(self, pos):
+    def calc_pos(self, pos) -> dict:
+        '''
+        Преобразует координаты в объекты класса Point.
+        '''
         if pos is None:
             pos = nx.spring_layout(nx.Graph(np.array(self.graph.matrix),
                                             nodetype=int))
@@ -158,9 +108,9 @@ class AnnealingAlgorithm(Algorithm):
 
         return pos
 
-    def count_crossings(self):
+    def count_crossings(self) -> int:
         '''
-        Функция, которая возвращает количество пересекающихся ребер в графе
+        Функция, которая возвращает количество пересекающихся ребер в графе.
         '''
         crossings = 0
         for i in range(len(self.graph)):
@@ -174,8 +124,21 @@ class AnnealingAlgorithm(Algorithm):
         # Проходим по всем ребрам дважды => нужно /2
         return crossings // 2
 
+    @staticmethod
+    def from_pos_to_layout(positions) -> dict:
+        '''
+        Форматирование координат в понятный для networkx вид.
+        '''
+        layout = {}
+        for key, value in positions.items():
+            layout[int(key)] = (value.x, value.y)
+        return layout
+
     # Функция, которая реализует метод отжига
-    def simulated_annealing(self):
+    def simulated_annealing(self) -> dict:
+        '''
+        Симуляция метода отжига.
+        '''
         temperature = INITIAL_TEMPERATURE
         while temperature > 1:
             if self.count_crossings() == 0:
@@ -192,13 +155,6 @@ class AnnealingAlgorithm(Algorithm):
             temperature *= 1 - COOLING_RATE
             print(temperature)
         return AnnealingAlgorithm.from_pos_to_layout(self.pos)
-
-    @staticmethod
-    def from_pos_to_layout(positions):
-        layout = {}
-        for key, value in positions.items():
-            layout[int(key)] = (value.x, value.y)
-        return layout
 
     def run(self):
         return self.simulated_annealing()
