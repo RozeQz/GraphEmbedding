@@ -75,5 +75,7 @@ class Graph:
         Визуализировать исходный граф.
         """
         graph = nx.Graph(np.array(self.matrix), nodetype=int)
-        nx.draw(graph, pos=layout(graph), with_labels=True)
+        pos = layout(graph)
+        nx.draw(graph, pos=pos, with_labels=True)
         plt.show()
+        return pos

@@ -1,10 +1,13 @@
 from typing import List
 import argparse
 import networkx as nx
+import matplotlib.pyplot as plt
+import numpy as np
 
 from utils.graph import Graph
 from src.algorithms.gamma_algorithm import GammaAlgorithm
 from src.algorithms.pqtree_algorithm import PQTreeAlgorithm
+from src.algorithms.annealing_algorithm import AnnealingAlgorithm
 
 
 def main() -> None:
@@ -31,7 +34,7 @@ def main() -> None:
         print(gr)
 
         # исходный граф
-        gr.show_graph()
+        pos = gr.show_graph()
         # плоская визуализация
         # gr.show_graph(nx.planar_layout)
 
@@ -48,7 +51,15 @@ def main() -> None:
             planar = gr.run()
             print(planar)
         elif algoritm == "annealing":
-            pass
+            gr = AnnealingAlgorithm(gr, pos)
+            planar = gr.run()
+            print(planar)
+
+            new_graph = Graph(graph)
+            new_graph = nx.Graph(np.array(new_graph.matrix), nodetype=int)
+
+            nx.draw(new_graph, pos=planar, with_labels=True)
+            plt.show()
 
     except FileNotFoundError as e:
         print(e)
