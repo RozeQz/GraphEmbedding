@@ -1,0 +1,12 @@
+# Ignore cache
+__pycache__
+
+# Ignore venv
+.venv
+
+# Ignore vscode
+.vscode
+
+# Пока уберу
+README.md
+requirements.txt
