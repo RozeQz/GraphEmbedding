@@ -4,44 +4,66 @@ from jpype.types import *
 
 from utils.graph import Graph
 from utils.algorithm import Algorithm
+from utils.connector import Connector
+
+java = Connector()
 
 class PQTreeAlgorithm(Algorithm):
+
     def __init__(self, graph: Graph):
         self.graph = graph
 
-        # Launch the JVM
-        jpype.startJVM(jpype.getDefaultJVMPath())
-        jar_path = "../../lib/GraphDrawingMonoproject-0.1.0-SNAPSHOT-jar-with-dependencies.jar"
-        jpype.addClassPath(jar_path)
+        jgraph = self.form_java_graph()
 
-        # Graph(java.util.List<V> vertices, java.util.List<E> edges)
-        Graph = jpype.JClass("graph.elements.Graph")
-        Vertex = jpype.JClass("graph.elements.impl.GraphVertex")
-        Edge = jpype.JClass("graph.elements.impl.GraphEdge")
+        print(jgraph)
 
-        vertex1 = Vertex()
-        vertex2 = Vertex()
+        print(f"is biconnected = {jgraph.isBiconnected()}")
 
-        vertexes = [vertex1, vertex2]
-        jvert = jpype.java.util.ArrayList()
-        for s in vertexes:
-            jvert.add(s)
+        st = jgraph.getEdges().get(0)
+        s = st.getOrigin()
+        t = st.getDestination()
 
-        edge = Edge(vertex1, vertex2)
+        print(f"\n{s.getContent()=}\n{t.getContent()=}")
 
-        edges = [edge]
-        jedges = jpype.java.util.ArrayList()
-        for s in edges:
-            jedges.add(s)
 
-        graph = Graph(jvert, jedges)
+        st_numbering = java.STNumbering(jgraph, s, t)
+        st_order = st_numbering.getOrder()
+        st_numbers = st_numbering.getNumbering()
+        # print(dir(st))
 
-        print(graph)
-        print(jvert)
-        print(jedges)
+        print(st_numbers)
+
+        pqtree = java.PlanarEmbedding()
+        pqtree.emedGraph(jgraph, s, t)
+
+        # planar_faces = java.PlanarFaces(jgraph, st_numbering)
+        # planar_faces.formFaces(s, t)
+        # print(planar_faces.getPlanarEmbedding())
 
     def __del__(self):
-        jpype.shutdownJVM()
+        if jpype.isJVMStarted():
+            jpype.shutdownJVM()
+
+    def form_java_graph(self):
+        graph = self.graph.adjacency_matrix_to_edge_list()
+
+        jverts = jpype.java.util.ArrayList()
+        size = jpype.java.awt.Dimension(10, 10)
+        for i, (key, value) in enumerate(graph.items()):
+            content = jpype.java.lang.Integer(key)
+            vertex = java.Vertex(size, content)
+            jverts.add(vertex)
+            print(f"vertex with content {content}")
+
+        jedges = jpype.java.util.ArrayList()
+        for i, (key, value) in enumerate(graph.items()):
+            vertex1 = jverts[i]
+            for v in value:
+                vertex2 = jverts[v]
+                jedges.add(java.Edge(vertex1, vertex2))
+                print(f"edge between {vertex1.getContent()} and {vertex2.getContent()}")
+
+        return java.Graph(jverts, jedges)
 
     def run(self):
         return "at least works"

@@ -1,4 +1,5 @@
 import copy
+from typing import List, Dict
 
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -69,6 +70,24 @@ class Graph:
         int: Количество смежных узлов с данным узлом v.
         """
         return sum(self.matrix[v])
+
+    def adjacency_matrix_to_edge_list(self) -> Dict[int, List[int]]:
+        '''
+        Преобразует матрицу смежности в список ребер.
+
+        Например: \n
+        0 1 1 1 \n
+        1 0 1 1 \n
+        1 1 0 1 \t -> \t {0: [1,2,3], 1: [0,2,3], 2: [0,1,3], 3: [0,1,2]} \n
+        1 1 1 0 \n
+
+        Returns:
+        Dict[int, List[int]]: Список ребер.
+        '''
+        edge_list: Dict[int, List[int]] = {}
+        for i, row in enumerate(self.matrix):
+            edge_list[i] = [j for j, value in enumerate(row) if value == 1]
+        return edge_list
 
     def show_graph(self, layout=nx.spring_layout) -> None:
         """
