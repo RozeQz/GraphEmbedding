@@ -1,6 +1,4 @@
 import jpype
-import jpype.imports
-from jpype.types import *
 
 from utils.graph import Graph
 from utils.algorithm import Algorithm
@@ -39,10 +37,6 @@ class PQTreeAlgorithm(Algorithm):
         # planar_faces = java.PlanarFaces(jgraph, st_numbering)
         # planar_faces.formFaces(s, t)
         # print(planar_faces.getPlanarEmbedding())
-
-    def __del__(self):
-        if jpype.isJVMStarted():
-            jpype.shutdownJVM()
 
     def form_java_graph(self):
         graph = self.graph.adjacency_matrix_to_edge_list()
