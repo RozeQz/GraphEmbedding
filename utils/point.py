@@ -12,7 +12,7 @@ class Point:
         self.x = x
         self.y = y
 
-    def change_position(self, value) -> 'Point':
+    def change_position(self, value: float = 0.5) -> 'Point':
         '''
         Меняет позицию точки на плоскости.
 
@@ -22,6 +22,12 @@ class Point:
         Returns:
         Point: Точка с новыми координатами.
         '''
+        # Для более плавной анимации, но худшей производительности:
+        # sign = random.choice([-1, 1])
+        # self.x = self.x + random.random() * sign * value
+        # self.y = self.y + random.random() * sign * value
+
+        # Для худшей анимации, но хорошей производительности:
         self.x = random.random() * value
         self.y = random.random() * value
         return self.__class__(self.x, self.y)

@@ -3,6 +3,9 @@ import random
 import networkx as nx
 import numpy as np
 
+from matplotlib.animation import FuncAnimation, FFMpegWriter
+import matplotlib.pyplot as plt
+
 from utils.graph import Graph
 from utils.algorithm import Algorithm
 from utils.point import Point
@@ -16,6 +19,7 @@ class AnnealingAlgorithm(Algorithm):
     def __init__(self, graph: Graph, pos: dict):
         self.graph = graph
         self.pos = self.calc_pos(pos)
+        self.chronology_pos = []
 
     def __str__(self):
         coordinates = ''
@@ -69,13 +73,15 @@ class AnnealingAlgorithm(Algorithm):
         '''
         temperature = INITIAL_TEMPERATURE
         while temperature > 1:
+            self.chronology_pos.append(AnnealingAlgorithm.from_pos_to_layout(self.pos))
             if self.count_crossings() == 0:
+                print(len(self.chronology_pos))
                 return AnnealingAlgorithm.from_pos_to_layout(self.pos)
             i, j = random.sample(range(len(self.graph)), 2)
             temp1 = self.pos[i]
             temp2 = self.pos[j]
             old_crossings = self.count_crossings()
-            self.pos[i], self.pos[j] = self.pos[i].change_position(1), self.pos[j].change_position(1)
+            self.pos[i], self.pos[j] = self.pos[i].change_position(), self.pos[j].change_position()
             new_crossings = self.count_crossings()
             if new_crossings < old_crossings or math.exp((old_crossings-new_crossings)/temperature) > random.random():
                 continue
@@ -83,6 +89,27 @@ class AnnealingAlgorithm(Algorithm):
             temperature *= 1 - COOLING_RATE
             print(temperature)
         return AnnealingAlgorithm.from_pos_to_layout(self.pos)
+
+    def __update_graph(self, frame):
+        plt.clf()
+        graph = nx.Graph(np.array(self.graph.matrix), nodetype=int)
+        pos = self.chronology_pos[frame]
+        nx.draw(graph, pos=pos, with_labels=True)
+
+    def animate(self, sec: int):
+        figure = plt.figure()
+
+        frames = len(self.chronology_pos)
+        interval = sec * 1000 / frames
+        fps = frames / sec
+
+        anim_created = FuncAnimation(figure, self.__update_graph,
+                                     frames=frames,
+                                     interval=interval,
+                                     repeat=False)
+        writer = FFMpegWriter(fps=fps)
+        anim_created.save(filename="annealing.mp4", writer=writer)
+        plt.close()
 
     def run(self):
         return self.simulated_annealing()

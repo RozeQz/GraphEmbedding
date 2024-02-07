@@ -53,7 +53,8 @@ def main() -> None:
         elif algoritm == "annealing":
             gr = AnnealingAlgorithm(gr, pos)
             planar = gr.run()
-            print(planar)
+            gr.animate(sec=5)
+            #print(planar)
 
             new_graph = Graph(graph)
             new_graph = nx.Graph(np.array(new_graph.matrix), nodetype=int)
