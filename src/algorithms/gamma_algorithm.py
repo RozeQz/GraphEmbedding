@@ -1,7 +1,13 @@
 import copy
+import math
+
+import matplotlib.pyplot as plt
+import numpy as np
+import networkx as nx
 
 from utils.graph import Graph
 from utils.algorithm import Algorithm
+from src.algorithms.tutte_embedding import TutteEmbedding
 
 
 class GammaAlgorithm(Algorithm):
@@ -308,6 +314,18 @@ class GammaAlgorithm(Algorithm):
 
         return Faces(int_faces, ext_face)
 
+    def visualize(self):
+        external_face = self.run().external
+        internal_faces = self.run().interior
+
+        graph = self.graph.adjacency_matrix_to_edge_list()
+        results = TutteEmbedding.tutte(graph, external_face)
+        TutteEmbedding.draw_lines(results, graph)
+        print(results)
+        TutteEmbedding.annotate(results)
+
+        plt.axis('off')
+        plt.show()
 
 class Faces:
     def __init__(self, interior, external):

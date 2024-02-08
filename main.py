@@ -44,6 +44,7 @@ def main() -> None:
             if planar is not None:
                 print("Граф планарный.")
                 print(planar)
+                gr.visualize()
             else:
                 print("Граф не планарный.")
         elif algoritm == "pq":
@@ -54,7 +55,6 @@ def main() -> None:
             gr = AnnealingAlgorithm(gr, pos)
             planar = gr.run()
             gr.animate(sec=5)
-            #print(planar)
 
             new_graph = Graph(graph)
             new_graph = nx.Graph(np.array(new_graph.matrix), nodetype=int)

@@ -8,9 +8,13 @@ class Point:
     Реализация проверки пересечения двух отрезков взята с сайта:
     https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
     '''
-    def __init__(self, x, y):
+    def __init__(self, x, y, label=None):
         self.x = x
         self.y = y
+        self.label = label
+
+    def __str__(self) -> str:
+        return f"{self.label}: ({self.x}, {self.y})"
 
     def change_position(self, value: float = 0.5) -> 'Point':
         '''
@@ -111,3 +115,24 @@ class Point:
             return True
 
         return False
+
+    @staticmethod
+    def isBetween(a, b, c):
+        '''
+        Проверяет, находится ли точка c между a и b
+        '''
+        crossproduct = (c.y - a.y) * (b.x - a.x) - (c.x - a.x) * (b.y - a.y)
+
+        epsilon = 0.001
+        if abs(crossproduct) > epsilon:
+            return False
+
+        dotproduct = (c.x - a.x) * (b.x - a.x) + (c.y - a.y)*(b.y - a.y)
+        if dotproduct < 0:
+            return False
+
+        squaredlengthba = (b.x - a.x)*(b.x - a.x) + (b.y - a.y)*(b.y - a.y)
+        if dotproduct > squaredlengthba:
+            return False
+
+        return True
