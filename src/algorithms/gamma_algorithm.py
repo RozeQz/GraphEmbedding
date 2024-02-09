@@ -1,6 +1,7 @@
 import copy
 import math
 
+from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 import networkx as nx
@@ -314,21 +315,31 @@ class GammaAlgorithm(Algorithm):
 
         return Faces(int_faces, ext_face)
 
-    def visualize(self):
+    def visualize(self) -> None:
+        '''
+        Визуализирует гамма-алгоритм как вложение Татта.
+
+        Если внешний многоугольник фиксирован (внешняя грань),
+        а внутренние вершины являются геометрическим центром соседей,
+        то это условие определяет их положения однозначно как решение системы
+        линейных уравнений. Решение уравнений даёт планарное вложение.
+
+        Следовательно, зная только внешнюю грань, существует единственная
+        плоская укладка внутренних граней.
+        '''
         external_face = self.run().external
-        internal_faces = self.run().interior
 
         graph = self.graph.adjacency_matrix_to_edge_list()
-        results = TutteEmbedding.tutte(graph, external_face)
-        TutteEmbedding.draw_lines(results, graph)
-        print(results)
-        TutteEmbedding.annotate(results)
+        tutte = TutteEmbedding(graph, external_face)
+        tutte.run(delta=0.05)
 
-        plt.axis('off')
-        plt.show()
 
 class Faces:
-    def __init__(self, interior, external):
+    '''
+    Класс граней графа.
+    '''
+    def __init__(self, interior: List[int] = None,
+                 external: List[int] = None):
         if interior is not None and external is not None:
             self.interior = [list(face) for face in interior]
             self.external = list(external)
@@ -336,14 +347,31 @@ class Faces:
         else:
             self.size = 0
 
-    def get_interior(self):
-        return [list(face) for face in self.interior]
+    def get_interior(self) -> List[List[int]]:
+        '''
+        Получить список внутренних граней графа.
 
-    def get_external(self):
-        return list(self.external)
+        Returns:
+        List[List[int]]: Список внутренних граней, заданных списком
+        вершин этих граней.
+        '''
+        return self.interior
+
+    def get_external(self) -> List[int]:
+        '''
+        Получить внешнюю грань графа.
+
+        Returns:
+        List[int]: Список вершин внешней грани.
+        '''
+        return self.external
 
     def __str__(self):
-        result = f"Количество граней = {self.size}\nВнешняя грань:\n{self.external}\nВнутренние грани:\n"
+        result = (
+                    f"Количество граней = {self.size}\n"
+                    f"Внешняя грань:\n{self.external}\n"
+                    f"Внутренние грани:\n"
+                 )
         for face in self.interior:
             result += f"{face}\n"
         return result
