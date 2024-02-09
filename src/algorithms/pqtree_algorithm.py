@@ -4,13 +4,34 @@ from utils.graph import Graph
 from utils.algorithm import Algorithm
 from utils.connector import Connector
 
-java = Connector()
-
 class PQTreeAlgorithm(Algorithm):
-
     def __init__(self, graph: Graph):
         self.graph = graph
+        self.java = Connector()
 
+    def form_java_graph(self):
+        graph = self.graph.adjacency_matrix_to_edge_list()
+
+        jverts = jpype.java.util.ArrayList()
+        size = jpype.java.awt.Dimension(10, 10)
+        for i, (key, value) in enumerate(graph.items()):
+            content = jpype.java.lang.Integer(key)
+            vertex = self.java.Vertex(size, content)
+            jverts.add(vertex)
+            print(f"Vertex {vertex} with content {content}")
+
+        jedges = jpype.java.util.ArrayList()
+        for i, (key, value) in enumerate(graph.items()):
+            vertex1 = jverts[i]
+            for v in value:
+                vertex2 = jverts[v]
+                edge = self.java.Edge(vertex1, vertex2)
+                jedges.add(edge)
+                print(f"Edge {edge} between {vertex1.getContent()} and {vertex2.getContent()}")
+
+        return self.java.Graph(jverts, jedges)
+
+    def run(self):
         jgraph = self.form_java_graph()
 
         print(jgraph)
@@ -21,43 +42,37 @@ class PQTreeAlgorithm(Algorithm):
         s = st.getOrigin()
         t = st.getDestination()
 
-        print(f"\n{s.getContent()=}\n{t.getContent()=}")
+        print(f"{s.getContent()=}\n{t.getContent()=}")
 
+        print('\n ST numbering\n')
 
-        st_numbering = java.STNumbering(jgraph, s, t)
+        st_numbering = self.java.STNumbering(jgraph, s, t)
         st_order = st_numbering.getOrder()
         st_numbers = st_numbering.getNumbering()
         # print(dir(st))
 
-        print(st_numbers)
+        print('\n Planar Embedding\n')
 
-        pqtree = java.PlanarEmbedding()
-        pqtree.emedGraph(jgraph, s, t)
+        # embedding = self.java.Embedding(self.java.HashMap, st_numbers)
 
-        # planar_faces = java.PlanarFaces(jgraph, st_numbering)
-        # planar_faces.formFaces(s, t)
-        # print(planar_faces.getPlanarEmbedding())
+        # Либо ошибка в программе на java, либо ошибка возникает на этапе преобразования типов в jpype
+        # Ошибка java.lang.NullPointerException: Cannot invoke "java.util.Collection.toArray()" because "c" is null
+        # возникает на этапе проверки графа на планарность .isPlannar(graph) внутри этого метода
 
-    def form_java_graph(self):
-        graph = self.graph.adjacency_matrix_to_edge_list()
+        # Более того, после работы алгоритма, библиотека не предусматривает вычисление координат
+        # вершин на плоскости. В коде библиотеки очень много вставок "TODO", что говорит
+        # о неполноценности библиотеки => принято решение отказаться от данного алгоритма.
+        try:
+            embedding = self.java.PlanarEmbedding().emedGraph(jgraph, s, t)
+            print(f"{embedding.toString()}")
+            print('\ngetEmbedding\n')
+            print(f"{embedding.getEmbedding()=}")
+            for e in embedding.getEmbedding().entrySet():
+                print(e)
+            print('\ngetStNumbering\n')
+            print(f"{embedding.getStNumbering()=}")
+            for e in embedding.getStNumbering().entrySet():
+                print(e)
 
-        jverts = jpype.java.util.ArrayList()
-        size = jpype.java.awt.Dimension(10, 10)
-        for i, (key, value) in enumerate(graph.items()):
-            content = jpype.java.lang.Integer(key)
-            vertex = java.Vertex(size, content)
-            jverts.add(vertex)
-            print(f"vertex with content {content}")
-
-        jedges = jpype.java.util.ArrayList()
-        for i, (key, value) in enumerate(graph.items()):
-            vertex1 = jverts[i]
-            for v in value:
-                vertex2 = jverts[v]
-                jedges.add(java.Edge(vertex1, vertex2))
-                print(f"edge between {vertex1.getContent()} and {vertex2.getContent()}")
-
-        return java.Graph(jverts, jedges)
-
-    def run(self):
-        return "at least works"
+        except jpype.JException as ex:
+            print(f"Java Exception while running PQTree embedding: {str(ex)}")

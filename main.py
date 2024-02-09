@@ -49,8 +49,7 @@ def main() -> None:
                 print("Граф не планарный.")
         elif algoritm == "pq":
             gr = PQTreeAlgorithm(gr)
-            planar = gr.run()
-            print(planar)
+            gr.run()
         elif algoritm == "annealing":
             gr = AnnealingAlgorithm(gr, pos)
             planar = gr.run()
