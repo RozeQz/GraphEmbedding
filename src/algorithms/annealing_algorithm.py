@@ -3,6 +3,7 @@ import random
 import networkx as nx
 import numpy as np
 
+from functools import partial
 from matplotlib.animation import FuncAnimation, FFMpegWriter
 import matplotlib.pyplot as plt
 
@@ -90,25 +91,54 @@ class AnnealingAlgorithm(Algorithm):
             print(temperature)
         return AnnealingAlgorithm.from_pos_to_layout(self.pos)
 
-    def __update_graph(self, frame):
+    def __update_graph(self, frame: int, pos: list):
+        '''
+        Функция рисования графа, которая будет вызываться на каждом фрейме
+        из animate.
+
+        Args:
+        frame (int): Номер кадра.
+        pos (list): Хронологический список изменения координат каждой вершины на плоскости.
+        '''
         plt.clf()
         graph = nx.Graph(np.array(self.graph.matrix), nodetype=int)
-        pos = self.chronology_pos[frame]
+        pos = pos[frame]
         nx.draw(graph, pos=pos, with_labels=True)
 
-    def animate(self, sec: int):
-        figure = plt.figure()
+    def animate(self,
+                sec: float = 5,
+                filename: str = "annealing.mp4",
+                rate: int = 1) -> None:
+        '''
+        Создает анимацию работы метода отжига и
+        сохраняет её в файл с расширением mp4.
 
-        frames = len(self.chronology_pos)
+        Args:
+        sec (float): Длительность полученного видео.
+        filename (str): Название файла mp4 для сохранения видео.
+        rate (int): Каждый какой по счету, начиная с первого, брать кадр для создания анимации.
+        '''
+        figure = plt.figure()
+        positions = []
+
+        for i, pos in enumerate(self.chronology_pos):
+            print(f'{i=}')
+            if (i % rate == 0) or (i == (len(self.chronology_pos)-1)):
+                print(f'i2={i}')
+                positions.append(pos)
+
+        frames = len(positions)
         interval = sec * 1000 / frames
         fps = frames / sec
 
-        anim_created = FuncAnimation(figure, self.__update_graph,
+        anim_created = FuncAnimation(figure,
+                                     partial(self.__update_graph,
+                                             pos=positions),
                                      frames=frames,
                                      interval=interval,
                                      repeat=False)
         writer = FFMpegWriter(fps=fps)
-        anim_created.save(filename="annealing.mp4", writer=writer)
+        anim_created.save(filename=filename, writer=writer)
         plt.close()
 
     def run(self):
