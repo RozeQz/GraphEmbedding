@@ -122,9 +122,7 @@ class AnnealingAlgorithm(Algorithm):
         positions = []
 
         for i, pos in enumerate(self.chronology_pos):
-            print(f'{i=}')
             if (i % rate == 0) or (i == (len(self.chronology_pos)-1)):
-                print(f'i2={i}')
                 positions.append(pos)
 
         frames = len(positions)

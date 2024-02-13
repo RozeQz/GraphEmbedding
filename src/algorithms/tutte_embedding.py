@@ -6,7 +6,8 @@ import numpy as np
 from numpy.linalg import solve
 import matplotlib.pyplot as plt
 import networkx as nx
-from collections import defaultdict, ValuesView
+from collections import defaultdict
+from collections.abc import ValuesView
 
 from utils.algorithm import Algorithm
 from utils.graph import Graph
