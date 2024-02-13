@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from utils.graph import Graph
+from src.education.task import Task
+from src.education.task_manager import TaskManager
 from src.algorithms.gamma_algorithm import GammaAlgorithm
 from src.algorithms.pqtree_algorithm import PQTreeAlgorithm
 from src.algorithms.annealing_algorithm import AnnealingAlgorithm
@@ -38,6 +40,9 @@ def main() -> None:
         # плоская визуализация
         # gr.show_graph(nx.planar_layout)
 
+        tm = TaskManager()
+        print(tm.generate_tasks_by_type(3, 1))
+
         if algoritm == "gamma":
             gr = GammaAlgorithm(gr)
             planar = gr.run()
@@ -53,7 +58,7 @@ def main() -> None:
         elif algoritm == "annealing":
             gr = AnnealingAlgorithm(gr, pos)
             planar = gr.run()
-            gr.animate(sec=5)
+            #gr.animate(sec=5)
 
             new_graph = Graph(graph)
             new_graph = nx.Graph(np.array(new_graph.matrix), nodetype=int)
