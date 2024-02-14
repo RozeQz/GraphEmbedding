@@ -7,6 +7,10 @@ __pycache__
 # Ignore vscode
 .vscode
 
+# Ignore db
+db.xlsx
+
 # Пока уберу
 README.md
 requirements.txt
+annealing.mp4

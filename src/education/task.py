@@ -6,8 +6,11 @@ class Task():
                  options=None):
         self.number = number
         self.question = question
-        self.correct_answer = correct_answer
         self.task_type = task_type
+        if isinstance(correct_answer, int):
+            self.correct_answer = [correct_answer]
+        else:
+            self.correct_answer = correct_answer.split(';')
         if options is not None:
             self.options = options.split(';')
         else:
@@ -16,7 +19,7 @@ class Task():
     def __str__(self):
         text = (
                     f"Номер вопроса: {self.number}\n"
-                    f"Вопрос:{self.question}\n"
+                    f"Вопрос: {self.question}\n"
                     f"Правильный ответ: {self.correct_answer}\n"
                     f"Тип вопроса: {self.task_type}\n"
                     f"Варианты ответа: {self.options}\n"
@@ -28,7 +31,7 @@ class Task():
         Проверяет, правильный ли дан ответ на задание.
 
         Args:
-        correct_text (str): Правильный текст.
+        answer (str): Полученный ответ.
 
         Returns:
         bool: True если ответ правильный, иначе False.
@@ -39,9 +42,13 @@ class Task():
                 return True
             return False
 
+        # if answer.isdigit():
+        #     answer = int(answer)
+
         # В остальных задания правильный ответ лишь один
-        if self.correct_answer == answer:
-            return True
+        for correct_answer in self.correct_answer:
+            if str(answer).lower() == str(correct_answer).lower():
+                return True
         return False
 
     @staticmethod

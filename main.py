@@ -3,6 +3,7 @@ import argparse
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+from termcolor import colored   # Убрать потом
 
 from utils.graph import Graph
 from src.education.task import Task
@@ -14,7 +15,7 @@ from src.algorithms.annealing_algorithm import AnnealingAlgorithm
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--algorithm', type=str, default="gamma",
+    parser.add_argument('-a', '--algorithm', type=str,
                         dest='algorithm',
                         help="Name of algoritm to use: gamma, pq, annealing")
     # parser.add_argument(type=str, dest='filename',
@@ -24,50 +25,67 @@ def main() -> None:
     algoritm: str = args.algorithm
     vertexes: int = 0
     graph: List[List[int]] = []
-    try:
-        with open("data/input.txt", "r", encoding="utf-8") as file:
-            vertexes = int(file.readline())
-            for _ in range(vertexes):
-                row = list(map(int, file.readline().split()))
-                graph.append(row)
 
-        gr = Graph(graph)
-        print("Исходный граф:")
-        print(gr)
-
-        # исходный граф
-        pos = gr.show_graph()
-        # плоская визуализация
-        # gr.show_graph(nx.planar_layout)
-
+    if algoritm is None:
         tm = TaskManager()
-        print(tm.generate_tasks_by_type(3, 1))
+        tasks = tm.generate_tasks_by_type(num_tasks=5, task_type=1)
+        test = tm.create_test(tasks=tasks, time=20)
 
-        if algoritm == "gamma":
-            gr = GammaAlgorithm(gr)
-            planar = gr.run()
-            if planar is not None:
-                print("Граф планарный.")
-                print(planar)
-                gr.visualize()
+        test.start()
+        for task in test:
+            print(task.question)
+            for answer in task.options:
+                print(answer, end='\t')
+            print()
+            answer = input()
+            if task.check_answer(answer):
+                print(colored('Верно!', 'green'))
             else:
-                print("Граф не планарный.")
-        elif algoritm == "pq":
-            gr = PQTreeAlgorithm(gr)
-            gr.run()
-        elif algoritm == "annealing":
-            gr = AnnealingAlgorithm(gr, pos)
-            planar = gr.run()
-            #gr.animate(sec=5)
+                print(colored('Неврно!', 'red'))
+        if test.get_state():
+            test.stop()
+    else:
+        try:
+            with open("data/input.txt", "r", encoding="utf-8") as file:
+                vertexes = int(file.readline())
+                for _ in range(vertexes):
+                    row = list(map(int, file.readline().split()))
+                    graph.append(row)
 
-            new_graph = Graph(graph)
-            new_graph = nx.Graph(np.array(new_graph.matrix), nodetype=int)
+            gr = Graph(graph)
+            print("Исходный граф:")
+            print(gr)
 
-            nx.draw(new_graph, pos=planar, with_labels=True)
-            plt.show()
+            # исходный граф
+            pos = gr.show_graph()
+            # плоская визуализация
+            # gr.show_graph(nx.planar_layout)
 
-    except FileNotFoundError as e:
-        print(e)
+            if algoritm == "gamma":
+                gr = GammaAlgorithm(gr)
+                planar = gr.run()
+                if planar is not None:
+                    print("Граф планарный.")
+                    print(planar)
+                    gr.visualize()
+                else:
+                    print("Граф не планарный.")
+            elif algoritm == "pq":
+                gr = PQTreeAlgorithm(gr)
+                gr.run()
+            elif algoritm == "annealing":
+                gr = AnnealingAlgorithm(gr, pos)
+                planar = gr.run()
+                #gr.animate(sec=5)
+
+                new_graph = Graph(graph)
+                new_graph = nx.Graph(np.array(new_graph.matrix), nodetype=int)
+
+                nx.draw(new_graph, pos=planar, with_labels=True)
+                plt.show()
+
+        except FileNotFoundError as e:
+            print(e)
 
 
 if __name__ == '__main__':
