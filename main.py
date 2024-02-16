@@ -5,12 +5,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from termcolor import colored   # Убрать потом
 
+from PyQt5 import QtWidgets, QtGui, uic
+import sys
+
 from utils.graph import Graph
 from src.education.task import Task
 from src.education.task_manager import TaskManager
 from src.algorithms.gamma_algorithm import GammaAlgorithm
 from src.algorithms.pqtree_algorithm import PQTreeAlgorithm
 from src.algorithms.annealing_algorithm import AnnealingAlgorithm
+from gui.main_window import MainWindow
 
 
 def main() -> None:
@@ -18,6 +22,7 @@ def main() -> None:
     parser.add_argument('-a', '--algorithm', type=str,
                         dest='algorithm',
                         help="Name of algoritm to use: gamma, pq, annealing")
+    parser.add_argument('-g', '--gui', action='store_true')
     # parser.add_argument(type=str, dest='filename',
     #                     help="File containing graph")
     args = parser.parse_args()
@@ -25,6 +30,14 @@ def main() -> None:
     algoritm: str = args.algorithm
     vertexes: int = 0
     graph: List[List[int]] = []
+
+    if args.gui:
+        app = QtWidgets.QApplication([])
+        application = MainWindow()
+        #application = uic.loadUi("gui/ui_main_window.ui")
+        application.show()
+
+        sys.exit(app.exec())
 
     if algoritm is None:
         tm = TaskManager()

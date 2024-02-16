@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1920</width>
+    <height>1080</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PlanarEd</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <property name="locale">
+   <locale language="Russian" country="Russia"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>26</pointsize>
+    </font>
+   </property>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>405</width>
+      <height>1080</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame {
+	background-color: rgb(44, 48, 57);
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
+    </property>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>46</x>
+       <y>261</y>
+       <width>313</width>
+       <height>67</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 75 26pt &quot;Open Sans&quot;;
+color: rgb(255, 255, 255);
+text-align: left;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <widget class="QLabel" name="lbl_profile">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>313</width>
+        <height>67</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(255, 255, 255);
+	text-align: left;
+	margin-left: 32;
+}
+
+QLabel:hover {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(12, 140, 233);
+	text-align: left;
+	margin-left: 32;
+}</string>
+      </property>
+      <property name="text">
+       <string>Профиль</string>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_3">
+     <property name="geometry">
+      <rect>
+       <x>46</x>
+       <y>352</y>
+       <width>313</width>
+       <height>304</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 75 26pt &quot;Open Sans&quot;;
+color: rgb(255, 255, 255);
+text-align: left;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <widget class="QLabel" name="lbl_edu">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>313</width>
+        <height>67</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 75 26pt &quot;Open Sans&quot;;
+color: rgb(158, 172, 183);
+text-align: left;
+margin-left: 32;</string>
+      </property>
+      <property name="text">
+       <string>Обучение</string>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lbl_theory">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>67</y>
+        <width>313</width>
+        <height>67</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(255, 255, 255);
+	text-align: left;
+	margin-left: 52;
+}
+
+QLabel:hover {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(12, 140, 233);
+	text-align: left;
+	margin-left: 32;
+}</string>
+      </property>
+      <property name="text">
+       <string>Теория</string>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lbl_tasks">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>134</y>
+        <width>313</width>
+        <height>67</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(255, 255, 255);
+	text-align: left;
+	margin-left: 52;
+}
+
+QLabel:hover {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(12, 140, 233);
+	text-align: left;
+	margin-left: 32;
+}</string>
+      </property>
+      <property name="text">
+       <string>Задания</string>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lbl_testing">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>201</y>
+        <width>313</width>
+        <height>67</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(255, 255, 255);
+	text-align: left;
+	margin-left: 52;
+}
+
+QLabel:hover {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(12, 140, 233);
+	text-align: left;
+	margin-left: 32;
+}</string>
+      </property>
+      <property name="text">
+       <string>Тестирование</string>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lbl_arrow">
+      <property name="geometry">
+       <rect>
+        <x>253</x>
+        <y>33</y>
+        <width>22</width>
+        <height>11</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>../../Проектирование интерфейса/Arrow.svg</pixmap>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_4">
+     <property name="geometry">
+      <rect>
+       <x>46</x>
+       <y>656</y>
+       <width>313</width>
+       <height>67</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 75 26pt &quot;Open Sans&quot;;
+color: rgb(255, 255, 255);
+text-align: left;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <widget class="QLabel" name="lbl_graph_emb">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>313</width>
+        <height>67</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(255, 255, 255);
+	text-align: left;
+	margin-left: 32;
+}
+
+QLabel:hover {
+	font: 75 26pt &quot;Open Sans&quot;;
+	color: rgb(12, 140, 233);
+	text-align: left;
+	margin-left: 32;
+}</string>
+      </property>
+      <property name="text">
+       <string>Укладка графа</string>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="lbl_logo">
+     <property name="geometry">
+      <rect>
+       <x>108</x>
+       <y>48</y>
+       <width>189</width>
+       <height>117</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>../../Проектирование интерфейса/logo_white.svg</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
