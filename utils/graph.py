@@ -1,5 +1,5 @@
 import copy
-from typing import List, Dict
+from typing import (List, Dict, Mapping, Callable)
 
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -36,8 +36,8 @@ class Graph:
         Добавляет ребро между вершинами k и m в графе.
 
         Args:
-        k (int): Вершина, из которой исходит ребро.
-        m (int): Вершина, в которую входит ребро.
+            k (int): Вершина, из которой исходит ребро.
+            m (int): Вершина, в которую входит ребро.
         """
         if self.orientation == "directed":
             self.matrix[k][m] = 1
@@ -51,11 +51,11 @@ class Graph:
         в графе.
 
         Args:
-        k (int): Вершина, из которой исходит ребро.
-        m (int): Вершина, в которую входит ребро.
+            k (int): Вершина, из которой исходит ребро.
+            m (int): Вершина, в которую входит ребро.
 
         Returns:
-        bool: True если ребро содержится в графе, иначе False.
+            bool: True если ребро содержится в графе, иначе False.
         """
         return self.matrix[k][m] == 1
 
@@ -64,10 +64,10 @@ class Graph:
         Возвращает количество смежных узлов для данного узла v.
 
         Args:
-        v (int): Узел, для которого подсчитываются смежные узлы.
+            v (int): Узел, для которого подсчитываются смежные узлы.
 
         Returns:
-        int: Количество смежных узлов с данным узлом v.
+            int: Количество смежных узлов с данным узлом v.
         """
         return sum(self.matrix[v])
 
@@ -82,19 +82,51 @@ class Graph:
         1 1 1 0 \n
 
         Returns:
-        Dict[int, List[int]]: Список ребер.
+            Dict[int, List[int]]: Список ребер.
         '''
         edge_list: Dict[int, List[int]] = {}
         for i, row in enumerate(self.matrix):
             edge_list[i] = [j for j, value in enumerate(row) if value == 1]
         return edge_list
 
-    def show_graph(self, layout=nx.spring_layout) -> None:
+    @staticmethod
+    def get_graph_from_file(filename: str = "data/input.txt") -> 'Graph':
+        '''
+        Преобразует матрицу смежности, записанную в файле в граф.
+
+        Args:
+            filename (str): Путь к файлу с матрицей смежности.
+
+        Returns:
+            Graph: Полученный граф.
+
+        Raises:
+            FileNotFoundError: Если файла по заданному пути не существует.
+        '''
+        graph: List[List[int]] = []
+        try:
+            with open(filename, "r", encoding="utf-8") as file:
+                vertexes = int(file.readline())
+                for _ in range(vertexes):
+                    row = list(map(int, file.readline().split()))
+                    graph.append(row)
+            return Graph(graph)
+        except FileNotFoundError as e:
+            print(e)
+
+    def show_graph(self, layout: Callable =
+                   nx.spring_layout) -> Dict[int, List[float]]:
         """
         Визуализировать исходный граф.
+
+        Args:
+            layout: Метод расположения вершин графа.
+
+        Returns:
+            Dict[int, List[float]]: Ключ - вершина, значение - координаты вершины.
         """
         graph = nx.Graph(np.array(self.matrix), nodetype=int)
         pos = layout(graph)
-        nx.draw(graph, pos=pos, with_labels=True)
+        nx.draw(graph, pos=pos, with_labels=True, node_color="#0C8CE9")
         plt.show()
         return pos

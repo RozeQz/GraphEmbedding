@@ -34,7 +34,7 @@ def main() -> None:
     if args.gui:
         app = QtWidgets.QApplication([])
         application = MainWindow()
-        #application = uic.loadUi("gui/ui_main_window.ui")
+        # application = uic.loadUi("gui/ui_main_window.ui")
         application.show()
 
         sys.exit(app.exec())
@@ -47,48 +47,40 @@ def main() -> None:
         test.start()
 
     else:
-        try:
-            with open("data/input.txt", "r", encoding="utf-8") as file:
-                vertexes = int(file.readline())
-                for _ in range(vertexes):
-                    row = list(map(int, file.readline().split()))
-                    graph.append(row)
+        gr = Graph.get_graph_from_file(filename="data/input.txt")
 
-            gr = Graph(graph)
-            print("Исходный граф:")
-            print(gr)
+        print("Исходный граф:")
+        print(gr)
 
-            # исходный граф
-            pos = gr.show_graph()
-            # плоская визуализация
-            # gr.show_graph(nx.planar_layout)
+        # исходный граф
+        pos = gr.show_graph()
+        print(pos)
+        # плоская визуализация
+        # gr.show_graph(nx.planar_layout)
 
-            if algoritm == "gamma":
-                gr = GammaAlgorithm(gr)
-                planar = gr.run()
-                if planar is not None:
-                    print("Граф планарный.")
-                    print(planar)
-                    gr.visualize()
-                else:
-                    print("Граф не планарный.")
-            elif algoritm == "pq":
-                gr = PQTreeAlgorithm(gr)
-                gr.run()
-            elif algoritm == "annealing":
-                gr = AnnealingAlgorithm(gr, pos)
-                planar = gr.run()
-                #gr.animate(sec=5)
+        if algoritm == "gamma":
+            gr = GammaAlgorithm(gr)
+            planar = gr.run()
+            if planar is not None:
+                print("Граф планарный.")
+                print(planar)
+                gr.visualize()
+            else:
+                print("Граф не планарный.")
+        elif algoritm == "pq":
+            gr = PQTreeAlgorithm(gr)
+            gr.run()
+        elif algoritm == "annealing":
+            gr = AnnealingAlgorithm(gr, pos)
+            planar = gr.run()
+            # gr.animate(sec=5)
 
-                new_graph = Graph(graph)
-                new_graph = nx.Graph(np.array(new_graph.matrix), nodetype=int)
+            new_graph = Graph(graph)
+            new_graph = nx.Graph(np.array(new_graph.matrix), nodetype=int)
 
-                nx.draw(new_graph, pos=planar, with_labels=True,
-                        node_color="#0C8CE9")
-                plt.show()
-
-        except FileNotFoundError as e:
-            print(e)
+            nx.draw(new_graph, pos=planar, with_labels=True,
+                    node_color="#0C8CE9")
+            plt.show()
 
 
 if __name__ == '__main__':

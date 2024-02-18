@@ -52,10 +52,11 @@ class TutteEmbedding(Algorithm):
         '''
         Рисует линию между двумя точками point1 и point2.
         '''
+        node_color="#0C8CE9"
         print("Line: " + str(point1) + "  " + str(point2))
         plt.plot((point1.x, point2.x),
                  (point1.y, point2.y),
-                 markerfacecolor='#2C7FB8', markeredgewidth=0,
+                 markerfacecolor=node_color, markeredgewidth=0,
                  color='black', marker='o',
                  linewidth=1, markersize=18)
 
