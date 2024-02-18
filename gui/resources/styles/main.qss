@@ -1,0 +1,26 @@
+QLabel {
+	font-size: 26pt;
+	font-weight: 75;
+	color: rgb(255, 255, 255);
+	text-align: left;
+	margin-left: 32;
+}
+
+QLabel#lbl_logo {
+    margin-left: 0;
+    margin-bottom: 30;
+    margin-top: 50;
+}
+
+QLabel#lbl_arrow {
+    margin-left: 0;
+}
+
+QLabel#lbl_exit {
+    margin-top: 30;
+    margin-bottom: 50;
+}
+
+QLabel:hover {
+	color: rgb(12, 140, 233);
+}
