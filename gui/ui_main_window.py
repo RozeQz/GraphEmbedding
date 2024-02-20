@@ -53,9 +53,10 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.lbl_logo = QtWidgets.QLabel(self.fr_menu)
         self.lbl_logo.setMaximumSize(QtCore.QSize(16777215, 200))
+        self.lbl_logo.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.lbl_logo.setStyleSheet("")
         self.lbl_logo.setText("")
-        self.lbl_logo.setPixmap(QtGui.QPixmap("../assets/logo_white.svg"))
+        self.lbl_logo.setPixmap(QtGui.QPixmap("resources/img/logo_white.svg"))
         self.lbl_logo.setScaledContents(False)
         self.lbl_logo.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_logo.setObjectName("lbl_logo")
@@ -74,6 +75,7 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.lbl_profile.setFont(font)
+        self.lbl_profile.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.lbl_profile.setStyleSheet("QLabel {\n"
 "    color: rgb(255, 255, 255);\n"
 "    text-align: left;\n"
@@ -119,43 +121,12 @@ class Ui_MainWindow(object):
         self.lbl_arrow.setObjectName("lbl_arrow")
         self.horizontalLayout_3.addWidget(self.lbl_arrow)
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
-        self.lbl_testing = QtWidgets.QLabel(self.fr_menu)
-        font = QtGui.QFont()
-        font.setFamily("Open Sans")
-        font.setPointSize(26)
-        self.lbl_testing.setFont(font)
-        self.lbl_testing.setStyleSheet("QLabel {\n"
-"    color: rgb(255, 255, 255);\n"
-"    text-align: left;\n"
-"    margin-left: 52;\n"
-"}\n"
-"\n"
-"QLabel:hover {\n"
-"    color: rgb(12, 140, 233);\n"
-"}")
-        self.lbl_testing.setObjectName("lbl_testing")
-        self.verticalLayout_2.addWidget(self.lbl_testing)
-        self.lbl_tasks = QtWidgets.QLabel(self.fr_menu)
-        font = QtGui.QFont()
-        font.setFamily("Open Sans")
-        font.setPointSize(26)
-        self.lbl_tasks.setFont(font)
-        self.lbl_tasks.setStyleSheet("QLabel {\n"
-"    color: rgb(255, 255, 255);\n"
-"    text-align: left;\n"
-"    margin-left: 52;\n"
-"}\n"
-"\n"
-"QLabel:hover {\n"
-"    color: rgb(12, 140, 233);\n"
-"}")
-        self.lbl_tasks.setObjectName("lbl_tasks")
-        self.verticalLayout_2.addWidget(self.lbl_tasks)
         self.lbl_theory = QtWidgets.QLabel(self.fr_menu)
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(26)
         self.lbl_theory.setFont(font)
+        self.lbl_theory.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.lbl_theory.setStyleSheet("QLabel {\n"
 "    color: rgb(255, 255, 255);\n"
 "    text-align: left;\n"
@@ -168,12 +139,47 @@ class Ui_MainWindow(object):
 "")
         self.lbl_theory.setObjectName("lbl_theory")
         self.verticalLayout_2.addWidget(self.lbl_theory)
+        self.lbl_tasks = QtWidgets.QLabel(self.fr_menu)
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(26)
+        self.lbl_tasks.setFont(font)
+        self.lbl_tasks.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.lbl_tasks.setStyleSheet("QLabel {\n"
+"    color: rgb(255, 255, 255);\n"
+"    text-align: left;\n"
+"    margin-left: 52;\n"
+"}\n"
+"\n"
+"QLabel:hover {\n"
+"    color: rgb(12, 140, 233);\n"
+"}")
+        self.lbl_tasks.setObjectName("lbl_tasks")
+        self.verticalLayout_2.addWidget(self.lbl_tasks)
+        self.lbl_testing = QtWidgets.QLabel(self.fr_menu)
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(26)
+        self.lbl_testing.setFont(font)
+        self.lbl_testing.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.lbl_testing.setStyleSheet("QLabel {\n"
+"    color: rgb(255, 255, 255);\n"
+"    text-align: left;\n"
+"    margin-left: 52;\n"
+"}\n"
+"\n"
+"QLabel:hover {\n"
+"    color: rgb(12, 140, 233);\n"
+"}")
+        self.lbl_testing.setObjectName("lbl_testing")
+        self.verticalLayout_2.addWidget(self.lbl_testing)
         self.verticalLayout.addLayout(self.verticalLayout_2)
         self.lbl_graph_emb = QtWidgets.QLabel(self.fr_menu)
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(26)
         self.lbl_graph_emb.setFont(font)
+        self.lbl_graph_emb.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.lbl_graph_emb.setStyleSheet("QLabel {\n"
 "    color: rgb(255, 255, 255);\n"
 "    text-align: left;\n"
@@ -197,6 +203,7 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.lbl_exit.setFont(font)
+        self.lbl_exit.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.lbl_exit.setStyleSheet("QLabel {\n"
 "    color: rgb(255, 255, 255);\n"
 "    text-align: left;\n"
@@ -222,6 +229,23 @@ class Ui_MainWindow(object):
         self.fr_main.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.fr_main.setFrameShadow(QtWidgets.QFrame.Raised)
         self.fr_main.setObjectName("fr_main")
+        self.lbl_refresh = QtWidgets.QLabel(self.fr_main)
+        self.lbl_refresh.setGeometry(QtCore.QRect(1380, 940, 71, 71))
+        self.lbl_refresh.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.lbl_refresh.setText("")
+        self.lbl_refresh.setPixmap(QtGui.QPixmap("resources/img/rotate.png"))
+        self.lbl_refresh.setScaledContents(True)
+        self.lbl_refresh.setObjectName("lbl_refresh")
+        self.btn_embed = QtWidgets.QPushButton(self.fr_main)
+        self.btn_embed.setGeometry(QtCore.QRect(1150, 950, 181, 61))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(16)
+        self.btn_embed.setFont(font)
+        self.btn_embed.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btn_embed.setCheckable(False)
+        self.btn_embed.setFlat(False)
+        self.btn_embed.setObjectName("btn_embed")
         self.horizontalLayout_4.addWidget(self.fr_main)
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -233,8 +257,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "PlanarEd"))
         self.lbl_profile.setText(_translate("MainWindow", "Профиль"))
         self.lbl_edu.setText(_translate("MainWindow", "Обучение"))
-        self.lbl_testing.setText(_translate("MainWindow", "Тестирование"))
-        self.lbl_tasks.setText(_translate("MainWindow", "Задания"))
         self.lbl_theory.setText(_translate("MainWindow", "Теория"))
+        self.lbl_tasks.setText(_translate("MainWindow", "Задания"))
+        self.lbl_testing.setText(_translate("MainWindow", "Тестирование"))
         self.lbl_graph_emb.setText(_translate("MainWindow", "Укладка графа"))
         self.lbl_exit.setText(_translate("MainWindow", "Выйти"))
+        self.btn_embed.setText(_translate("MainWindow", "Уложить"))

@@ -114,6 +114,40 @@ class Graph:
         except FileNotFoundError as e:
             print(e)
 
+    @staticmethod
+    def generate_random_graph(n: int, p: float,
+                              connected: bool = True) -> 'Graph':
+        '''
+        Генерирует рандомный граф, также известный как граф Эрдёша - Реньи.
+
+        Args:
+            n (int): Количество вершин.
+            p (float): Вероятность создания ребра.
+            connected (bool): Должен ли быть граф связным.
+        '''
+        G = nx.fast_gnp_random_graph(n, p)
+        if connected:
+            while not nx.is_connected(G):
+                G = nx.fast_gnp_random_graph(n, p)
+        return Graph(nx.adjacency_matrix(G).toarray())
+
+    @staticmethod
+    def generate_random_planar_graph(n: int, p: float,
+                                     connected: bool = True) -> 'Graph':
+        '''
+        Генерирует рандомный планарный граф.
+
+        Args:
+            n (int): Количество вершин.
+            p (float): Вероятность создания ребра.
+            connected (bool): Должен ли быть граф связным.
+        '''
+        graph = Graph.generate_random_graph(n, p, connected)
+        G = nx.Graph(np.array(graph.matrix))
+        if nx.is_planar(G):
+            return graph
+        return Graph.generate_random_planar_graph(n, p, connected)
+
     def show_graph(self, layout: Callable =
                    nx.spring_layout) -> Dict[int, List[float]]:
         """
