@@ -4,6 +4,9 @@ __pycache__
 # Ignore venv
 .venv
 
+# Ignore enviroment file
+.env
+
 # Ignore vscode
 .vscode
 

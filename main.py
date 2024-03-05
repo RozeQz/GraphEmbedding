@@ -4,6 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 from termcolor import colored   # Убрать потом
+import json
 
 from PyQt5 import QtWidgets, QtGui, uic
 import sys
@@ -16,8 +17,19 @@ from src.algorithms.pqtree_algorithm import PQTreeAlgorithm
 from src.algorithms.annealing_algorithm import AnnealingAlgorithm
 from gui.main_window import MainWindow
 
+from src.models.tasks import crud, schemas
+from configs.database import session_factory, engine
+from src.models.models import Base
 
 def main() -> None:
+
+    with session_factory() as session:
+        Base.metadata.create_all(engine)
+
+        task = schemas.TaskCreate(question='foo', answer='bar', type=1,
+                                  options='bar, baz')
+        crud.create_tasks(session, task)
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--algorithm', type=str,
                         dest='algorithm',
