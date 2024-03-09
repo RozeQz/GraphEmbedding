@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         # Путь к ассетам
-        path = "./gui/resources/"
+        path = "client/gui/resources/"
 
         # Привязка стиля (qss)
         with open(path + "styles/main.qss", 'r', encoding="utf-8") as file:
@@ -97,7 +97,7 @@ class MainWindow(QMainWindow):
         if event is not None:
             event.accept()
         self.canvas.axes.cla()
-        graph = Graph.generate_random_planar_graph(15, 0.33)
+        graph = Graph.generate_random_planar_graph(10, 0.55)
         # graph = Graph.get_graph_from_file()
         G = nx.Graph(np.array(graph.matrix))
         pos = nx.spring_layout(G)

@@ -17,3 +17,5 @@ pydantic==2.6.3
 pydantic_settings==2.2.1
 sqlalchemy==2.0.28
 psycopg2==2.9.9
+fastapi==0.110.0
+uvicorn==0.28.0

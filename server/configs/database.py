@@ -16,3 +16,11 @@ session_factory = sessionmaker(
     autocommit=False,
     expire_on_commit=False,
 )
+
+
+def get_session():
+    session = session_factory()
+    try:
+        yield session
+    finally:
+        session.close()
