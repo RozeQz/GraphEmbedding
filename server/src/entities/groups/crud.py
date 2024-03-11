@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional, Type
 
-from server.src.entities.schema import Group
-from server.src.entities.groups.schemas import GroupCreate, GroupUpdate
+from src.entities.schema import Group
+from src.entities.groups.model import GroupCreate, GroupUpdate
 
 
 def get_one(session: Session, obj_id: int) -> Optional[Group]:

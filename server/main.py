@@ -3,7 +3,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from configs.database import session_factory, engine
-from server.src.entities.schema import Base
+from src.entities.schema import Base
 from src.entities.users.controller import router
 
 

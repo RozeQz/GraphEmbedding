@@ -2,10 +2,10 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from starlette import status
 
-from server.src.entities.tasks import crud
-from server.src.entities.tasks.model import TaskCreate, TaskUpdate
+from src.entities.tasks import crud
+from src.entities.tasks.model import TaskCreate, TaskUpdate
 
-from server.configs.database import get_session
+from configs.database import get_session
 
 
 router = APIRouter(tags=["Tasks"], prefix="/planared/tasks")

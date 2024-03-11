@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional, Type
 
-from server.src.entities.schema import Task
-from server.src.entities.tasks.model import TaskCreate, TaskUpdate
+from src.entities.schema import Task
+from src.entities.tasks.model import TaskCreate, TaskUpdate
 
 
 def get_one(session: Session, obj_id: int) -> Optional[Task]:

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional, Type
 
-from server.src.entities.schema import User
-from server.src.entities.users.model import UserCreate, UserUpdate
+from src.entities.schema import User
+from src.entities.users.model import UserCreate, UserUpdate
 
 
 def get_one(session: Session, obj_id: int) -> Optional[User]:

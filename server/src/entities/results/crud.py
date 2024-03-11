@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional, Type
 
-from server.src.entities.schema import Result
-from server.src.entities.results.model import ResultCreate, ResultUpdate
+from src.entities.schema import Result
+from src.entities.results.model import ResultCreate, ResultUpdate
 
 
 def get_one(session: Session, obj_id: int) -> Optional[Result]:
@@ -11,6 +11,20 @@ def get_one(session: Session, obj_id: int) -> Optional[Result]:
 
 def get_all(session: Session) -> List[Type[Result]]:
     return session.query(Result).all()
+
+
+def get_user_results(session: Session, user_id: int) -> List[Type[Result]]:
+    '''
+    Получить все результаты пользователя по user_id.
+    '''
+    return session.query(Result).where(Result.user_id == user_id).all()
+
+
+def get_test_results(session: Session, test_id: int) -> List[Type[Result]]:
+    '''
+    Получить все результаты теста по test_id.
+    '''
+    return session.query(Result).where(Result.test_id == test_id).all()
 
 
 def create(session: Session, obj_create: ResultCreate) -> Result:

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional, Type
 
-from server.src.entities.schema import Tasks_Test
-from server.src.entities.tasks_tests.model import (
+from src.entities.schema import Tasks_Test
+from src.entities.tasks_tests.model import (
     TasksTestCreate, TasksTestUpdate)
 
 
@@ -12,6 +12,13 @@ def get_one(session: Session, obj_id: int) -> Optional[Tasks_Test]:
 
 def get_all(session: Session) -> List[Type[Tasks_Test]]:
     return session.query(Tasks_Test).all()
+
+
+def get_test_tasks(session: Session, test_id: int) -> List[Type[Tasks_Test]]:
+    '''
+    Получить все задания теста по test_id.
+    '''
+    return session.query(Tasks_Test).where(Tasks_Test.test_id == test_id).all()
 
 
 def create(session: Session, obj_create: TasksTestCreate) -> Tasks_Test:

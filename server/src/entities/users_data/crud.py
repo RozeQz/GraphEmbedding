@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional, Type
 
-from server.src.entities.schema import UsersData
-from server.src.entities.users_data.schemas import UsersDataCreate, UsersDataUpdate
+from src.entities.schema import UsersData
+from src.entities.users_data.model import UsersDataCreate, UsersDataUpdate
 
 
 def get_one(session: Session, obj_id: int) -> Optional[UsersData]:
@@ -11,6 +11,13 @@ def get_one(session: Session, obj_id: int) -> Optional[UsersData]:
 
 def get_all(session: Session) -> List[Type[UsersData]]:
     return session.query(UsersData).all()
+
+
+def get_by_fio(session: Session, firstname: str,
+               lastname: str, midname: str) -> Optional[List[Type[UsersData]]]:
+    return session.query(UsersData).where(UsersData.firstname == firstname and
+                                          UsersData.lastname == lastname and
+                                          UsersData.midname == midname).all()
 
 
 def create(session: Session, obj_create: UsersDataCreate) -> UsersData:
