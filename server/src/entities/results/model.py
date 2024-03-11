@@ -2,10 +2,10 @@ from pydantic import BaseModel, ConfigDict
 
 
 class ResultBase(BaseModel):
-    question: str
-    answer: str
-    type: int
-    options: str
+    user_id: int
+    test_id: int
+    points: float
+    answers: dict
 
 
 class Result(ResultBase):

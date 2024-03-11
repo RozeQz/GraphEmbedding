@@ -115,5 +115,5 @@ class Result(Base):
         ForeignKey("Tests.id"),
         nullable=False
     )
-    point: Mapped[float] = mapped_column(nullable=False)
+    points: Mapped[float] = mapped_column(nullable=False)
     answer: Mapped[str] = mapped_column()
