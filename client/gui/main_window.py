@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QMainWindow
 
 from gui.ui_main_window import Ui_MainWindow
 
-from gui.test_page import TestPage
+from gui.task_page import TaskPage
 from gui.profile_page import ProfilePage
 from gui.main_page import MainPage
 
@@ -18,6 +18,14 @@ class MainWindow(QMainWindow):
 
         # Путь к ассетам
         path = "client/gui/resources/"
+
+        # Привязка стиля (qss)
+        with open(path + "styles/main.qss", 'r', encoding="utf-8") as file:
+            self.setStyleSheet(file.read())
+
+        # with open(path + "styles/profile.qss", 'r', encoding="utf-8") as file:
+        #     self.profile_page.setStyleSheet(file.read())
+        #     self.task_page.setStyleSheet(file.read())
 
         # Отображение картинок
         icon = QIcon()
@@ -39,37 +47,26 @@ class MainWindow(QMainWindow):
         # Создание страниц для отображения в stacked widget
         self.main_page = MainPage(self)
         self.profile_page = ProfilePage(self)
-        self.test_page = TestPage(self)
+        self.task_page = TaskPage(self)
 
         # Инициализация первой страницы
         self.ui.stackedWidget.addWidget(self.main_page)
         self.ui.stackedWidget.setCurrentWidget(self.main_page)
 
-        # Привязка стиля (qss)
-        with open(path + "styles/main.qss", 'r', encoding="utf-8") as file:
-            self.setStyleSheet(file.read())
-
-        with open(path + "styles/profile.qss", 'r', encoding="utf-8") as file:
-            self.profile_page.setStyleSheet(file.read())
-            self.test_page.setStyleSheet(file.read())
-
-        with open(path + "styles/main.qss", 'r', encoding="utf-8") as file:
-            self.main_page.setStyleSheet(file.read())
-
         # Добавление страниц
-        self.ui.stackedWidget.addWidget(self.test_page)
+        self.ui.stackedWidget.addWidget(self.task_page)
         self.ui.stackedWidget.addWidget(self.profile_page)
 
         # Обработка нажатия на кнопок
         self.ui.lbl_graph_emb.mouseReleaseEvent = self.show_graph_emb_page
-        self.ui.lbl_testing.mouseReleaseEvent = self.show_testing_page
+        self.ui.lbl_tasks.mouseReleaseEvent = self.show_testing_page
         self.ui.lbl_exit.mouseReleaseEvent = self.close
         self.ui.lbl_logo.mouseReleaseEvent = self.show_main_page
         self.ui.lbl_profile.mouseReleaseEvent = self.show_profile_page
 
     def show_testing_page(self, event):
         event.accept()
-        self.ui.stackedWidget.setCurrentWidget(self.test_page)
+        self.ui.stackedWidget.setCurrentWidget(self.task_page)
 
     def show_profile_page(self, event):
         event.accept()

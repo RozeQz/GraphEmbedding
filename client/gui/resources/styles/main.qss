@@ -1,4 +1,4 @@
-QLabel {
+MainWindow QLabel {
 	font-size: 26pt;
 	font-weight: 75;
 	color: rgb(255, 255, 255);
@@ -6,31 +6,43 @@ QLabel {
 	margin-left: 32;
 }
 
-QLabel#lbl_logo {
+MainWindow QLabel#lbl_logo {
     margin-left: 0;
     margin-bottom: 30;
     margin-top: 50;
 }
 
-QLabel#lbl_arrow {
+MainWindow QLabel#lbl_arrow {
     margin-left: 0;
 }
 
-QLabel#lbl_exit {
+MainWindow QLabel#lbl_exit {
     margin-top: 30;
     margin-bottom: 50;
 }
 
-QLabel:hover {
+MainWindow QLabel:hover {
 	color: rgb(12, 140, 233);
 }
 
-QPushButton {
+MainWindow QPushButton {
     color: rgb(255, 255, 255);
     background-color: rgb(12, 140, 233);
     border-radius: 10px;
 }
 
-QFrame {
+MainWindow QFrame {
     background-color: rgb(255, 255, 255);
+}
+
+QWidget QLabel {
+    font-size: 26pt;
+	font-weight: 75;
+	color: rgb(0, 0, 0);
+	text-align: left;
+	margin-left: 32;
+}
+
+QWidget QLabel:hover {
+	color: rgb(0, 0, 0);
 }
