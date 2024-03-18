@@ -31,25 +31,39 @@ class Task():
         Проверяет, правильный ли дан ответ на задание.
 
         Args:
-        answer (str): Полученный ответ.
+        answer (List): Полученный ответ.
 
         Returns:
         bool: True если ответ правильный, иначе False.
         '''
-        # В заданиях с вводом ответа проверяется наличие опечаток
-        if self.task_type == 3:
-            if Task.is_misspell(self.correct_answer, answer):
+        # В первом типе заданий правильный ответ один
+        if self.task_type == 1:
+            if self.correct_answer == answer:
                 return True
             return False
 
+        # В задании с множественным ответом надо проверять множество ответов
+        if self.task_type == 2:
+            if set(self.correct_answer) == set(answer):
+                return True
+            return False
+
+        # В заданиях с вводом ответа проверяется наличие опечаток
+        if self.task_type == 3:
+            if Task.is_misspell(self.correct_answer[0], answer[0]):
+                return True
+            return False
+
+        # В задания с установлением правильной последовательности, проверяется
+        # правильность принятого массива
+        if self.task_type == 4:
+            for i, _ in enumerate(self.correct_answer):
+                if self.correct_answer[i].lower() != answer[i].lower():
+                    return False
+            return True
+
         # if answer.isdigit():
         #     answer = int(answer)
-
-        # В остальных задания правильный ответ лишь один
-        for correct_answer in self.correct_answer:
-            if str(answer).lower() == str(correct_answer).lower():
-                return True
-        return False
 
     @staticmethod
     def is_misspell(correct_text, text) -> bool:

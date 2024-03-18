@@ -68,6 +68,8 @@ class Ui_TaskPage(object):
         self.btn_get_task.setObjectName("btn_get_task")
         self.verticalLayout_2.addWidget(self.btn_get_task)
         self.lbl_task = QtWidgets.QLabel(TaskPage)
+        self.lbl_task.setMaximumSize(QtCore.QSize(700, 16777215))
+        self.lbl_task.setWordWrap(True)
         self.lbl_task.setObjectName("lbl_task")
         self.verticalLayout_2.addWidget(self.lbl_task)
         self.btn_check = QtWidgets.QPushButton(TaskPage)
