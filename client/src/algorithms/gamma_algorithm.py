@@ -3,6 +3,7 @@ import math
 
 from typing import List
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 import numpy as np
 import networkx as nx
 
@@ -315,7 +316,7 @@ class GammaAlgorithm(Algorithm):
 
         return Faces(int_faces, ext_face)
 
-    def visualize(self) -> None:
+    def visualize(self) -> Figure:
         '''
         Визуализирует гамма-алгоритм как вложение Татта.
 
@@ -331,7 +332,7 @@ class GammaAlgorithm(Algorithm):
 
         graph = self.graph.adjacency_matrix_to_edge_list()
         tutte = TutteEmbedding(graph, external_face)
-        tutte.run(delta=0.05)
+        return tutte.run(delta=0.05)
 
 
 class Faces:

@@ -31,6 +31,17 @@ class Graph:
     def __len__(self):
         return self.size
 
+    def count_edges(self) -> int:
+        """
+        Считает количество ребер в графе.
+        """
+        edges = 0
+        for i in range(self.size):
+            for j in range(self.size):
+                if self.matrix[i][j] == 1:
+                    edges += 1
+        return edges
+
     def add_edge(self, k, m) -> None:
         """
         Добавляет ребро между вершинами k и m в графе.
@@ -143,10 +154,13 @@ class Graph:
             connected (bool): Должен ли быть граф связным.
         '''
         graph = Graph.generate_random_graph(n, p, connected)
-        G = nx.Graph(np.array(graph.matrix))
-        if nx.is_planar(G):
+        if graph.is_planar():
             return graph
         return Graph.generate_random_planar_graph(n, p, connected)
+
+    def is_planar(self):
+        G = nx.Graph(np.array(self.matrix), nodetype=int)
+        return nx.is_planar(G)
 
     def show_graph(self, layout: Callable =
                    nx.spring_layout) -> Dict[int, List[float]]:

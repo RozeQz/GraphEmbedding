@@ -6,6 +6,7 @@ from gui.ui_main_window import Ui_MainWindow
 from gui.task_page import TaskPage
 from gui.profile_page import ProfilePage
 from gui.main_page import MainPage
+from gui.graph_page import GraphPage
 
 
 class MainWindow(QMainWindow):
@@ -48,6 +49,7 @@ class MainWindow(QMainWindow):
         self.main_page = MainPage(self)
         self.profile_page = ProfilePage(self)
         self.task_page = TaskPage(self)
+        self.graph_page = GraphPage(self)
 
         # Инициализация первой страницы
         self.ui.stackedWidget.addWidget(self.main_page)
@@ -56,9 +58,10 @@ class MainWindow(QMainWindow):
         # Добавление страниц
         self.ui.stackedWidget.addWidget(self.task_page)
         self.ui.stackedWidget.addWidget(self.profile_page)
+        self.ui.stackedWidget.addWidget(self.graph_page)
 
         # Обработка нажатия на кнопок
-        self.ui.lbl_graph_emb.mouseReleaseEvent = self.show_graph_emb_page
+        self.ui.lbl_graph_emb.mouseReleaseEvent = self.show_graph_page
         self.ui.lbl_tasks.mouseReleaseEvent = self.show_testing_page
         self.ui.lbl_exit.mouseReleaseEvent = self.close
         self.ui.lbl_logo.mouseReleaseEvent = self.show_main_page
@@ -76,9 +79,9 @@ class MainWindow(QMainWindow):
         event.accept()
         self.ui.stackedWidget.setCurrentWidget(self.main_page)
 
-    def show_graph_emb_page(self, event):
+    def show_graph_page(self, event):
         event.accept()
-        self.ui.stackedWidget.setCurrentWidget(self.graph_emb_page)
+        self.ui.stackedWidget.setCurrentWidget(self.graph_page)
 
     def on_resize(self, event):
         event.accept()

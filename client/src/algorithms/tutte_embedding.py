@@ -5,6 +5,7 @@ Tutte Embedding
 import numpy as np
 from numpy.linalg import solve
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 import networkx as nx
 from collections import defaultdict
 from collections.abc import ValuesView
@@ -23,10 +24,10 @@ class TutteEmbedding(Algorithm):
         self.graph = graph
         self.outer_face = outer_face
 
-    def run(self, delta: float = 0.05) -> None:
+    def run(self, delta: float = 0.05) -> Figure:
         '''
         Выполняет алгоритм, вычисляет позицию каждой вершины
-        и рисует полученную укладку на плоскости.
+        и возвращает отрисовку полученной укладки на плоскости.
 
         Args:
         delta (float): позиция для сдвига для гарантии плоской укладки.
@@ -45,7 +46,7 @@ class TutteEmbedding(Algorithm):
         self.annotate(result)
 
         plt.axis('off')
-        plt.show()
+        return plt.gcf()
 
     @staticmethod
     def add_line(point1: Point, point2: Point) -> None:
