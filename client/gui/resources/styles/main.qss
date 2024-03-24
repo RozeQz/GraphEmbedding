@@ -42,6 +42,24 @@ GraphPage QLabel {
 	text-align: left;
 }
 
+TestPage QLabel {
+    font-size: 16pt;
+	font-weight: 75;
+	color: rgb(0, 0, 0);
+	text-align: left;
+}
+
+TestPage QLabel#lbl_clock {
+	margin-left: 0;
+}
+
+TestStartPage QLabel {
+    font-size: 16pt;
+	font-weight: 75;
+	color: rgb(0, 0, 0);
+	margin-bottom: 40px;
+}
+
 QWidget QLabel:hover {
 	color: rgb(0, 0, 0);
 }

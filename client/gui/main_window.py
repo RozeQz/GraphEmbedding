@@ -7,6 +7,8 @@ from gui.task_page import TaskPage
 from gui.profile_page import ProfilePage
 from gui.main_page import MainPage
 from gui.graph_page import GraphPage
+from gui.test_page import TestPage
+from gui.test_start_page import TestStartPage
 
 
 class MainWindow(QMainWindow):
@@ -50,6 +52,8 @@ class MainWindow(QMainWindow):
         self.profile_page = ProfilePage(self)
         self.task_page = TaskPage(self)
         self.graph_page = GraphPage(self)
+        self.test_start_page = TestStartPage(self)
+        self.test_page = TestPage(self)
 
         # Инициализация первой страницы
         self.ui.stackedWidget.addWidget(self.main_page)
@@ -59,15 +63,18 @@ class MainWindow(QMainWindow):
         self.ui.stackedWidget.addWidget(self.task_page)
         self.ui.stackedWidget.addWidget(self.profile_page)
         self.ui.stackedWidget.addWidget(self.graph_page)
+        self.ui.stackedWidget.addWidget(self.test_start_page)
+        self.ui.stackedWidget.addWidget(self.test_page)
 
         # Обработка нажатия на кнопок
         self.ui.lbl_graph_emb.mouseReleaseEvent = self.show_graph_page
-        self.ui.lbl_tasks.mouseReleaseEvent = self.show_testing_page
+        self.ui.lbl_tasks.mouseReleaseEvent = self.show_task_page
         self.ui.lbl_exit.mouseReleaseEvent = self.close
         self.ui.lbl_logo.mouseReleaseEvent = self.show_main_page
         self.ui.lbl_profile.mouseReleaseEvent = self.show_profile_page
+        self.ui.lbl_testing.mouseReleaseEvent = self.show_test_start_page
 
-    def show_testing_page(self, event):
+    def show_task_page(self, event):
         event.accept()
         self.ui.stackedWidget.setCurrentWidget(self.task_page)
 
@@ -82,6 +89,10 @@ class MainWindow(QMainWindow):
     def show_graph_page(self, event):
         event.accept()
         self.ui.stackedWidget.setCurrentWidget(self.graph_page)
+
+    def show_test_start_page(self, event):
+        event.accept()
+        self.ui.stackedWidget.setCurrentWidget(self.test_start_page)
 
     def on_resize(self, event):
         event.accept()
