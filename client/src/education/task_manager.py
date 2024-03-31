@@ -1,14 +1,17 @@
 from typing import List
+import random
 
 from src.education.database import DataBase
 from src.education.task import Task
 from src.education.testing import Testing
 
+from src.api.tasks_controller import get_tasks_by_type
+
 
 class TaskManager():
 
     def __init__(self):
-        self.db = DataBase()
+        pass
 
     def generate_tasks_by_type(self,
                                num_tasks: int,
@@ -24,20 +27,17 @@ class TaskManager():
             List[Task]: Список объектов типа Task.
         '''
         tasks = []
-        unique_numbers = set()  # Множество для хранения уникальных номеров заданий
-        while len(tasks) < num_tasks:
-            row = self.db.get_tasks_by_type(task_type).sample()
-            number = row.index[0]
-            if number in unique_numbers:
-                continue  # Пропустить дубликаты
-            unique_numbers.add(number)
-            question = row['Вопрос'].values[0]
-            correct_answer = row['Ответ'].values[0]
-            task_type = row['Тип'].values[0]
-            options = row['Примечание'].values[0]
-            task = Task(number, question, correct_answer, task_type, options)
-            tasks.append(task)
-        return tasks
+
+        all_tasks = get_tasks_by_type(task_type)
+
+        for task in all_tasks:
+            tasks.append(Task(number=task["id"],
+                              question=task["question"],
+                              correct_answer=task["answer"],
+                              task_type=task["type"],
+                              options=task["options"]))
+
+        return random.choices(tasks, k=num_tasks)
 
     def create_test(self, tasks: List[Task], time: float = 3600) -> Testing:
         '''
@@ -51,3 +51,20 @@ class TaskManager():
             Testing: Сгенерированный тест.
         '''
         return Testing(tasks, time)
+
+    def create_classic_tests(self, time: float = 3600):
+        '''
+        Создает классический тест: по 2 задания каждого типа.
+
+        Args:
+            time (float): Время тестирования в секундах. По умолчанию тестирование длится час.
+
+        Returns:
+            Testing: Сгенерированный тест.
+        '''
+        tasks = []
+        tasks += self.generate_tasks_by_type(num_tasks=2, task_type=1)
+        tasks += self.generate_tasks_by_type(num_tasks=2, task_type=2)
+        tasks += self.generate_tasks_by_type(num_tasks=2, task_type=3)
+        tasks += self.generate_tasks_by_type(num_tasks=2, task_type=4)
+        return self.create_test(tasks, time)

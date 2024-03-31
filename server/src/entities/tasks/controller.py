@@ -34,8 +34,11 @@ async def get_task(task_id: int,
     return task
 
 
-@router.get("/", description="Получить все задания")
-async def get_tasks(session: Session = Depends(get_session)):
+@router.get("/", description="Получить все задания с учетом query параметров")
+async def get_tasks(task_type: int = None,
+                    session: Session = Depends(get_session)):
+    if task_type is not None:
+        return crud.get_by_type(session, task_type)
     return crud.get_all(session)
 
 

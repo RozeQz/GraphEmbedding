@@ -13,6 +13,10 @@ def get_all(session: Session) -> List[Type[Task]]:
     return session.query(Task).all()
 
 
+def get_by_type(session: Session, task_type: int) -> List[Type[Task]]:
+    return session.query(Task).where(Task.type == task_type).all()
+
+
 def create(session: Session, obj_create: TaskCreate) -> Task:
     obj_dict = obj_create.model_dump()
     task = Task(**obj_dict)
