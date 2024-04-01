@@ -16,6 +16,18 @@ MainWindow QLabel#lbl_arrow {
     margin-left: 0;
 }
 
+MainWindow QLabel#lbl_tasks {
+	margin-left: 52;
+}
+
+MainWindow QLabel#lbl_testing {
+	margin-left: 52;
+}
+
+MainWindow QLabel#lbl_theory {
+	margin-left: 52;
+}
+
 MainWindow QLabel#lbl_exit {
     margin-top: 30;
     margin-bottom: 50;

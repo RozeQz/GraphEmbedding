@@ -176,3 +176,20 @@ def check_answer(widget, task) -> bool:
         result = task.check_answer(answer)
 
     return result
+
+
+def highlight_label(widget, label):
+    '''
+    Делает все лейблы меню белыми, а заданный лейбл меню синим.
+    '''
+    labels = [widget.ui.lbl_profile,
+              widget.ui.lbl_theory,
+              widget.ui.lbl_tasks,
+              widget.ui.lbl_testing,
+              widget.ui.lbl_graph_emb,
+              widget.ui.lbl_exit]
+
+    for lbl in labels:
+        lbl.setStyleSheet("color: rgb(255, 255, 255)")
+
+    label.setStyleSheet("color: rgb(12, 140, 233)")

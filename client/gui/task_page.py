@@ -10,7 +10,7 @@ from gui.ui_task_page import Ui_TaskPage
 
 from src.education.task import Task
 from src.api.tasks_controller import get_all_tasks, create_task
-from utils.gui import clearLayout, clearLineEdits, init_type_1, init_type_2, init_type_3, init_type_4, check_answer
+from utils.gui import clearLayout, clearLineEdits, init_type_1, init_type_2, init_type_3, init_type_4, check_answer, highlight_label
 
 
 class TaskPage(QWidget):
@@ -18,6 +18,8 @@ class TaskPage(QWidget):
         super(TaskPage, self).__init__(parent)
         self.ui = Ui_TaskPage()
         self.ui.setupUi(self)
+
+        self.parent = parent
 
         # Шаблон для расположения вариантов ответа
         self.options_layout = QVBoxLayout()
@@ -30,6 +32,10 @@ class TaskPage(QWidget):
         self.ui.btn_get_task.clicked.connect(self.get_task)
         self.ui.btn_add_task.clicked.connect(self.create_task)
         self.ui.btn_check.clicked.connect(self.check_answer)
+
+    def showEvent(self, event):
+        # Вызывается при открытии страницы
+        highlight_label(self.parent, self.parent.ui.lbl_tasks)
 
     def get_task(self):
         tasks = get_all_tasks()

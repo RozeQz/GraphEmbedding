@@ -21,6 +21,7 @@ from gui.mplcanvas import MplCanvas
 
 from src.algorithms.gamma_algorithm import GammaAlgorithm
 from src.algorithms.annealing_algorithm import AnnealingAlgorithm
+from utils.gui import highlight_label
 
 
 class GraphPage(QWidget):
@@ -28,6 +29,8 @@ class GraphPage(QWidget):
         super(GraphPage, self).__init__(parent)
         self.ui = Ui_GraphPage()
         self.ui.setupUi(self)
+
+        self.parent = parent
 
         self.graph = None
 
@@ -45,6 +48,10 @@ class GraphPage(QWidget):
         self.ui.btn_file.clicked.connect(self.open_file)
         self.ui.btn_draw.clicked.connect(self.draw_graph)
         self.ui.btn_embed.clicked.connect(self.embed_graph)
+
+    def showEvent(self, event):
+        # Вызывается при открытии страницы
+        highlight_label(self.parent, self.parent.ui.lbl_graph_emb)
 
     def open_file(self):
         options = QFileDialog.Options()

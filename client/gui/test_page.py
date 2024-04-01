@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (
 from gui.ui_test_page import Ui_TestPage
 
 from src.education.task_manager import TaskManager
-from utils.gui import clearLayout, init_type_1, init_type_2, init_type_3, init_type_4, check_answer
+from utils.gui import clearLayout, init_type_1, init_type_2, init_type_3, init_type_4, check_answer, highlight_label
 
 
 class TestPage(QWidget):
@@ -16,6 +16,8 @@ class TestPage(QWidget):
         super(TestPage, self).__init__(parent)
         self.ui = Ui_TestPage()
         self.ui.setupUi(self)
+
+        self.parent = parent
 
         # Путь к ассетам
         path = "client/gui/resources/"
@@ -40,6 +42,8 @@ class TestPage(QWidget):
     def showEvent(self, event):
         # Вызывается при открытии страницы
         self.start_test()
+
+        highlight_label(self.parent, self.parent.ui.lbl_testing)
 
     def closeEvent(self, event):
         # Вызывается при закрытии страницы
