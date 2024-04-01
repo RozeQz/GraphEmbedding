@@ -1,4 +1,5 @@
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QTimer, QDateTime
 from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
@@ -24,8 +25,8 @@ class TestPage(QWidget):
         self.ui.lbl_clock.setPixmap(clock)
 
         # Инициализация тестирования
-        self.tm = TaskManager()
-        self.test = self.generate_test()
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.updateTime)
 
         # Инициализация всего нужного
         self.options_layout = QVBoxLayout()
@@ -33,12 +34,35 @@ class TestPage(QWidget):
         self.order = None
 
         self.task_num = 0
-        self.show_task(self.task_num)
 
         self.ui.btn_answer.clicked.connect(self.go_to_next_task)
 
+    def showEvent(self, event):
+        # Вызывается при открытии страницы
+        self.start_test()
+
+    def closeEvent(self, event):
+        # Вызывается при закрытии страницы
+        self.stop_test()
+
+    def start_test(self):
+        self.tm = TaskManager()
+        self.test = self.generate_test()
+        self.remaining_time = self.test.time
+
+        self.timer.start(1000)  # каждую секунду
+        self.updateTime()
+
+        # Показать первое задание
+        self.show_task(self.task_num)
+
+    def stop_test(self):
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+        self.show_results()
+
     def generate_test(self):
-        return self.tm.create_classic_tests(5)
+        return self.tm.create_classic_tests()
 
     def show_task(self, task_num: int):
         clearLayout(self.options_layout)
@@ -65,7 +89,17 @@ class TestPage(QWidget):
         if self.task_num < len(self.test.tasks):
             self.show_task(self.task_num)
         else:
-            self.show_results()
+            self.stop_test()
+
+    def updateTime(self):
+        minutes = self.remaining_time // 60
+        seconds = self.remaining_time % 60
+        self.ui.lbl_time.setText(f"До окончания тестирования: {minutes:02}:{seconds:02}")
+
+        self.remaining_time -= 1
+
+        if self.remaining_time < 0:
+            self.stop_test()
 
     def show_results(self):
         self.ui.lbl_status.setText("Тестирование завершено!")

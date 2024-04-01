@@ -1,7 +1,4 @@
 from typing import List
-import threading
-import sys
-from termcolor import colored   # Убрать потом
 
 from src.education.task import Task
 
@@ -28,7 +25,7 @@ class Testing():
 
     Attributes:
         tasks (List[Task]): Список заданий, включенных в тестирование.
-        timer (threading.Timer): Таймер для остановки тестирования.
+        time (float): Время тестирования в секундах.
         points (int): Количество полученных баллов за тестирование.
         current_task_index (int): Используется при итерировании по заданиям.
 
@@ -45,7 +42,7 @@ class Testing():
             time (float): Время тестирования в секундах. По умолчанию тестирование длится час.
         '''
         self.tasks = tasks
-        self.timer = threading.Timer(time, self.stop)
+        self.time = time
         self.points = 0
         self.current_task_index = None
 
@@ -59,55 +56,3 @@ class Testing():
             self.current_task_index += 1
             return current_task
         raise StopIteration
-
-    def start(self) -> None:
-        '''
-        Запуск тестирования.
-        '''
-        self.timer.start()
-        print('Тестирование началось')
-
-        for task in self:
-            print(task.question)
-            for answer in task.options:
-                print(answer, end='\t')
-            print()
-            answer = input()
-            if task.check_answer(answer):
-                print(colored('Верно!', 'green'))
-                self.points += 1
-            else:
-                print(colored('Неверно!', 'red'))
-            print()
-        if self.get_state():
-            self.stop(timeout=False)
-
-    def stop(self, timeout: bool = True) -> None:
-        '''
-        Остановка тестирования.
-
-        Args:
-            timeout (bool): Вышло ли время тестирования.
-        '''
-        try:
-            if not timeout:
-                self.timer.cancel()
-                message = "Вы выполнили все задания. Тестирование завершено!"
-            else:
-                message = "Время вышло! Тестирование завершено!"
-            raise StopTestingException(message)
-        except StopTestingException as e:
-            self.__stop_handler(e)
-
-    def __stop_handler(self, exception):
-        print(exception.message)
-        print(f'Ваш результат: {self.points}/{len(self.tasks)}')
-
-    def get_state(self) -> bool:
-        '''
-        Возвращает статус тестирования.
-
-        Returns:
-            bool: True если тестирование еще не завершено, иначе False.
-        '''
-        return self.timer.is_alive()
