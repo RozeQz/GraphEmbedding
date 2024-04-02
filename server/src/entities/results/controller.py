@@ -12,44 +12,33 @@ router = APIRouter(tags=["Results"], prefix="/planared/results")
 
 
 @router.post("/", description="Создать результат")
-async def create_user_group(
-    user_group: ResultCreate, session: Session = Depends(get_session)
+async def create_result(
+    result: ResultCreate, session: Session = Depends(get_session)
 ):
-    return crud.create(session, user_group)
+    return crud.create(session, result)
 
 
-@router.get("/{user_id}/",
-            description="Получить список всех результатов пользователя")
-async def get_user_results(user_id: int,
-                           session: Session = Depends(get_session)):
-    user_results = crud.get_user_results(session, user_id)
-
-    if not user_results:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with {user_id=} not found",
-        )
-
-    return user_results
-
-
-@router.get("/{test_id}/",
-            description="Получить список всех результатов теста")
-async def get_test_results(test_id: int,
-                           session: Session = Depends(get_session)):
-    test_results = crud.get_test_results(session, test_id)
-
-    if not test_results:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Test with {test_id=} not found",
-        )
-
-    return test_results
-
-
-@router.get("/", description="Получить все результаты")
-async def get_results(session: Session = Depends(get_session)):
+@router.get("/",
+            description="Получить все результаты с учетом query параметров")
+async def get_results(user_id: int = None,
+                      test_id: int = None,
+                      session: Session = Depends(get_session)):
+    if user_id is not None:
+        user_results = crud.get_user_results(session, user_id)
+        if not user_results:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with {user_id=} not found",
+            )
+        return user_results
+    if test_id is not None:
+        test_results = crud.get_test_results(session, test_id)
+        if not test_results:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Test with {test_id=} not found",
+            )
+        return test_results
     return crud.get_all(session)
 
 

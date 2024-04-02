@@ -1,8 +1,10 @@
+from typing import Optional
+
 from pydantic import BaseModel, ConfigDict
 
 
 class TestBase(BaseModel):
-    name: str
+    name: Optional[str] = None
 
 
 class Test(TestBase):

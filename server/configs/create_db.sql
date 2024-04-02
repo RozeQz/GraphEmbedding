@@ -88,6 +88,7 @@ CREATE TABLE "Results" (
     "test_id" int NOT NULL,
     "points" float NOT NULL,
     "answres" json,
+    "time_spent" int,
     PRIMARY KEY ("id"),
     CONSTRAINT "FK_Result.user_id"
         FOREIGN KEY ("user_id")

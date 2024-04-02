@@ -1,10 +1,12 @@
+from typing import Optional
+
 from pydantic import BaseModel, ConfigDict
 
 
 class UsersDataBase(BaseModel):
     firstname: str
     lastname: str
-    midname: str
+    midname: Optional[str]
     email: str
 
 

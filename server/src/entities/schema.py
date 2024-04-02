@@ -42,7 +42,7 @@ class UsersData(Base):
 
     firstname: Mapped[str] = mapped_column(nullable=False)
     lastname: Mapped[str] = mapped_column(nullable=False)
-    midname: Mapped[str] = mapped_column()
+    midname: Mapped[str] = mapped_column(nullable=True)
     email: Mapped[str] = mapped_column(nullable=False)
 
 
@@ -51,6 +51,7 @@ class User(Base):
 
     login: Mapped[str] = mapped_column(nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
+    role_id:  Mapped[int] = mapped_column(nullable=False)   # Потом переделаю под таблицу
     user_data_id: Mapped[int] = mapped_column(
         ForeignKey("Users_data.id", ondelete="CASCADE"),
         nullable=False
@@ -88,7 +89,7 @@ class Task(Base):
 class Test(Base):
     __tablename__ = "Tests"
 
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=True)
 
 
 class Tasks_Test(Base):
@@ -116,4 +117,5 @@ class Result(Base):
         nullable=False
     )
     points: Mapped[float] = mapped_column(nullable=False)
-    answer: Mapped[str] = mapped_column()
+    answers: Mapped[str] = mapped_column(nullable=True)
+    time_spent:  Mapped[int] = mapped_column(nullable=True)
