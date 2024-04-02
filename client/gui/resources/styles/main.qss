@@ -59,6 +59,7 @@ TestPage QLabel {
 	font-weight: 75;
 	color: rgb(0, 0, 0);
 	text-align: left;
+	margin-left: 0;
 }
 
 TestPage QLabel#lbl_clock {

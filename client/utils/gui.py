@@ -26,6 +26,19 @@ def clearLineEdits(ui):
         child.clear()
 
 
+def hide_layout_items(layout):
+    if layout is None:
+        return
+
+    for i in range(layout.count()):
+        item = layout.itemAt(i)
+        widget = item.widget()
+        if widget is not None:
+            widget.hide()
+        else:
+            hide_layout_items(item.layout())
+
+
 def init_type_1(widget, question_layout, prev_widget, task):
     options = task.options
 
