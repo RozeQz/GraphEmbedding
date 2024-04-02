@@ -5,7 +5,8 @@ from PyQt5.QtWidgets import (
     QWidget,
     QButtonGroup,
     QLabel,
-    QFormLayout)
+    QFormLayout,
+    QMessageBox)
 
 from gui.ui_test_page import Ui_TestPage
 
@@ -18,7 +19,8 @@ from utils.gui import (
     init_type_4,
     check_answer,
     highlight_label,
-    hide_layout_items)
+    hide_layout_items,
+    show_layout_items)
 
 
 MAX_COLUMNS = 3
@@ -41,36 +43,46 @@ class TestPage(QWidget):
         # Инициализация тестирования
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.updateTime)
+        self.test = None
 
         # Инициализация всего нужного
         self.options_layout = QVBoxLayout()
         self.group_options = QButtonGroup()
         self.order = None
 
-        self.task_num = 0
-
         self.ui.btn_answer.clicked.connect(self.go_to_next_task)
+        self.ui.btn_end.clicked.connect(self.forced_stop)
 
     def showEvent(self, event):
         # Вызывается при открытии страницы
-        self.start_test()
+        # Если тест еще не начат или уже закончен, то запускаем тестирование
+        if (self.test is None) or (not self.timer.isActive()):
+            self.start_test()
 
         highlight_label(self.parent, self.parent.ui.lbl_testing)
-
-    def closeEvent(self, event):
-        # Вызывается при закрытии страницы
-        self.stop_test()
 
     def start_test(self):
         self.tm = TaskManager()
         self.test = self.generate_test()
+        self.task_num = 0
         self.remaining_time = self.test.time
 
         self.timer.start(1000)  # каждую секунду
         self.updateTime()
 
+        # Выводим содержимое главных лейаутов
+        show_layout_items(self.ui.hbox_top)
+        show_layout_items(self.ui.hbox_main)
+        show_layout_items(self.ui.hbox_btn_answer)
+        # Убираем результаты
+        hide_layout_items(self.ui.vbox_results)
+
         # Показать сетку заданий
         self.show_grid_tasks()
+
+        # Изначально мы на первом вопросе
+        for i in range(len(self.test.tasks)):
+            self.highlight_grid(i, 'grey')
 
         # Показать первое задание
         self.show_task(self.task_num)
@@ -79,9 +91,12 @@ class TestPage(QWidget):
         if hasattr(self, 'timer') and self.timer.isActive():
             self.timer.stop()
 
+        # Убираем содержимое главных лейаутов
         hide_layout_items(self.ui.hbox_top)
         hide_layout_items(self.ui.hbox_main)
         hide_layout_items(self.ui.hbox_btn_answer)
+        # Выводим результаты
+        show_layout_items(self.ui.vbox_results)
 
         self.show_results()
 
@@ -140,6 +155,9 @@ class TestPage(QWidget):
                 elif color == 'green':
                     with open("client/gui/resources/styles/grid/grid-green.qss", 'r', encoding="utf-8") as file:
                         widget.setStyleSheet(file.read())
+                else:
+                    with open("client/gui/resources/styles/grid/grid-grey.qss", 'r', encoding="utf-8") as file:
+                        widget.setStyleSheet(file.read())
 
     def go_to_next_task(self):
         if check_answer(self, self.test.tasks[self.task_num]):
@@ -165,21 +183,29 @@ class TestPage(QWidget):
             self.stop_test()
 
     def show_results(self):
-
-        results = QFormLayout()
-
-        self.ui.verticalLayout.addWidget(QLabel("Тестирование завершено!"))
-        self.ui.verticalLayout.addLayout(results)
-
-        results.setWidget(0, QFormLayout.LabelRole, QLabel("Ваш результат: "))
-        results.setWidget(0, QFormLayout.FieldRole,
-                          QLabel(f"{self.test.points}/{len(self.test.tasks)}"))
+        self.ui.fbox_results.setWidget(0, QFormLayout.LabelRole,
+                                       QLabel("Ваш результат: "))
+        self.ui.fbox_results.setWidget(0, QFormLayout.FieldRole,
+                                       QLabel(f"{self.test.points}/{len(self.test.tasks)}"))
 
         time = self.test.time - self.remaining_time
         minutes = time // 60
         seconds = time % 60
 
-        results.setWidget(1, QFormLayout.LabelRole,
-                          QLabel("Время тестирования: "))
-        results.setWidget(1, QFormLayout.FieldRole,
-                          QLabel(f"{minutes:02}:{seconds:02}"))
+        self.ui.fbox_results.setWidget(1, QFormLayout.LabelRole,
+                                       QLabel("Время тестирования: "))
+        self.ui.fbox_results.setWidget(1, QFormLayout.FieldRole,
+                                       QLabel(f"{minutes:02}:{seconds:02}"))
+
+    def forced_stop(self):
+        answer = QMessageBox.question(
+            self,
+            'Подтверждение',
+            'Вы уверены, что хотите завершить тестирование? Вы ответили ещё не на все вопросы.',
+            QMessageBox.StandardButton.Yes |
+            QMessageBox.StandardButton.No
+        )
+        if answer == QMessageBox.StandardButton.Yes:
+            self.stop_test()
+        else:
+            pass

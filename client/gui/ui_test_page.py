@@ -106,6 +106,15 @@ class Ui_TestPage(object):
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.hbox_btn_answer.addItem(spacerItem3)
         self.verticalLayout.addLayout(self.hbox_btn_answer)
+        self.vbox_results = QtWidgets.QVBoxLayout()
+        self.vbox_results.setObjectName("vbox_results")
+        self.lbl_test_end = QtWidgets.QLabel(TestPage)
+        self.lbl_test_end.setObjectName("lbl_test_end")
+        self.vbox_results.addWidget(self.lbl_test_end)
+        self.fbox_results = QtWidgets.QFormLayout()
+        self.fbox_results.setObjectName("fbox_results")
+        self.vbox_results.addLayout(self.fbox_results)
+        self.verticalLayout.addLayout(self.vbox_results)
 
         self.retranslateUi(TestPage)
         QtCore.QMetaObject.connectSlotsByName(TestPage)
@@ -120,3 +129,4 @@ class Ui_TestPage(object):
         self.btn_end.setText(_translate("TestPage", "Завершить\n"
 "тестирование"))
         self.btn_answer.setText(_translate("TestPage", "Ответить"))
+        self.lbl_test_end.setText(_translate("TestPage", "Тестирование завершено!"))

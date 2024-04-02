@@ -231,6 +231,20 @@
      </item>
     </layout>
    </item>
+   <item>
+    <layout class="QVBoxLayout" name="vbox_results">
+     <item>
+      <widget class="QLabel" name="lbl_test_end">
+       <property name="text">
+        <string>Тестирование завершено!</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QFormLayout" name="fbox_results"/>
+     </item>
+    </layout>
+   </item>
   </layout>
  </widget>
  <resources/>
