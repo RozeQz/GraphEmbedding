@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict
 class UserBase(BaseModel):
     login: str
     password: str
+    role_id: int
     user_data_id: int
 
 

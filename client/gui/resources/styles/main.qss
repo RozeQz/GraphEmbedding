@@ -72,6 +72,18 @@ TestStartPage QLabel {
 	margin-bottom: 40px;
 }
 
+ProfilePage QLabel {
+    font-size: 16pt;
+	font-weight: 75;
+	color: rgb(0, 0, 0);
+}
+
+TaskPage QLabel {
+    font-size: 16pt;
+	font-weight: 75;
+	color: rgb(0, 0, 0);
+}
+
 QWidget QLabel:hover {
 	color: rgb(0, 0, 0);
 }
