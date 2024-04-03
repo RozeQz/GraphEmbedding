@@ -1,5 +1,6 @@
-from PyQt5.QtGui import QFont, QFontDatabase, QIcon, QPixmap
+from PyQt5.QtGui import QFont, QFontDatabase, QIcon, QPixmap, QImageReader
 from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtCore import QCoreApplication
 
 from gui.ui_main_window import Ui_MainWindow
 
@@ -9,6 +10,9 @@ from gui.main_page import MainPage
 from gui.graph_page import GraphPage
 from gui.test_page import TestPage
 from gui.test_start_page import TestStartPage
+
+import os
+from dotenv import load_dotenv
 
 
 class MainWindow(QMainWindow):
@@ -20,12 +24,16 @@ class MainWindow(QMainWindow):
         self.resizeEvent = self.on_resize
 
         # Путь к ассетам
-        path = "client/gui/resources/"
+        path = os.getcwd() + "/client/gui/resources/"
+
+        # Добавление форматов изображений
+        print(QImageReader.supportedImageFormats())
+        load_dotenv()
+        QCoreApplication.addLibraryPath(os.getenv("PYTHON_PATH") + '/Lib/site-packages/PyQt5/Qt5/plugins')
 
         # Привязка стиля (qss)
-        with open(path + "styles/main.qss", 'r', encoding="utf-8") as file:
+        with open(path + "styles\\main.qss", 'r', encoding="utf-8") as file:
             self.setStyleSheet(file.read())
-
         # with open(path + "styles/profile.qss", 'r', encoding="utf-8") as file:
         #     self.profile_page.setStyleSheet(file.read())
         #     self.task_page.setStyleSheet(file.read())
