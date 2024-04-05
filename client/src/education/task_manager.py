@@ -36,8 +36,10 @@ class TaskManager():
                               correct_answer=task["answer"],
                               task_type=task["type"],
                               options=task["options"]))
-
-        return random.choices(tasks, k=num_tasks)
+        try:
+            return random.sample(tasks, k=num_tasks)
+        except ValueError:
+            return random.choices(tasks, k=num_tasks)
 
     def create_test(self, tasks: List[Task], time: float = 3600) -> Testing:
         '''

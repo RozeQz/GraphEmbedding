@@ -1,3 +1,5 @@
+import json
+
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QTimer, QDateTime
 from PyQt5.QtWidgets import (
@@ -22,6 +24,8 @@ from utils.gui import (
     hide_layout_items,
     show_layout_items)
 
+from src.api.results_controller import create_result
+
 
 MAX_COLUMNS = 3
 
@@ -44,6 +48,7 @@ class TestPage(QWidget):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.updateTime)
         self.test = None
+        self.answers = []
 
         # Инициализация всего нужного
         self.options_layout = QVBoxLayout()
@@ -97,6 +102,16 @@ class TestPage(QWidget):
         hide_layout_items(self.ui.hbox_btn_answer)
         # Выводим результаты
         show_layout_items(self.ui.vbox_results)
+
+        # Отправляем результат на сервер
+        result = {
+            "user_id": 1,
+            "test_id": 1,
+            "points": self.test.points,
+            "time_spent": self.test.time - self.remaining_time,
+            "answers": str(self.answers)
+        }
+        create_result(json.dumps(result))
 
         self.show_results()
 
@@ -160,8 +175,12 @@ class TestPage(QWidget):
                         widget.setStyleSheet(file.read())
 
     def go_to_next_task(self):
-        if check_answer(self, self.test.tasks[self.task_num]):
+        print(check_answer(self, self.test.tasks[self.task_num]))
+
+        if check_answer(self, self.test.tasks[self.task_num])[0]:
             self.test.points += 1
+
+        self.answers.append(check_answer(self, self.test.tasks[self.task_num])[1])
 
         # Выделяем прошлое задание в сетке заданий
         self.highlight_grid(self.task_num, 'green')

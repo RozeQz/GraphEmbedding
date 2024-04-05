@@ -22,7 +22,7 @@ def get_results_by_user(user_id: int):
         return response.json()
     else:
         return None
-    
+
 
 def get_results_by_test(test_id: int):
     url = origin + f"/planared/results?test_id={test_id}/"

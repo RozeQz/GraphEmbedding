@@ -182,16 +182,16 @@ def get_selected_options(options_layout) -> List[QCheckBox]:
                 checked_boxes.append(checkbox)
     return checked_boxes
 
-def check_answer(widget, task) -> bool:
+def check_answer(widget, task):
     if task.task_type == 1:
-        answer = widget.group_options.checkedButton()
-        result = task.check_answer([answer.text()])
+        answer = widget.group_options.checkedButton().text()
+        result = task.check_answer([answer])
 
     elif task.task_type == 2:
-        answers = []
+        answer = []
         for checkbox in get_selected_options(widget.options_layout):
-            answers.append(checkbox.text())
-        result = task.check_answer(answers)
+            answer.append(checkbox.text())
+        result = task.check_answer(answer)
 
     elif task.task_type == 3:
         answer = widget.edt_answer.text()
@@ -201,7 +201,7 @@ def check_answer(widget, task) -> bool:
         answer = widget.order
         result = task.check_answer(answer)
 
-    return result
+    return (result, answer)
 
 
 def highlight_label(widget, label):

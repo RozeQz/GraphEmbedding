@@ -78,8 +78,8 @@ class TaskPage(QWidget):
         clearLineEdits(self)
 
     def check_answer(self):
-        self.show_result(check_answer(self, self.task))
-        return check_answer(self, self.task)
+        self.show_result(check_answer(self, self.task)[0])
+        return check_answer(self, self.task)[0]
 
     def show_result(self, result: bool):
         if result:
