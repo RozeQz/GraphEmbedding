@@ -13,8 +13,11 @@ from sqlalchemy.orm import (
 
 from sqlalchemy import (
     text,
-    ForeignKey
+    ForeignKey,
+    Column
 )
+
+from sqlalchemy.dialects.postgresql import JSONB
 
 
 class Base(DeclarativeBase):
@@ -117,5 +120,5 @@ class Result(Base):
         nullable=False
     )
     points: Mapped[float] = mapped_column(nullable=False)
-    answers: Mapped[str] = mapped_column(nullable=True)
+    answers = Column(JSONB, nullable=True)
     time_spent:  Mapped[int] = mapped_column(nullable=True)

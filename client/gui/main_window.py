@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         # Добавление форматов изображений
         print(QImageReader.supportedImageFormats())
         load_dotenv()
-        QCoreApplication.addLibraryPath(os.getenv("PYTHON_PATH") + '/Lib/site-packages/PyQt5/Qt5/plugins')
+        QCoreApplication.addLibraryPath(str(os.getenv("PYTHON_PATH")) + '/Lib/site-packages/PyQt5/Qt5/plugins')
 
         # Привязка стиля (qss)
         with open(path + "styles\\main.qss", 'r', encoding="utf-8") as file:

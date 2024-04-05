@@ -98,7 +98,18 @@
 
 // http://localhost:8000/planared/results
 {
-    "user_id": 1,
-    "test_id": 1,
-    "points": 6
+    "user_id": 1, 
+    "test_id": 1, 
+    "points": 3, 
+    "time_spent": 12, 
+    "answers": [
+        {
+            "task_id": 1,
+            "answer": "Нет"
+        },
+        {
+            "task_id": 4,
+            "answer": ["Невозможно определить планарность графа", "Алгоритм завершает работу"]
+        }
+    ]
 }

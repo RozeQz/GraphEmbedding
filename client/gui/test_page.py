@@ -25,9 +25,21 @@ from utils.gui import (
     show_layout_items)
 
 from src.api.results_controller import create_result
+from src.api.tests_controller import create_test, create_test_task
+from src.education.testing import Testing
 
 
 MAX_COLUMNS = 3
+
+
+class CurrentTest():
+    test: Testing = None
+    test_id: int
+    answers: list = []
+    current_task: int
+    remaining_time: int
+    num_tasks: int
+
 
 class TestPage(QWidget):
     def __init__(self, parent=None):
@@ -47,8 +59,8 @@ class TestPage(QWidget):
         # Инициализация тестирования
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.updateTime)
-        self.test = None
-        self.answers = []
+
+        self.current_test = CurrentTest()
 
         # Инициализация всего нужного
         self.options_layout = QVBoxLayout()
@@ -61,16 +73,35 @@ class TestPage(QWidget):
     def showEvent(self, event):
         # Вызывается при открытии страницы
         # Если тест еще не начат или уже закончен, то запускаем тестирование
-        if (self.test is None) or (not self.timer.isActive()):
+        if (self.current_test.test is None) or (not self.timer.isActive()):
             self.start_test()
 
         highlight_label(self.parent, self.parent.ui.lbl_testing)
 
+    def init_test(self, test_name=None):
+        self.current_test.test = self.tm.create_classic_tests()
+
+        if test_name is not None:
+            test_id = create_test({"name": test_name})["id"]
+        else:
+            test_id = create_test({})["id"]
+
+        for task in self.current_test.test.tasks:
+            test_task = {
+                "test_id": test_id,
+                "task_id": task.number
+            }
+            create_test_task(test_task)
+
+        self.current_test.test_id = test_id
+        self.current_test.current_task = 0
+        self.current_test.remaining_time = self.current_test.test.time
+        self.current_test.num_tasks = len(self.current_test.test.tasks)
+
     def start_test(self):
         self.tm = TaskManager()
-        self.test = self.generate_test()
-        self.task_num = 0
-        self.remaining_time = self.test.time
+
+        self.init_test()
 
         self.timer.start(1000)  # каждую секунду
         self.updateTime()
@@ -86,11 +117,11 @@ class TestPage(QWidget):
         self.show_grid_tasks()
 
         # Изначально мы на первом вопросе
-        for i in range(len(self.test.tasks)):
+        for i in range(self.current_test.num_tasks):
             self.highlight_grid(i, 'grey')
 
         # Показать первое задание
-        self.show_task(self.task_num)
+        self.show_task(self.current_test.current_task)
 
     def stop_test(self):
         if hasattr(self, 'timer') and self.timer.isActive():
@@ -106,17 +137,15 @@ class TestPage(QWidget):
         # Отправляем результат на сервер
         result = {
             "user_id": 1,
-            "test_id": 1,
-            "points": self.test.points,
-            "time_spent": self.test.time - self.remaining_time,
-            "answers": str(self.answers)
+            "test_id": self.current_test.test_id,
+            "points": self.current_test.test.points,
+            "time_spent": self.current_test.test.time - self.current_test.remaining_time,
+            "answers": self.current_test.answers
         }
-        create_result(json.dumps(result))
+
+        create_result(result)
 
         self.show_results()
-
-    def generate_test(self):
-        return self.tm.create_classic_tests()
 
     def show_task(self, task_num: int):
         clearLayout(self.options_layout)
@@ -124,7 +153,7 @@ class TestPage(QWidget):
         # Выделяем задание в сетке заданий
         self.highlight_grid(task_num, 'blue')
 
-        task = self.test.tasks[task_num]
+        task = self.current_test.test.tasks[task_num]
 
         self.ui.lbl_num_question.setText(f"Вопрос №{task_num + 1}")
         self.ui.lbl_question.setText(task.question)
@@ -139,11 +168,9 @@ class TestPage(QWidget):
             init_type_4(self, self.ui.vbox_task, self.ui.lbl_question, task)
 
     def show_grid_tasks(self):
-        num_tasks = len(self.test.tasks)
-
         square_size = self.ui.gridLayout.geometry().width() // MAX_COLUMNS
 
-        for i in range(num_tasks):
+        for i in range(self.current_test.num_tasks):
             row = i // MAX_COLUMNS
             column = i % MAX_COLUMNS
 
@@ -175,39 +202,42 @@ class TestPage(QWidget):
                         widget.setStyleSheet(file.read())
 
     def go_to_next_task(self):
-        print(check_answer(self, self.test.tasks[self.task_num]))
+        if check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[0]:
+            self.current_test.test.points += 1
 
-        if check_answer(self, self.test.tasks[self.task_num])[0]:
-            self.test.points += 1
+        answer = {
+            "task_id": self.current_test.current_task,
+            "answer": check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[1]
+        }
 
-        self.answers.append(check_answer(self, self.test.tasks[self.task_num])[1])
+        self.current_test.answers.append(answer)
 
         # Выделяем прошлое задание в сетке заданий
-        self.highlight_grid(self.task_num, 'green')
+        self.highlight_grid(self.current_test.current_task, 'green')
 
-        self.task_num += 1
-        if self.task_num < len(self.test.tasks):
-            self.show_task(self.task_num)
+        self.current_test.current_task += 1
+        if self.current_test.current_task < self.current_test.num_tasks:
+            self.show_task(self.current_test.current_task)
         else:
             self.stop_test()
 
     def updateTime(self):
-        minutes = self.remaining_time // 60
-        seconds = self.remaining_time % 60
+        minutes = self.current_test.remaining_time // 60
+        seconds = self.current_test.remaining_time % 60
         self.ui.lbl_time.setText(f"До окончания тестирования: {minutes:02}:{seconds:02}")
 
-        self.remaining_time -= 1
+        self.current_test.remaining_time -= 1
 
-        if self.remaining_time < 0:
+        if self.current_test.remaining_time < 0:
             self.stop_test()
 
     def show_results(self):
         self.ui.fbox_results.setWidget(0, QFormLayout.LabelRole,
                                        QLabel("Ваш результат: "))
         self.ui.fbox_results.setWidget(0, QFormLayout.FieldRole,
-                                       QLabel(f"{self.test.points}/{len(self.test.tasks)}"))
+                                       QLabel(f"{self.current_test.test.points}/{self.current_test.num_tasks}"))
 
-        time = self.test.time - self.remaining_time
+        time = self.current_test.test.time - self.current_test.remaining_time
         minutes = time // 60
         seconds = time % 60
 
