@@ -202,24 +202,34 @@ class TestPage(QWidget):
                         widget.setStyleSheet(file.read())
 
     def go_to_next_task(self):
-        if check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[0]:
-            self.current_test.test.points += 1
+        try:
+            if check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[0]:
+                self.current_test.test.points += 1
 
-        answer = {
-            "task_id": self.current_test.current_task,
-            "answer": check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[1]
-        }
+            answer = {
+                "task_id": self.current_test.current_task,
+                "answer": check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[1]
+            }
 
-        self.current_test.answers.append(answer)
+            self.current_test.answers.append(answer)
 
-        # Выделяем прошлое задание в сетке заданий
-        self.highlight_grid(self.current_test.current_task, 'green')
+            # Выделяем прошлое задание в сетке заданий
+            self.highlight_grid(self.current_test.current_task, 'green')
 
-        self.current_test.current_task += 1
-        if self.current_test.current_task < self.current_test.num_tasks:
-            self.show_task(self.current_test.current_task)
-        else:
-            self.stop_test()
+            self.current_test.current_task += 1
+            if self.current_test.current_task < self.current_test.num_tasks:
+                self.show_task(self.current_test.current_task)
+            else:
+                self.stop_test()
+
+        except AttributeError:
+            mbx = QMessageBox()
+            mbx.setIcon(QMessageBox.Critical)
+            mbx.setText("Вы не ответили на вопрос! \n" +
+                        "Перед тем как перейти к следующему вопросу, нужно ответить на текущий.")
+            mbx.setWindowTitle("Внимание!")
+            mbx.setStandardButtons(QMessageBox.Ok)
+            mbx.exec_()
 
     def updateTime(self):
         minutes = self.current_test.remaining_time // 60

@@ -10,7 +10,8 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QRadioButton,
     QButtonGroup,
-    QLabel)
+    QLabel,
+    QMessageBox)
 
 
 def clearLayout(layout):
@@ -184,17 +185,24 @@ def get_selected_options(options_layout) -> List[QCheckBox]:
 
 def check_answer(widget, task):
     if task.task_type == 1:
-        answer = widget.group_options.checkedButton().text()
+        try:
+            answer = widget.group_options.checkedButton().text()
+        except AttributeError:
+            raise AttributeError("No answer")
         result = task.check_answer([answer])
 
     elif task.task_type == 2:
         answer = []
         for checkbox in get_selected_options(widget.options_layout):
             answer.append(checkbox.text())
+        if not answer:
+            raise AttributeError("No answer")
         result = task.check_answer(answer)
 
     elif task.task_type == 3:
         answer = widget.edt_answer.text()
+        if not answer:
+            raise AttributeError("No answer")
         result = task.check_answer([answer])
 
     elif task.task_type == 4:
