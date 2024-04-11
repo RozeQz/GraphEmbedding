@@ -79,6 +79,12 @@ ProfilePage QLabel {
 	color: rgb(0, 0, 0);
 }
 
+StudentProfilePage QLabel {
+    font-size: 16pt;
+	font-weight: 75;
+	color: rgb(0, 0, 0);
+}
+
 TaskPage QLabel {
     font-size: 16pt;
 	font-weight: 75;

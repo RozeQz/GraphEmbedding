@@ -1,9 +1,12 @@
 from src.api.groups_controller import get_group_by_id, get_user_groups
 from src.education.group import Group
 
+
 class User():
-    def __init__(self, user_id, firstname, lastname, midname, group=None):
+    def __init__(self, user_id, role_id, firstname, lastname, midname,
+                 group=None):
         self.id = user_id
+        self.role_id = role_id
         self.firstname = firstname
         self.lastname = lastname
         self.midname = midname

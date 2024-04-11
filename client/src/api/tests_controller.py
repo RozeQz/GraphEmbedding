@@ -8,7 +8,6 @@ def get_all_tests():
     url = origin + "/planared/tests/"
     response = requests.get(url)
     if response.status_code == 200:
-        print(response.json())
         return response.json()
     else:
         return None
@@ -18,7 +17,6 @@ def get_test_tasks(test_id: int):
     url = origin + f"/planared/tasks_tests/{test_id}"
     response = requests.get(url)
     if response.status_code == 200:
-        print(response.json())
         return response.json()
     else:
         return None

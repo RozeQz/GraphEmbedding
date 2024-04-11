@@ -14,6 +14,12 @@ from PyQt5.QtWidgets import (
     QMessageBox)
 
 
+# Моя палетка
+COLORS = ["#0ACF83", "#1ABCFE", "#A259FF",
+          "#F24E1E", "#FF7262", "#636EFA",
+          "#FFA15A", "#FF6692", "#C491FB"]
+
+
 def clearLayout(layout):
     while layout.count():
         item = layout.takeAt(0)
