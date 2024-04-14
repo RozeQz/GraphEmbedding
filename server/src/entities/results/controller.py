@@ -18,6 +18,21 @@ async def create_result(
     return crud.create(session, result)
 
 
+@router.get("/{result_id}/",
+            description="Получить результат по идентификатору")
+async def get_result(result_id: int,
+                     session: Session = Depends(get_session)):
+    task = crud.get_one(session, result_id)
+
+    if not task:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Result with {result_id=} not found",
+        )
+
+    return task
+
+
 @router.get("/",
             description="Получить все результаты с учетом query параметров")
 async def get_results(user_id: int = None,

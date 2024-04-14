@@ -14,6 +14,15 @@ def get_all_results():
         return None
 
 
+def get_result_by_id(result_id: int):
+    url = origin + f"/planared/results/{result_id}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+
 def get_results_by_user(user_id: int):
     url = origin + f"/planared/results?user_id={user_id}"
     response = requests.get(url)

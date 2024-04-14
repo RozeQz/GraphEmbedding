@@ -207,8 +207,9 @@ class TestPage(QWidget):
                 self.current_test.test.points += 1
 
             answer = {
-                "task_id": self.current_test.current_task,
-                "answer": check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[1]
+                "task_id": self.current_test.test.tasks[self.current_test.current_task].number,
+                "answer": check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[1],
+                "correct": check_answer(self, self.current_test.test.tasks[self.current_test.current_task])[0]
             }
 
             self.current_test.answers.append(answer)

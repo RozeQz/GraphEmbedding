@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 class AnswerBase(BaseModel):
     task_id: int
     answer: Union[str, List[str]]
+    correct: bool
 
 
 class ResultBase(BaseModel):

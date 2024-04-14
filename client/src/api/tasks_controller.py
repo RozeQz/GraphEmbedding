@@ -13,6 +13,15 @@ def get_all_tasks():
         return None
 
 
+def get_task_by_id(task_id: int):
+    url = origin + f"/planared/tasks/{task_id}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+
 def get_tasks_by_type(task_type: int):
     url = origin + f"/planared/tasks?task_type={task_type}"
     response = requests.get(url)
