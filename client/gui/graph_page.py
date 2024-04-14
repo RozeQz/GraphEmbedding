@@ -1,8 +1,10 @@
 from typing import List
 import os
+import time
 import numpy as np
 import networkx as nx
 
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
@@ -28,6 +30,16 @@ class GraphPage(QWidget):
         self.parent = parent
 
         self.graph = None
+
+        # Путь к ассетам
+        path = os.getcwd() + "/client/gui/resources/"
+
+        # Отображение картинок
+        self.ui.lbl_clock.setPixmap(QPixmap(path + "img/clock.png"))
+
+        # Изначально время скрыто
+        self.ui.lbl_clock.setVisible(False)
+        self.ui.lbl_time.setVisible(False)
 
         # Добавляем место для графа на страницу
         self.graph_layout = QVBoxLayout()
@@ -91,6 +103,9 @@ class GraphPage(QWidget):
         self.canvas.axes.cla()
 
         alogithm = self.ui.cbx_algorithm.currentIndex()
+
+        start = time.time()
+
         # Гамма-алгоритм
         if alogithm == 0:
             gr = GammaAlgorithm(self.graph)
@@ -124,3 +139,10 @@ class GraphPage(QWidget):
             nx.draw(G, pos=pos, ax=self.canvas.axes,
                     with_labels=True, node_color="#0C8CE9")
             self.canvas.draw()
+
+        finish = time.time()
+        res = finish - start
+        res_msec = res * 1000
+        self.ui.lbl_time.setText(f"Время работы: {res_msec:.2f} миллисекунд")
+        self.ui.lbl_time.setVisible(True)
+        self.ui.lbl_clock.setVisible(True)

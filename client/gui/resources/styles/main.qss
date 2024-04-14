@@ -52,6 +52,7 @@ GraphPage QLabel {
 	font-weight: 75;
 	color: rgb(0, 0, 0);
 	text-align: left;
+	margin-left: 0;
 }
 
 TestPage QLabel {
@@ -71,24 +72,28 @@ TestStartPage QLabel {
 	font-weight: 75;
 	color: rgb(0, 0, 0);
 	margin-bottom: 40px;
+	margin-left: 0;
 }
 
 ProfilePage QLabel {
     font-size: 16pt;
 	font-weight: 75;
 	color: rgb(0, 0, 0);
+	margin-left: 0;
 }
 
 StudentProfilePage QLabel {
     font-size: 16pt;
 	font-weight: 75;
 	color: rgb(0, 0, 0);
+	margin-left: 0;
 }
 
 TaskPage QLabel {
     font-size: 16pt;
 	font-weight: 75;
 	color: rgb(0, 0, 0);
+	margin-left: 0;
 }
 
 QWidget QLabel:hover {

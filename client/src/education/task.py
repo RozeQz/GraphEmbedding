@@ -81,6 +81,6 @@ class Task():
         dl = textdistance.DamerauLevenshtein()
         result = dl.normalized_distance(correct_text, text)
 
-        if result > 0.20:
+        if result > 0.3:
             return False
         return True
