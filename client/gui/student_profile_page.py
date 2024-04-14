@@ -1,9 +1,10 @@
 import seaborn as sns
-from fpdf import FPDF
 
 from PyQt5.QtWidgets import (
     QWidget,
-    QListWidgetItem)
+    QListWidgetItem,
+    QMessageBox,
+    QFileDialog)
 
 from gui.ui_student_profile_page import Ui_StudentProfilePage
 from gui.mplcanvas import MplCanvas
@@ -30,7 +31,7 @@ class StudentProfilePage(QWidget):
         self.ui.verticalLayout_3.addWidget(self.canvas)
 
         self.ui.btn_logout.clicked.connect(self.logout)
-        self.ui.listWidget.itemDoubleClicked.connect(self.print_results)
+        self.ui.listWidget.itemDoubleClicked.connect(self.msg_print_results)
 
     def refresh(self):
         '''
@@ -60,7 +61,16 @@ class StudentProfilePage(QWidget):
             item = QListWidgetItem(f"{i+1}.\t №{result_id}\t Результат: {points}/{num_tasks}\t{time}")
             self.ui.listWidget.insertItem(0, item)
 
-    def print_results(self, item):
+    def msg_print_results(self, item):
+        options = QFileDialog.Options()
+        file_name, check = QFileDialog.getSaveFileName(self, "Сохранить файл",
+                                                       "planared_results",
+                                                       filter=".pdf",
+                                                       options=options)
+        if check:
+            self.print_results(file_name, item)
+
+    def print_results(self, file_name, item):
         text = item.text().split('\t')
         # Удаляем символ №
         result_id = text[1][2:]
@@ -129,7 +139,7 @@ class StudentProfilePage(QWidget):
             pdf.multi_cell(150, 10, f"{answ}", border=1, fill=True)
             pdf.ln(5)
 
-        pdf.output("simple_demo.pdf")
+        pdf.output(f"{file_name}.pdf")
 
     def show_pie_chart(self):
         # Чистим холст
@@ -140,7 +150,6 @@ class StudentProfilePage(QWidget):
         for i in range(0, 8 + 1):
             points[i] = 0
         for result in get_results_by_user(self.parent.current_user.id):
-            print(result)
             points[result["points"]] += 1
 
         # Удаляем нулевые значения
