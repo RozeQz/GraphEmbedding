@@ -1,6 +1,4 @@
 from PyQt5.QtWidgets import (
-    QPushButton,
-    QVBoxLayout,
     QWidget)
 
 from gui.ui_profile import Ui_ProfilePage
@@ -22,14 +20,17 @@ class ProfilePage(QWidget):
         user_data = get_user_data_by_id(user["user_data_id"])
 
         self.current_user = User(user["id"],
+                                 user["role_id"],
                                  user_data["firstname"],
                                  user_data["lastname"],
                                  user_data["midname"])
 
-        self.ui.lbl_surname.setText(self.current_user.lastname)
-        self.ui.lbl_name.setText(self.current_user.firstname)
-        self.ui.lbl_midname.setText(self.current_user.midname)
-        self.ui.lbl_group.setText(self.current_user.groups[0].name)
+        # Инициализация страницы соответствующей роли
+        if self.current_user.role_id == 1:
+            # parent.show_student_profile_page()
+            pass
+        else:
+            raise Exception("Invalid role id")
 
     def showEvent(self, event):
         # Вызывается при открытии страницы

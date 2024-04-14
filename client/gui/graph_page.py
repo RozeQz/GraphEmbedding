@@ -1,15 +1,10 @@
 from typing import List
-import random
 import os
 import numpy as np
 import networkx as nx
 
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
-    QPushButton,
     QVBoxLayout,
-    QHBoxLayout,
     QWidget,
     QFileDialog,
     QSizePolicy)

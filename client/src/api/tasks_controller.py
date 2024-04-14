@@ -10,6 +10,7 @@ def get_all_tasks():
     if response.status_code == 200:
         return response.json()
     else:
+        print("Error")
         return None
 
 
@@ -19,6 +20,7 @@ def get_task_by_id(task_id: int):
     if response.status_code == 200:
         return response.json()
     else:
+        print("Error")
         return None
 
 
@@ -28,6 +30,7 @@ def get_tasks_by_type(task_type: int):
     if response.status_code == 200:
         return response.json()
     else:
+        print("Error")
         return None
 
 
@@ -35,7 +38,6 @@ def create_task(task: json):
     url = origin + "/planared/tasks/"
     response = requests.post(url, json=task)
     if response.status_code == 200:
-        print(response.json())
         return response.json()
     else:
         print("Error")

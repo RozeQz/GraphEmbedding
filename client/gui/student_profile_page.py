@@ -3,7 +3,6 @@ import seaborn as sns
 from PyQt5.QtWidgets import (
     QWidget,
     QListWidgetItem,
-    QMessageBox,
     QFileDialog)
 
 from gui.ui_student_profile_page import Ui_StudentProfilePage

@@ -10,7 +10,15 @@ from gui.ui_task_page import Ui_TaskPage
 
 from src.education.task import Task
 from src.api.tasks_controller import get_all_tasks, create_task
-from utils.gui import clearLayout, clearLineEdits, init_type_1, init_type_2, init_type_3, init_type_4, check_answer, highlight_label
+from utils.gui import (
+    clearLayout,
+    clearLineEdits,
+    init_type_1,
+    init_type_2,
+    init_type_3,
+    init_type_4,
+    check_answer,
+    highlight_label)
 
 
 class TaskPage(QWidget):

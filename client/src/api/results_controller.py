@@ -11,6 +11,7 @@ def get_all_results():
     if response.status_code == 200:
         return response.json()
     else:
+        print("Error")
         return None
 
 
@@ -20,6 +21,7 @@ def get_result_by_id(result_id: int):
     if response.status_code == 200:
         return response.json()
     else:
+        print("Error")
         return None
 
 
@@ -29,6 +31,7 @@ def get_results_by_user(user_id: int):
     if response.status_code == 200:
         return response.json()
     else:
+        print("Error")
         return None
 
 
@@ -38,6 +41,7 @@ def get_results_by_test(test_id: int):
     if response.status_code == 200:
         return response.json()
     else:
+        print("Error")
         return None
 
 
@@ -60,6 +64,7 @@ def calc_average_percent(id: int, obj="user") -> float:
             percent += points / num_tasks * 100
         return percent / len(response.json())
     else:
+        print("Error")
         return None
 
 
