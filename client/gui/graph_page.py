@@ -50,7 +50,10 @@ class GraphPage(QWidget):
 
     def open_file(self):
         options = QFileDialog.Options()
-        self.file_name, _ = QFileDialog.getOpenFileName(self, "Выбрать файл", "", "Text Files (*.txt)", options=options)
+        self.file_name, _ = QFileDialog.getOpenFileName(self,
+                                                        "Выбрать файл", "",
+                                                        filter="Text Files (*.txt)",
+                                                        options=options)
         if self.file_name:
             file_base_name = os.path.basename(self.file_name)
             print("Выбранный файл:", self.file_name)
@@ -64,7 +67,10 @@ class GraphPage(QWidget):
 
         num_vertices = self.graph.size
         num_edges = self.graph.count_edges()
-        is_planar_str = "<p style='color: green;'>Граф планарный" if self.graph.is_planar() else "<p style='color: red;'>Граф не планарный"
+        if self.graph.is_planar():
+            is_planar_str = "<p style='color: green;'>Граф планарный"
+        else:
+            is_planar_str = "<p style='color: red;'>Граф не планарный"
 
         text = f"<html><head/><body><p>Количество вершин: {num_vertices}</p>" + \
                f"<p>Количество ребер: {num_edges}</p>" + \

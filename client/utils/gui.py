@@ -152,8 +152,6 @@ def move_word_up(widget, child_widget):
     '''
     index = widget.options_layout.indexOf(child_widget)
 
-    print(widget.order)
-
     if index > 0:
         widget.options_layout.insertWidget(index - 1, child_widget)
 
@@ -166,8 +164,6 @@ def move_word_down(widget, child_widget):
     Перемещение виджета на 1 элемент ниже в шаблоне
     '''
     index = widget.options_layout.indexOf(child_widget)
-
-    print(widget.order)
 
     if index < widget.options_layout.count() - 1:
         widget.options_layout.insertWidget(index + 1, child_widget)
@@ -188,6 +184,7 @@ def get_selected_options(options_layout) -> List[QCheckBox]:
             if checkbox.isChecked():
                 checked_boxes.append(checkbox)
     return checked_boxes
+
 
 def check_answer(widget, task):
     if task.task_type == 1:

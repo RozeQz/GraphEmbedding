@@ -38,9 +38,6 @@ class MainWindow(QMainWindow):
         # Привязка стиля (qss)
         with open(path + "styles\\main.qss", 'r', encoding="utf-8") as file:
             self.setStyleSheet(file.read())
-        # with open(path + "styles/profile.qss", 'r', encoding="utf-8") as file:
-        #     self.profile_page.setStyleSheet(file.read())
-        #     self.task_page.setStyleSheet(file.read())
 
         # Отображение картинок
         icon = QIcon()

@@ -8,7 +8,10 @@ from PyQt5.QtWidgets import (
 from gui.ui_student_profile_page import Ui_StudentProfilePage
 from gui.mplcanvas import MplCanvas
 
-from src.api.results_controller import get_results_by_user, calc_average_percent, get_result_by_id
+from src.api.results_controller import (
+    get_results_by_user,
+    calc_average_percent,
+    get_result_by_id)
 from src.api.tests_controller import get_test_tasks
 from src.api.tasks_controller import get_task_by_id
 
@@ -43,7 +46,8 @@ class StudentProfilePage(QWidget):
         self.ui.lbl_group.setText(self.parent.current_user.groups[0].name)
 
         self.ui.lbl_num_tests.setText(f"{len(get_results_by_user(self.parent.current_user.id))}")
-        average_percent = calc_average_percent(self.parent.current_user.id, obj="user")
+        average_percent = calc_average_percent(self.parent.current_user.id,
+                                               obj="user")
         self.ui.lbl_avg_percent.setText(f"{average_percent:.2f}%")
 
         self.show_pie_chart()

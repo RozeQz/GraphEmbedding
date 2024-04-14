@@ -61,13 +61,17 @@ class TaskPage(QWidget):
         self.ui.lbl_result.setText("")
 
         if self.task.task_type == 1:
-            init_type_1(self, self.ui.verticalLayout_2, self.ui.lbl_task, self.task)
+            init_type_1(self, self.ui.verticalLayout_2,
+                        self.ui.lbl_task, self.task)
         elif self.task.task_type == 2:
-            init_type_2(self, self.ui.verticalLayout_2, self.ui.lbl_task, self.task)
+            init_type_2(self, self.ui.verticalLayout_2,
+                        self.ui.lbl_task, self.task)
         elif self.task.task_type == 3:
-            init_type_3(self, self.ui.verticalLayout_2, self.ui.lbl_task, self.task)
+            init_type_3(self, self.ui.verticalLayout_2,
+                        self.ui.lbl_task, self.task)
         elif self.task.task_type == 4:
-            init_type_4(self, self.ui.verticalLayout_2, self.ui.lbl_task, self.task)
+            init_type_4(self, self.ui.verticalLayout_2,
+                        self.ui.lbl_task, self.task)
 
     def create_task(self):
         question = self.ui.edt_task.text()

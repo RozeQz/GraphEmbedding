@@ -176,7 +176,8 @@ class TestPage(QWidget):
             label = QLabel(str(task_number))
             label.setFixedSize(square_size, square_size)
 
-            with open("client/gui/resources/styles/grid/grid-grey.qss", 'r', encoding="utf-8") as file:
+            with open("client/gui/resources/styles/grid/grid-grey.qss", 'r',
+                      encoding="utf-8") as file:
                 label.setStyleSheet(file.read())
 
             self.ui.gridLayout.addWidget(label, row, column)
@@ -187,16 +188,20 @@ class TestPage(QWidget):
 
         layout_item = self.ui.gridLayout.itemAtPosition(row, column)
         if layout_item:
-            widget = layout_item.widget()  # Приводим к QWidget, если это возможно
+            # Приводим к QWidget, если это возможно
+            widget = layout_item.widget()
             if widget:
                 if color == 'blue':
-                    with open("client/gui/resources/styles/grid/grid-blue.qss", 'r', encoding="utf-8") as file:
+                    with open("client/gui/resources/styles/grid/grid-blue.qss",
+                              'r', encoding="utf-8") as file:
                         widget.setStyleSheet(file.read())
                 elif color == 'green':
-                    with open("client/gui/resources/styles/grid/grid-green.qss", 'r', encoding="utf-8") as file:
+                    with open("client/gui/resources/styles/grid/grid-green.qss",
+                              'r', encoding="utf-8") as file:
                         widget.setStyleSheet(file.read())
                 else:
-                    with open("client/gui/resources/styles/grid/grid-grey.qss", 'r', encoding="utf-8") as file:
+                    with open("client/gui/resources/styles/grid/grid-grey.qss",
+                              'r', encoding="utf-8") as file:
                         widget.setStyleSheet(file.read())
 
     def go_to_next_task(self):

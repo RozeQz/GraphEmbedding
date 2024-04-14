@@ -63,10 +63,12 @@ class MainPage(QWidget):
         h_layout.addWidget(self.lbl_refresh)
 
         # Отступы для красоты
-        h_spacer = QSpacerItem(20, 0, QSizePolicy.Maximum, QSizePolicy.Maximum)
+        h_spacer = QSpacerItem(20, 0, QSizePolicy.Maximum,
+                               QSizePolicy.Maximum)
         h_layout.addItem(h_spacer)
 
-        v_spacer = QSpacerItem(40, 40, QSizePolicy.Maximum, QSizePolicy.Maximum)
+        v_spacer = QSpacerItem(40, 40, QSizePolicy.Maximum,
+                               QSizePolicy.Maximum)
         layout.addItem(v_spacer)
 
         # Настройка этих кнопок
