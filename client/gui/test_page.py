@@ -1,5 +1,7 @@
+import os
+
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
@@ -48,7 +50,31 @@ class TestPage(QWidget):
         self.parent = parent
 
         # Путь к ассетам
-        path = "client/gui/resources/"
+        path = os.getcwd() + "/client/gui/resources/"
+
+        # Привязка стилей
+        with open(path + "styles/button/button-blue.qss", 'r',
+                  encoding="utf-8") as file:
+            button_style = file.read()
+            self.ui.btn_answer.setStyleSheet(button_style)
+
+        with open(path + "styles/button/button-red-outline.qss", 'r',
+                  encoding="utf-8") as file:
+            button_style = file.read()
+            self.ui.btn_end.setStyleSheet(button_style)
+
+        with open(path + "styles/label/label-main.qss", 'r',
+                  encoding="utf-8") as file:
+            label_style = file.read()
+            self.ui.lbl_num_question.setStyleSheet(label_style)
+            self.ui.lbl_question.setStyleSheet(label_style)
+
+        with open(path + "styles/label/label-h2.qss", 'r',
+                  encoding="utf-8") as file:
+            label_style = file.read()
+            self.ui.lbl_question.setStyleSheet(label_style)
+            self.ui.lbl_status.setStyleSheet(label_style)
+            self.ui.lbl_time.setStyleSheet(label_style)
 
         # Отображение картинок
         clock = QPixmap(path + "img/clock.png")
@@ -174,6 +200,7 @@ class TestPage(QWidget):
 
             task_number = i + 1
             label = QLabel(str(task_number))
+            label.setAlignment(Qt.AlignCenter)
             label.setFixedSize(square_size, square_size)
 
             with open("client/gui/resources/styles/grid/grid-grey.qss", 'r',

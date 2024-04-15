@@ -1,6 +1,7 @@
 from typing import List
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import (
     QPushButton,
     QVBoxLayout,
@@ -11,7 +12,7 @@ from PyQt5.QtWidgets import (
     QRadioButton,
     QButtonGroup,
     QLabel,
-    QMessageBox)
+    QSizePolicy)
 
 
 # Моя палетка
@@ -64,6 +65,7 @@ def init_type_1(widget, question_layout, prev_widget, task):
 
     # Создаем новый layout
     widget.options_layout = QVBoxLayout()
+    widget.options_layout.setSpacing(6)
 
     # Вставляем новый layout в основной layout
     index = question_layout.indexOf(prev_widget)
@@ -76,12 +78,19 @@ def init_type_1(widget, question_layout, prev_widget, task):
         widget.options_layout.addWidget(radiobutton)
         widget.group_options.addButton(radiobutton)
 
+        with open("client/gui/resources/styles/radio/radio-blue.qss", 'r',
+                  encoding="utf-8") as file:
+            radio_style = file.read()
+            radiobutton.setStyleSheet(radio_style)
+        radiobutton.setCursor(QCursor(Qt.PointingHandCursor))
+
 
 def init_type_2(widget, question_layout, prev_widget, task):
     options = task.options
 
     # Создаем новый layout
     widget.options_layout = QVBoxLayout()
+    widget.options_layout.setSpacing(6)
 
     # Вставляем новый layout в основной layout
     index = question_layout.indexOf(prev_widget)
@@ -91,18 +100,31 @@ def init_type_2(widget, question_layout, prev_widget, task):
         checkbox = QCheckBox(option, widget)
         widget.options_layout.addWidget(checkbox)
 
+        with open("client/gui/resources/styles/checkbox/checkbox-blue.qss", 'r',
+                  encoding="utf-8") as file:
+            checkbox_style = file.read()
+            checkbox.setStyleSheet(checkbox_style)
+        checkbox.setCursor(QCursor(Qt.PointingHandCursor))
 
 def init_type_3(widget, question_layout, prev_widget, task):
     # Создаем новый layout
     widget.options_layout = QVBoxLayout()
+    widget.options_layout.setSpacing(6)
 
     # Вставляем новый layout в основной layout
     index = question_layout.indexOf(prev_widget)
     question_layout.insertLayout(index + 1, widget.options_layout)
 
     widget.edt_answer = QLineEdit()
+    widget.edt_answer.setMaximumSize(QSize(1000, 50))
+    widget.edt_answer.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
     widget.edt_answer.setPlaceholderText("Ваш ответ:")
     widget.options_layout.addWidget(widget.edt_answer)
+
+    with open("client/gui/resources/styles/edit/answer-edit.qss", 'r',
+              encoding="utf-8") as file:
+        edt_style = file.read()
+        widget.edt_answer.setStyleSheet(edt_style)
 
 
 def init_type_4(widget, question_layout, prev_widget, task):
@@ -112,6 +134,7 @@ def init_type_4(widget, question_layout, prev_widget, task):
 
     # Создаем новый layout
     widget.options_layout = QVBoxLayout()
+    widget.options_layout.setSpacing(6)
 
     # Вставляем новый layout в основной layout
     index = question_layout.indexOf(prev_widget)
@@ -121,18 +144,37 @@ def init_type_4(widget, question_layout, prev_widget, task):
         option_layout = QHBoxLayout()  # Горизонтальный макет для варианта и кнопок
         label = QLabel(option)
         label.setAlignment(Qt.AlignCenter)
-        label.setStyleSheet("QLabel { background-color : lightblue; color : black;}")
+
+        with open("client/gui/resources/styles/label/label-task4.qss", 'r',
+                  encoding="utf-8") as file:
+            label_style = file.read()
+            label.setStyleSheet(label_style)
+
         option_layout.addWidget(label)
 
         # Добавление кнопок
         buttons_layout = QVBoxLayout()
-        up_button = QPushButton("↑")
+        up_button = QPushButton()
         up_button.setFixedWidth(20)
+        up_button.setFlat(True)
+        up_button.setCursor(QCursor(Qt.PointingHandCursor))
         buttons_layout.addWidget(up_button)
-        down_button = QPushButton("↓")
+        down_button = QPushButton()
         down_button.setFixedWidth(20)
+        down_button.setFlat(True)
+        down_button.setCursor(QCursor(Qt.PointingHandCursor))
         buttons_layout.addWidget(down_button)
         option_layout.addLayout(buttons_layout)
+
+        with open("client/gui/resources/styles/button/button-arrow-up.qss",
+                  'r', encoding="utf-8") as file:
+            button_style = file.read()
+            up_button.setStyleSheet(button_style)
+
+        with open("client/gui/resources/styles/button/button-arrow-down.qss",
+                  'r', encoding="utf-8") as file:
+            button_style = file.read()
+            down_button.setStyleSheet(button_style)
 
         # Конвертация макета в виджет
         option_widget = QWidget()

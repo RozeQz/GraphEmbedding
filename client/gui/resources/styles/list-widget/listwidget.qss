@@ -1,0 +1,82 @@
+QListWidget {
+    font-size: 14px;
+    background-color: #FFFFFF;
+    border: 1px solid rgb(217, 217, 217);
+    padding: 10px;
+}
+
+QListWidget:item {
+    background-color: #FFFFFF;
+    padding: 5px;
+}
+
+QListWidget:item:hover {
+    background-color: rgb(245, 245, 245);
+}
+
+QListWidget:item:selected {
+    border-top: 1px solid rgb(12, 140, 233);
+    border-bottom: 1px solid rgb(12, 140, 233);
+    background-color: rgb(12, 140, 233);
+}
+
+QListWidget QScrollBar {
+    background-color: rgb(217, 217, 217);
+    width: 15px;
+    margin: 15px 3px 15px 3px;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 4px;
+}
+
+QListWidget QScrollBar::handle {
+    background-color: rgb(12, 140, 233);
+    width: 15px;
+    min-height: 5px;
+    border-radius: 4px;
+}
+
+QListWidget QScrollBar::sub-line {
+    margin: 3px 0px 3px 0px;
+    border-image: url(:/qss_icons/rc/up_arrow_disabled.png);
+    height: 10px;
+    width: 10px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QListWidget QScrollBar::add-line {
+    margin: 3px 0px 3px 0px;
+    border-image: url(:/qss_icons/rc/down_arrow_disabled.png);
+    height: 10px;
+    width: 10px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QListWidget QScrollBar::sub-line:hover,
+QListWidget QScrollBar::sub-line:on {
+    border-image: url(:/qss_icons/rc/up_arrow.png);
+    height: 10px;
+    width: 10px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QListWidget QScrollBar::add-line:hover,
+QListWidget QScrollBar::add-line:on {
+    border-image: url(:/qss_icons/rc/down_arrow.png);
+    height: 10px;
+    width: 10px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QListWidget QScrollBar::up-arrow,
+QListWidget QScrollBar::down-arrow {
+    background: none;
+}
+
+QListWidget QScrollBar::add-page,
+QListWidget QScrollBar::sub-page {
+    background: none;
+}

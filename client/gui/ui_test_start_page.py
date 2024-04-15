@@ -37,6 +37,7 @@ class Ui_TestStartPage(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_start.sizePolicy().hasHeightForWidth())
         self.btn_start.setSizePolicy(sizePolicy)
+        self.btn_start.setMinimumSize(QtCore.QSize(160, 40))
         self.btn_start.setObjectName("btn_start")
         self.horizontalLayout.addWidget(self.btn_start)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)

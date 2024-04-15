@@ -1,0 +1,11 @@
+QLabel {
+    font-size: 14pt;
+	font-weight: 60;
+	color: rgb(0, 0, 0);
+	text-align: left;
+	margin-left: 0;
+}
+
+QLabel#lbl_file_name {
+    margin-left: 20px;
+}

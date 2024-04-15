@@ -1,0 +1,10 @@
+<RCC>
+    <qresource>
+        <file alias="arrow.svg">img/arrow.svg</file>
+        <file alias="clock.png">img/clock.png</file>
+        <file alias="logo_black.svg">img/logo_black.svg</file>
+        <file alias="logo_black.png">img/logo_black.png</file>
+        <file alias="logo_white.svg">img/logo_white.svg</file>
+        <file alias="rotate.png">img/rotate.png</file>
+    </qresource>
+</RCC>

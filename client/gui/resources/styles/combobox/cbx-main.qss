@@ -1,0 +1,55 @@
+/*  QcomboBox style */
+QComboBox {
+    font-size: 12pt;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    background: transparent; 
+    border: 1px solid rgb(217, 217, 217); 
+	color: #333333;
+	background-color: #FFFFFF;
+}
+
+QComboBox:hover {
+	border: 1px solid rgb(12, 140, 233);
+}
+
+/*  After dropping, the entire drop-down form style */
+QComboBox QAbstractItemView {
+    outline: 0px solid gray;
+    border: 1px solid rgb(217, 217, 217);
+    color: #333333;
+    background-color: #FFFFFF;
+    selection-background-color: rgb(245, 245, 245);
+    selection-color: #333333;
+    margin-top: 3px;  /* Добавляем смещение вниз */
+}
+
+/*  Click qComboBox */
+QComboBox:on {
+    color: rgb(200, 200, 200);
+    background-color: #FFFFFF;
+    border: 1px solid rgb(12, 140, 233);
+}
+
+/*  Pull-up box pattern */
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+/* Drop the arrow style */
+QComboBox::down-arrow {
+    width: 15px;
+    padding: 0px 10px 0px 0px;
+    image: url(client/gui/resources/img/arrow-down-black.svg);
+}
+
+/*  Click to pull the arrow */
+QComboBox::down-arrow:on {
+    width: 15px;
+    padding: 0px 10px 0px 0px;
+    image: url(client/gui/resources/img/arrow-up-black.svg);
+}

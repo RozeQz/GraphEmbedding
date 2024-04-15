@@ -1,0 +1,15 @@
+QLineEdit {
+    font-size: 16px;
+    border-radius: 15px;
+    border: 2px solid rgb(217, 217, 217);
+    padding: 10px;
+}
+
+QLineEdit:hover {
+    border: 2px solid rgb(12, 140, 233);
+}
+
+
+QLineEdit:Focus {
+    border: 2px solid rgb(12, 140, 233);
+}

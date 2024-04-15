@@ -1,3 +1,7 @@
+import os
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import (
     QWidget)
 
@@ -12,6 +16,16 @@ class TestStartPage(QWidget):
         self.ui.setupUi(self)
 
         self.parent = parent
+
+        # Путь к ассетам
+        path = os.getcwd() + "/client/gui/resources/"
+
+        # Привязка стилей
+        with open(path + "styles/button/button-blue.qss", 'r',
+                  encoding="utf-8") as file:
+            button_style = file.read()
+            self.ui.btn_start.setStyleSheet(button_style)
+        self.ui.btn_start.setCursor(QCursor(Qt.PointingHandCursor))
 
         self.ui.btn_start.clicked.connect(self.start_test)
 

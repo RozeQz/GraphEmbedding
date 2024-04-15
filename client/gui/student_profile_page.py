@@ -1,9 +1,11 @@
+import os
 import seaborn as sns
 
 from PyQt5.QtWidgets import (
     QWidget,
     QListWidgetItem,
-    QFileDialog)
+    QFileDialog,
+    QSizePolicy)
 
 from gui.ui_student_profile_page import Ui_StudentProfilePage
 from gui.mplcanvas import MplCanvas
@@ -28,9 +30,55 @@ class StudentProfilePage(QWidget):
 
         self.parent = parent
 
+        # Путь к ассетам
+        path = os.getcwd() + "/client/gui/resources/"
+
+        # Привязка стилей
+        with open(path + "styles/button/button-red.qss", 'r',
+                  encoding="utf-8") as file:
+            button_style = file.read()
+            self.ui.btn_logout.setStyleSheet(button_style)
+
+        with open(path + "styles/label/label-main.qss", 'r',
+                  encoding="utf-8") as file:
+            label_style = file.read()
+            self.ui.label.setStyleSheet(label_style)
+            self.ui.label_2.setStyleSheet(label_style)
+            self.ui.label_3.setStyleSheet(label_style)
+            self.ui.label_4.setStyleSheet(label_style)
+            self.ui.label_5.setStyleSheet(label_style)
+            self.ui.label_6.setStyleSheet(label_style)
+            self.ui.label_7.setStyleSheet(label_style)
+            self.ui.label_8.setStyleSheet(label_style)
+            self.ui.lbl_surname.setStyleSheet(label_style)
+            self.ui.lbl_name.setStyleSheet(label_style)
+            self.ui.lbl_midname.setStyleSheet(label_style)
+            self.ui.lbl_group.setStyleSheet(label_style)
+            self.ui.lbl_teacher.setStyleSheet(label_style)
+            self.ui.lbl_num_tests.setStyleSheet(label_style)
+            self.ui.lbl_avg_percent.setStyleSheet(label_style)
+            self.ui.lbl_unique_tasks.setStyleSheet(label_style)
+
+        with open(path + "styles/label/label-h1.qss", 'r',
+                  encoding="utf-8") as file:
+            label_style = file.read()
+            self.ui.lbl_fixed.setStyleSheet(label_style)
+
+        with open(path + "styles/label/label-h2.qss", 'r',
+                  encoding="utf-8") as file:
+            label_style = file.read()
+            self.ui.lbl_fixed_2.setStyleSheet(label_style)
+            self.ui.lbl_fixed_3.setStyleSheet(label_style)
+
+        with open(path + "styles/list-widget/listwidget.qss", 'r',
+                  encoding="utf-8") as file:
+            listw_style = file.read()
+            self.ui.listWidget.setStyleSheet(listw_style)
+
         # Добавление холста для рисования пай чарта
         self.canvas = MplCanvas(self)
         self.ui.verticalLayout_3.addWidget(self.canvas)
+        self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         self.ui.btn_logout.clicked.connect(self.logout)
         self.ui.listWidget.itemDoubleClicked.connect(self.msg_print_results)
@@ -58,9 +106,9 @@ class StudentProfilePage(QWidget):
 
         for i, result in enumerate(get_results_by_user(self.parent.current_user.id)):
             result_id = result['id']
-            points = result['points']
             num_tasks = len(get_test_tasks(result['test_id']))
             time = format_date(result['created_at'])
+            points = format_number(result["points"])
             item = QListWidgetItem(f"{i+1}.\t №{result_id}\t Результат: {points}/{num_tasks}\t{time}")
             self.ui.listWidget.insertItem(0, item)
 
@@ -89,10 +137,10 @@ class StudentProfilePage(QWidget):
         pdf.cell(40, 10, f"{result_id}", ln=1)
 
         points = format_number(result["points"])
+        num_tasks = len(get_test_tasks(result['test_id']))
         pdf.cell(40, 10, "Результат:", ln=0)
         pdf.tab(tab_size=5)
-        # TODO: заменить костыль /8 на реальное число вопросов в тесте
-        pdf.cell(40, 10, f"{points}/8", ln=1)
+        pdf.cell(40, 10, f"{points}/{num_tasks}", ln=1)
 
         fio = self.parent.current_user.lastname + " " + \
             self.parent.current_user.firstname + " " + \

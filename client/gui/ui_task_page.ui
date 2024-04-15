@@ -44,45 +44,56 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="cbx_task_type">
-       <property name="editable">
-        <bool>false</bool>
-       </property>
-       <property name="currentText">
-        <string/>
-       </property>
-       <property name="currentIndex">
-        <number>-1</number>
-       </property>
-       <property name="placeholderText">
-        <string>Тип задания</string>
-       </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <property name="text">
-         <string>1 - Один вариант ответа</string>
-        </property>
+        <widget class="QLabel" name="lbl_type">
+         <property name="text">
+          <string>Выберите тип задания:</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <property name="text">
-         <string>2 - Несколько вариантов ответа</string>
-        </property>
+        <widget class="QComboBox" name="cbx_task_type">
+         <property name="editable">
+          <bool>false</bool>
+         </property>
+         <property name="currentText">
+          <string/>
+         </property>
+         <property name="currentIndex">
+          <number>-1</number>
+         </property>
+         <property name="placeholderText">
+          <string>Тип задания</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>1 - Один вариант ответа</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2 - Несколько вариантов ответа</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3 - Открытый вопрос</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4 - Расставить в правильном порядке</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>5 - Динамический ответ</string>
+          </property>
+         </item>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>3 - Открытый вопрос</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>4 - Расставить в правильном порядке</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>5 - Динамический ответ</string>
-        </property>
-       </item>
-      </widget>
+      </layout>
      </item>
      <item>
       <widget class="QLineEdit" name="edt_answer">

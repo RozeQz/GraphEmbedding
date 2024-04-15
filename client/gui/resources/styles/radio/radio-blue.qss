@@ -1,0 +1,19 @@
+QRadioButton {
+    font-size: 14px;
+}
+
+QRadioButton::indicator:unchecked {
+    width: 25px;
+    height: 25px;
+    image: url(client/gui/resources/img/unchecked-radio-gray.svg);
+}
+
+QRadioButton::indicator:unchecked:hover {
+    image: url(client/gui/resources/img/unchecked-radio-blue.svg);
+}
+
+QRadioButton::indicator:checked {
+    width: 25px;
+    height: 25px;
+    image: url(client/gui/resources/img/checked-radio.png);
+}

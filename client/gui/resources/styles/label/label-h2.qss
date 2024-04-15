@@ -1,0 +1,7 @@
+QLabel {
+    font-size: 20pt;
+	font-weight: semibold;
+	color: rgb(0, 0, 0);
+	text-align: left;
+	margin-left: 0;
+}

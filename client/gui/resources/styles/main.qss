@@ -1,6 +1,6 @@
 MainWindow QLabel {
 	font-size: 26pt;
-	font-weight: 75;
+	font-weight: semibold;
 	color: rgb(255, 255, 255);
 	text-align: left;
 	margin-left: 32;
@@ -35,12 +35,6 @@ MainWindow QLabel#lbl_exit {
 
 MainWindow QLabel:hover {
 	color: rgb(12, 140, 233);
-}
-
-MainWindow QPushButton {
-    color: rgb(255, 255, 255);
-    background-color: rgb(12, 140, 233);
-    border-radius: 10px;
 }
 
 MainWindow QFrame {
@@ -94,6 +88,12 @@ TaskPage QLabel {
 	font-weight: 75;
 	color: rgb(0, 0, 0);
 	margin-left: 0;
+}
+
+MainPage QPushButton {
+    color: rgb(255, 255, 255);
+    background-color: rgb(12, 140, 233);
+    border-radius: 10px;
 }
 
 QWidget QLabel:hover {

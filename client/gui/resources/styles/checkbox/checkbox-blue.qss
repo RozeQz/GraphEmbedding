@@ -1,0 +1,19 @@
+QCheckBox {
+    font-size: 14px;
+}
+
+QCheckBox::indicator:unchecked {
+    width: 25px;
+    height: 25px;
+    image: url(client/gui/resources/img/unchecked-checkbox-gray.svg);
+}
+
+QCheckBox::indicator:unchecked:hover {
+    image: url(client/gui/resources/img/unchecked-checkbox-blue.svg);
+}
+
+QCheckBox::indicator:checked {
+    width: 25px;
+    height: 25px;
+    image: url(client/gui/resources/img/checked-checkbox-blue.png);
+}

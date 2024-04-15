@@ -1,0 +1,3 @@
+QPushButton{
+    image: url(client/gui/resources/img/arrow-down-black.svg);
+}

@@ -1,5 +1,6 @@
 from typing import List
 import random
+import os
 
 from PyQt5.QtWidgets import (
     QVBoxLayout,
@@ -28,6 +29,22 @@ class TaskPage(QWidget):
         self.ui.setupUi(self)
 
         self.parent = parent
+
+        # Путь к ассетам
+        path = os.getcwd() + "/client/gui/resources/"
+
+        # Привязка стилей
+        with open(path + "styles/edit/answer-edit.qss", 'r',
+                  encoding="utf-8") as file:
+            edt_style = file.read()
+            self.ui.edt_answer.setStyleSheet(edt_style)
+            self.ui.edt_options.setStyleSheet(edt_style)
+            self.ui.edt_task.setStyleSheet(edt_style)
+
+        with open(path + "styles/combobox/cbx-main.qss", 'r',
+                  encoding="utf-8") as file:
+            combo_style = file.read()
+            self.ui.cbx_task_type.setStyleSheet(combo_style)
 
         # Шаблон для расположения вариантов ответа
         self.options_layout = QVBoxLayout()

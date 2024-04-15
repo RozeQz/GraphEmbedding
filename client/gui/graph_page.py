@@ -37,9 +37,31 @@ class GraphPage(QWidget):
         # Отображение картинок
         self.ui.lbl_clock.setPixmap(QPixmap(path + "img/clock.png"))
 
-        # Изначально время скрыто
+        # Привязка стилей
+        with open(path + "styles/button/button-blue.qss", 'r',
+                  encoding="utf-8") as file:
+            button_style = file.read()
+            self.ui.btn_file.setStyleSheet(button_style)
+            self.ui.btn_draw.setStyleSheet(button_style)
+            self.ui.btn_embed.setStyleSheet(button_style)
+
+        with open(path + "styles/combobox/cbx-main.qss", 'r',
+                  encoding="utf-8") as file:
+            combo_style = file.read()
+            self.ui.cbx_algorithm.setStyleSheet(combo_style)
+
+        with open(path + "styles/label/label-main.qss", 'r',
+                  encoding="utf-8") as file:
+            label_style = file.read()
+            self.ui.lbl_file_name.setStyleSheet(label_style)
+            self.ui.lbl_algorithm.setStyleSheet(label_style)
+            self.ui.lbl_time.setStyleSheet(label_style)
+
+        # Изначально время и информация скрыты
         self.ui.lbl_clock.setVisible(False)
         self.ui.lbl_time.setVisible(False)
+        self.ui.lbl_graph_info.setVisible(False)
+        self.ui.lbl_file_name.setVisible(False)
 
         # Добавляем место для графа на страницу
         self.graph_layout = QVBoxLayout()
@@ -70,11 +92,14 @@ class GraphPage(QWidget):
             file_base_name = os.path.basename(self.file_name)
             print("Выбранный файл:", self.file_name)
             self.ui.lbl_file_name.setText(file_base_name)
+            self.ui.lbl_file_name.setVisible(True)
 
             # Добавление информации о графе
             self.add_graph_info()
 
     def add_graph_info(self):
+        self.ui.lbl_graph_info.setVisible(True)
+
         self.graph = Graph.get_graph_from_file(filename=self.file_name)
 
         num_vertices = self.graph.size
