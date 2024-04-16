@@ -12,6 +12,7 @@ textdistance==4.6.1
 termcolor==2.4.0
 PyQt5==5.15.9
 pyqt5-tools~=5.15
+PyQtWebEngine==5.15.6
 scipy==1.12.0
 pydantic==2.6.3
 pydantic_settings==2.2.1

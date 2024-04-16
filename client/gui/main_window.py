@@ -11,6 +11,7 @@ from gui.main_page import MainPage
 from gui.graph_page import GraphPage
 from gui.test_page import TestPage
 from gui.test_start_page import TestStartPage
+from gui.theory_page import TheoryPage
 
 from src.api.users_controller import get_user_by_id, get_user_data_by_id
 from src.education.user import User
@@ -75,6 +76,7 @@ class MainWindow(QMainWindow):
         self.graph_page = GraphPage(self)
         self.test_start_page = TestStartPage(self)
         self.test_page = TestPage(self)
+        self.theory_page = TheoryPage(self)
 
         # Инициализация первой страницы
         self.ui.stackedWidget.addWidget(self.main_page)
@@ -87,6 +89,7 @@ class MainWindow(QMainWindow):
         self.ui.stackedWidget.addWidget(self.graph_page)
         self.ui.stackedWidget.addWidget(self.test_start_page)
         self.ui.stackedWidget.addWidget(self.test_page)
+        self.ui.stackedWidget.addWidget(self.theory_page)
 
         # Обработка нажатия на кнопок
         self.ui.lbl_graph_emb.mouseReleaseEvent = self.show_graph_page
@@ -95,6 +98,7 @@ class MainWindow(QMainWindow):
         self.ui.lbl_logo.mouseReleaseEvent = self.show_main_page
         self.ui.lbl_profile.mouseReleaseEvent = self.show_student_profile_page
         self.ui.lbl_testing.mouseReleaseEvent = self.show_test_start_page
+        self.ui.lbl_theory.mouseReleaseEvent = self.show_theory_page
 
     def show_task_page(self, event):
         event.accept()
@@ -119,6 +123,10 @@ class MainWindow(QMainWindow):
     def show_test_start_page(self, event):
         event.accept()
         self.ui.stackedWidget.setCurrentWidget(self.test_start_page)
+
+    def show_theory_page(self, event):
+        event.accept()
+        self.ui.stackedWidget.setCurrentWidget(self.theory_page)
 
     def on_resize(self, event):
         event.accept()
