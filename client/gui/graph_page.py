@@ -9,7 +9,8 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QFileDialog,
-    QSizePolicy)
+    QSizePolicy,
+    QMessageBox)
 
 from gui.ui_graph_page import Ui_GraphPage
 from utils.graph import Graph
@@ -63,6 +64,10 @@ class GraphPage(QWidget):
         self.ui.lbl_graph_info.setVisible(False)
         self.ui.lbl_file_name.setVisible(False)
 
+        # Изначально некоторые кнопки недоступны
+        self.ui.btn_draw.setEnabled(False)
+        self.ui.btn_embed.setEnabled(False)
+
         # Добавляем место для графа на страницу
         self.graph_layout = QVBoxLayout()
         self.ui.horizontalLayout.insertLayout(0, self.graph_layout)
@@ -100,29 +105,40 @@ class GraphPage(QWidget):
     def add_graph_info(self):
         self.ui.lbl_graph_info.setVisible(True)
 
-        self.graph = Graph.get_graph_from_file(filename=self.file_name)
+        try:
+            self.graph = Graph.get_graph_from_file(filename=self.file_name)
 
-        num_vertices = self.graph.size
-        num_edges = self.graph.count_edges()
-        if self.graph.is_planar():
-            is_planar_str = "<p style='color: green;'>Граф планарный"
-        else:
-            is_planar_str = "<p style='color: red;'>Граф не планарный"
+            num_vertices = self.graph.size
+            num_edges = self.graph.count_edges()
+            if self.graph.is_planar():
+                is_planar_str = "<p style='color: green;'>Граф планарный"
+                self.ui.btn_embed.setEnabled(True)
+            else:
+                is_planar_str = "<p style='color: red;'>Граф не планарный"
+                self.ui.btn_embed.setEnabled(False)
 
-        text = f"<html><head/><body><p>Количество вершин: {num_vertices}</p>" + \
-               f"<p>Количество ребер: {num_edges}</p>" + \
-               f"{is_planar_str}</p></body></html>"
+            text = f"<html><head/><body><p>Количество вершин: {num_vertices}</p>" + \
+                f"<p>Количество ребер: {num_edges}</p>" + \
+                f"{is_planar_str}</p></body></html>"
 
-        self.ui.lbl_graph_info.setText(text)
+            self.ui.lbl_graph_info.setText(text)
+
+            self.ui.btn_draw.setEnabled(True)
+
+        except ValueError:
+            self.show_error_message("Некорректный файл")
 
     def draw_graph(self):
-        self.canvas.axes.cla()
+        if self.graph is None:
+            self.show_error_message("Не выбран файл с графом")
+        else:
+            self.canvas.axes.cla()
 
-        G = nx.Graph(np.array(self.graph.matrix))
-        pos = nx.spring_layout(G)
-        nx.draw(G, pos=pos, ax=self.canvas.axes,
-                with_labels=True, node_color="#0C8CE9")
-        self.canvas.draw()
+            G = nx.Graph(np.array(self.graph.matrix))
+            pos = nx.spring_layout(G)
+            nx.draw(G, pos=pos, ax=self.canvas.axes,
+                    with_labels=True, node_color="#0C8CE9")
+            self.canvas.draw()
 
     def embed_graph(self):
         self.canvas.axes.cla()
@@ -171,3 +187,16 @@ class GraphPage(QWidget):
         self.ui.lbl_time.setText(f"Время работы: {res_msec:.2f} миллисекунд")
         self.ui.lbl_time.setVisible(True)
         self.ui.lbl_clock.setVisible(True)
+
+    def show_error_message(self, text):
+        mbx = QMessageBox()
+        mbx.setIcon(QMessageBox.Critical)
+        if text == "Не выбран файл с графом":
+            mbx.setText("Не выбран файл с графом. \n" +
+                        "Выберите файл с графом, нажав на кнопку \"Выбрать файл\".")
+        elif text == "Некорректный файл":
+            mbx.setText("Выбран некорректный файл. \n" +
+                        "Выберите текстовый файл, в котором содержится число вершин и матрица смежности заданного графа.")
+        mbx.setWindowTitle("Ошибка!")
+        mbx.setStandardButtons(QMessageBox.Ok)
+        mbx.exec_()

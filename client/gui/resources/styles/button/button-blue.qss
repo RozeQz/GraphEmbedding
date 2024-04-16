@@ -10,3 +10,9 @@ QPushButton {
 QPushButton:hover {
     background-color: rgb(11, 125, 209);
 }
+
+QPushButton:!enabled {
+    color: rgb(200, 200, 200);
+    background-color: rgb(245, 245, 245);
+    border: 1px solid rgb(200, 200, 200);
+}

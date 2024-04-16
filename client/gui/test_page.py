@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (
     QMessageBox)
 
 from gui.ui_test_page import Ui_TestPage
+from gui.test_end_page import TestEndPage
 
 from src.education.task_manager import TaskManager
 from utils.gui import (
@@ -135,7 +136,7 @@ class TestPage(QWidget):
         show_layout_items(self.ui.hbox_main)
         show_layout_items(self.ui.hbox_btn_answer)
         # Убираем результаты
-        hide_layout_items(self.ui.vbox_results)
+        # hide_layout_items(self.ui.vbox_results)
 
         # Показать сетку заданий
         self.show_grid_tasks()
@@ -156,7 +157,7 @@ class TestPage(QWidget):
         hide_layout_items(self.ui.hbox_main)
         hide_layout_items(self.ui.hbox_btn_answer)
         # Выводим результаты
-        show_layout_items(self.ui.vbox_results)
+        # show_layout_items(self.ui.vbox_results)
 
         # Отправляем результат на сервер
         result = {
@@ -273,19 +274,19 @@ class TestPage(QWidget):
             self.stop_test()
 
     def show_results(self):
-        self.ui.fbox_results.setWidget(0, QFormLayout.LabelRole,
-                                       QLabel("Ваш результат: "))
-        self.ui.fbox_results.setWidget(0, QFormLayout.FieldRole,
-                                       QLabel(f"{self.current_test.test.points}/{self.current_test.num_tasks}"))
+        # clearLayout(self.ui.fbox_results)
+        result = f"{self.current_test.test.points}/{self.current_test.num_tasks}"
 
         time = self.current_test.test.time - self.current_test.remaining_time
         minutes = time // 60
         seconds = time % 60
+        str_time = f"{minutes:02}:{seconds:02}"
 
-        self.ui.fbox_results.setWidget(1, QFormLayout.LabelRole,
-                                       QLabel("Время тестирования: "))
-        self.ui.fbox_results.setWidget(1, QFormLayout.FieldRole,
-                                       QLabel(f"{minutes:02}:{seconds:02}"))
+        test_end_page = TestEndPage(result=result, time=str_time,
+                                    parent=self.parent)
+        self.parent.ui.stackedWidget.addWidget(test_end_page)
+
+        self.parent.ui.stackedWidget.setCurrentWidget(test_end_page)
 
     def forced_stop(self):
         answer = QMessageBox.question(

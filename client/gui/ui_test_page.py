@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_TestPage(object):
     def setupUi(self, TestPage):
         TestPage.setObjectName("TestPage")
-        TestPage.resize(765, 494)
+        TestPage.resize(841, 494)
         self.verticalLayout = QtWidgets.QVBoxLayout(TestPage)
         self.verticalLayout.setObjectName("verticalLayout")
         self.hbox_top = QtWidgets.QHBoxLayout()
@@ -142,15 +142,6 @@ class Ui_TestPage(object):
         self.verticalLayout.addLayout(self.hbox_btn_answer)
         spacerItem15 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem15)
-        self.vbox_results = QtWidgets.QVBoxLayout()
-        self.vbox_results.setObjectName("vbox_results")
-        self.lbl_test_end = QtWidgets.QLabel(TestPage)
-        self.lbl_test_end.setObjectName("lbl_test_end")
-        self.vbox_results.addWidget(self.lbl_test_end)
-        self.fbox_results = QtWidgets.QFormLayout()
-        self.fbox_results.setObjectName("fbox_results")
-        self.vbox_results.addLayout(self.fbox_results)
-        self.verticalLayout.addLayout(self.vbox_results)
 
         self.retranslateUi(TestPage)
         QtCore.QMetaObject.connectSlotsByName(TestPage)
@@ -165,4 +156,3 @@ class Ui_TestPage(object):
         self.btn_end.setText(_translate("TestPage", "Завершить\n"
 "тестирование"))
         self.btn_answer.setText(_translate("TestPage", "Ответить"))
-        self.lbl_test_end.setText(_translate("TestPage", "Тестирование завершено!"))

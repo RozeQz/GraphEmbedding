@@ -40,7 +40,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.fr_menu.sizePolicy().hasHeightForWidth())
         self.fr_menu.setSizePolicy(sizePolicy)
-        self.fr_menu.setMinimumSize(QtCore.QSize(0, 0))
+        self.fr_menu.setMinimumSize(QtCore.QSize(360, 0))
         self.fr_menu.setMaximumSize(QtCore.QSize(360, 16777215))
         self.fr_menu.setStyleSheet("QFrame {\n"
 "    background-color: rgb(44, 48, 57);\n"
