@@ -18,37 +18,28 @@ async def create_user_group(
     return crud.create(session, user_group)
 
 
-@router.get("/{user_id}/",
-            description="Получить список групп пользователя")
-async def get_user_groups(user_id: int, session: Session = Depends(get_session)):
-    user_groups = crud.get_user_groups(session, user_id)
-
-    if not user_groups:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with {user_id=} not found",
-        )
-
-    return user_groups
-
-
-@router.get("/{group_id}/",
-            description="Получить список пользователей группы")
-async def get_group_users(group_id: int,
-                          session: Session = Depends(get_session)):
-    group_users = crud.get_group_users(session, group_id)
-
-    if not group_users:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Group with {group_id=} not found",
-        )
-
-    return group_users
-
-
-@router.get("/", description="Получить все связи пользователь-группа")
-async def get_users_groups(session: Session = Depends(get_session)):
+@router.get("/",
+            description="Получить все связи пользователь-группа \
+                         c учетом query параметров")
+async def get_users_groups(user_id: int = None,
+                           group_id: int = None,
+                           session: Session = Depends(get_session)):
+    if user_id is not None:
+        user_groups = crud.get_user_groups(session, user_id)
+        if not user_groups:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with {user_id=} not found",
+            )
+        return user_groups
+    if group_id is not None:
+        group_users = crud.get_group_users(session, group_id)
+        if not group_users:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Group with {group_id=} not found",
+            )
+        return group_users
     return crud.get_all(session)
 
 

@@ -18,37 +18,28 @@ async def create_user_topic(
     return crud.create(session, user_group)
 
 
-@router.get("/{user_id}/",
-            description="Получить список прочитанных тем пользователя")
-async def get_user_topics(user_id: int, session: Session = Depends(get_session)):
-    user_topics = crud.get_user_topics(session, user_id)
-
-    if not user_topics:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with {user_id=} not found",
-        )
-
-    return user_topics
-
-
-@router.get("/{topic_id}/",
-            description="Получить список пользователей, которые прочитали тему")
-async def get_topic_users(topic_id: int,
-                          session: Session = Depends(get_session)):
-    topic_users = crud.get_topic_users(session, topic_id)
-
-    if not topic_users:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Topic with {topic_id=} not found",
-        )
-
-    return topic_users
-
-
-@router.get("/", description="Получить все связи пользователь-тема")
-async def get_users_topics(session: Session = Depends(get_session)):
+@router.get("/",
+            description="Получить все связи пользователь-тема \
+                         c учетом query параметров")
+async def get_users_topics(user_id: int = None,
+                           topic_id: int = None,
+                           session: Session = Depends(get_session)):
+    if user_id is not None:
+        user_topics = crud.get_user_topics(session, user_id)
+        if not user_topics:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with {user_id=} not found",
+            )
+        return user_topics
+    if topic_id is not None:
+        topic_users = crud.get_topic_users(session, topic_id)
+        if not topic_users:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Topic with {topic_id=} not found",
+            )
+        return topic_users
     return crud.get_all(session)
 
 
