@@ -122,3 +122,23 @@ class Result(Base):
     points: Mapped[float] = mapped_column(nullable=False)
     answers = Column(JSONB, nullable=True)
     time_spent:  Mapped[int] = mapped_column(nullable=True)
+
+
+class Topic(Base):
+    __tablename__ = "Topics"
+
+    title: Mapped[str] = mapped_column(nullable=False)
+    file_name: Mapped[str] = mapped_column(nullable=True)
+
+
+class Users_Topic(Base):
+    __tablename__ = "Users_Topics"
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("Users.id"),
+        nullable=False
+    )
+    topic_id: Mapped[int] = mapped_column(
+        ForeignKey("Topics.id"),
+        nullable=False
+    )
