@@ -5,7 +5,7 @@ from src.api.config import origin
 
 
 def get_all_tasks():
-    url = origin + "/planared/tasks/"
+    url = origin + "/planared/tasks"
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
@@ -35,7 +35,7 @@ def get_tasks_by_type(task_type: int):
 
 
 def create_task(task: json):
-    url = origin + "/planared/tasks/"
+    url = origin + "/planared/tasks"
     response = requests.post(url, json=task)
     if response.status_code == 200:
         return response.json()

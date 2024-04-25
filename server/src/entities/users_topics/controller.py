@@ -27,18 +27,12 @@ async def get_users_topics(user_id: int = None,
     if user_id is not None:
         user_topics = crud.get_user_topics(session, user_id)
         if not user_topics:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with {user_id=} not found",
-            )
+            return []
         return user_topics
     if topic_id is not None:
         topic_users = crud.get_topic_users(session, topic_id)
         if not topic_users:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Topic with {topic_id=} not found",
-            )
+            return []
         return topic_users
     return crud.get_all(session)
 
