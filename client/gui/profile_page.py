@@ -20,13 +20,13 @@ class ProfilePage(QWidget):
         user_data = get_user_data_by_id(user["user_data_id"])
 
         self.current_user = User(user["id"],
-                                 user["role_id"],
+                                 user["role"],
                                  user_data["firstname"],
                                  user_data["lastname"],
                                  user_data["midname"])
 
         # Инициализация страницы соответствующей роли
-        if self.current_user.role_id == 1:
+        if self.current_user.role == "student":
             # parent.show_student_profile_page()
             pass
         else:

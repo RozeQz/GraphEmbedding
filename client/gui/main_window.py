@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
         user_data = get_user_data_by_id(user["user_data_id"])
 
         self.current_user = User(user["id"],
-                                 user["role_id"],
+                                 user["role"],
                                  user_data["firstname"],
                                  user_data["lastname"],
                                  user_data["midname"])

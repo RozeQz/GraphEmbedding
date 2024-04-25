@@ -3,6 +3,7 @@
 '''
 
 from datetime import datetime
+import enum
 
 from sqlalchemy.orm import (
     Mapped,
@@ -49,12 +50,17 @@ class UsersData(Base):
     email: Mapped[str] = mapped_column(nullable=False)
 
 
+class Role(enum.Enum):
+    student = "student"
+    teacher = "teacher"
+
+
 class User(Base):
     __tablename__ = "Users"
 
     login: Mapped[str] = mapped_column(nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
-    role_id:  Mapped[int] = mapped_column(nullable=False)   # Потом переделаю под таблицу
+    role:  Mapped[Role] = mapped_column(nullable=False)
     user_data_id: Mapped[int] = mapped_column(
         ForeignKey("Users_data.id", ondelete="CASCADE"),
         nullable=False

@@ -3,10 +3,10 @@ from src.education.group import Group
 
 
 class User():
-    def __init__(self, user_id, role_id, firstname, lastname, midname,
+    def __init__(self, user_id, role, firstname, lastname, midname,
                  group=None):
         self.id = user_id
-        self.role_id = role_id
+        self.role = role
         self.firstname = firstname
         self.lastname = lastname
         self.midname = midname
