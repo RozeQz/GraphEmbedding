@@ -41,10 +41,7 @@ async def get_results(user_id: int = None,
     if user_id is not None:
         user_results = crud.get_user_results(session, user_id)
         if not user_results:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with {user_id=} not found",
-            )
+            return []
         return user_results
     if test_id is not None:
         test_results = crud.get_test_results(session, test_id)

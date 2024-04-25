@@ -24,6 +24,16 @@ def get_user_by_id(user_id: int):
         return None
 
 
+def get_users_by_role(role: str):
+    url = origin + f"/planared/users?role={role}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error")
+        return None
+
+
 def get_user_data_by_id(data_id: int):
     url = origin + f"/planared/users_data/{data_id}"
     response = requests.get(url)

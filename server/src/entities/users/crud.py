@@ -13,6 +13,10 @@ def get_all(session: Session) -> List[Type[User]]:
     return session.query(User).all()
 
 
+def get_users_by_role(session: Session, role: str) -> List[Type[User]]:
+    return session.query(User).where(User.role == role).all()
+
+
 def create(session: Session, obj_create: UserCreate) -> User:
     obj_dict = obj_create.model_dump()
     user = User(**obj_dict)

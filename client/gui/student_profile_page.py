@@ -1,5 +1,6 @@
 import os
 import seaborn as sns
+from typing import List, Optional
 
 from PyQt5.QtWidgets import (
     QWidget,
@@ -16,6 +17,11 @@ from src.api.results_controller import (
     get_result_by_id)
 from src.api.tests_controller import get_test_tasks
 from src.api.tasks_controller import get_task_by_id
+from src.api.groups_controller import get_group_users
+from src.api.users_controller import get_user_by_id, get_user_data_by_id
+from src.api.topics_controller import get_user_topics, get_all_topics
+
+from src.education.user import User
 
 from utils.gui import highlight_label
 from utils.PDF import PDF
@@ -50,6 +56,7 @@ class StudentProfilePage(QWidget):
             self.ui.label_6.setStyleSheet(label_style)
             self.ui.label_7.setStyleSheet(label_style)
             self.ui.label_8.setStyleSheet(label_style)
+            self.ui.label_9.setStyleSheet(label_style)
             self.ui.lbl_surname.setStyleSheet(label_style)
             self.ui.lbl_name.setStyleSheet(label_style)
             self.ui.lbl_midname.setStyleSheet(label_style)
@@ -58,6 +65,7 @@ class StudentProfilePage(QWidget):
             self.ui.lbl_num_tests.setStyleSheet(label_style)
             self.ui.lbl_avg_percent.setStyleSheet(label_style)
             self.ui.lbl_unique_tasks.setStyleSheet(label_style)
+            self.ui.lbl_topics_read.setStyleSheet(label_style)
 
         with open(path + "styles/label/label-h1.qss", 'r',
                   encoding="utf-8") as file:
@@ -80,6 +88,30 @@ class StudentProfilePage(QWidget):
         self.ui.verticalLayout_3.addWidget(self.canvas)
         self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
+        self.ui.lbl_avg_percent.setWordWrap(True)
+        self.ui.lbl_teacher.setWordWrap(True)
+
+        # Инициализация данных пользователя
+        self.ui.lbl_surname.setText(self.parent.current_user.lastname)
+        self.ui.lbl_name.setText(self.parent.current_user.firstname)
+        self.ui.lbl_midname.setText(self.parent.current_user.midname)
+        group = self.parent.current_user.groups[0]
+        self.ui.lbl_group.setText(group.name)
+
+        teachers = self.find_group_teacher(group.id)
+        t_text = ''
+        for teacher in teachers:
+            teacher_data = get_user_data_by_id(teacher["user_data_id"])
+            tutor = User(teacher["id"], teacher["role"],
+                         teacher_data["firstname"],
+                         teacher_data["lastname"],
+                         teacher_data["midname"])
+            t_text += f'{tutor.lastname} {tutor.firstname} {tutor.midname}'
+            if teacher != teachers[-1]:
+                t_text += ',\n'
+        self.ui.lbl_teacher.setText(t_text)
+
+        # Обработка нажатия кнопок
         self.ui.btn_logout.clicked.connect(self.logout)
         self.ui.listWidget.itemDoubleClicked.connect(self.msg_print_results)
 
@@ -88,18 +120,46 @@ class StudentProfilePage(QWidget):
         Вызывается при обновлении страницы.
         Обновляет содержимое профиля.
         '''
-        self.ui.lbl_surname.setText(self.parent.current_user.lastname)
-        self.ui.lbl_name.setText(self.parent.current_user.firstname)
-        self.ui.lbl_midname.setText(self.parent.current_user.midname)
-        self.ui.lbl_group.setText(self.parent.current_user.groups[0].name)
+        num_tests = len(get_results_by_user(self.parent.current_user.id))
+        self.ui.lbl_num_tests.setText(f"{num_tests}")
+        if num_tests > 0:
+            average_percent = calc_average_percent(self.parent.current_user.id,
+                                                   obj="user")
+            self.ui.lbl_avg_percent.setText(f"{average_percent:.2f}%")
 
-        self.ui.lbl_num_tests.setText(f"{len(get_results_by_user(self.parent.current_user.id))}")
-        average_percent = calc_average_percent(self.parent.current_user.id,
-                                               obj="user")
-        self.ui.lbl_avg_percent.setText(f"{average_percent:.2f}%")
+            self.show_pie_chart()
+            self.canvas.show()
+        else:
+            text = "Решите хотя бы 1 тест, чтобы получить статистику"
+            self.ui.lbl_avg_percent.setText(text)
 
-        self.show_pie_chart()
+            self.canvas.hide()
+
         self.init_test_story()
+
+        all_topics = len(get_all_topics())
+        user_topics = len(get_user_topics(self.parent.current_user.id))
+        self.ui.lbl_topics_read.setText(f"{user_topics}/{all_topics}")
+
+    def find_group_teacher(self, group_id: int) -> List[Optional[str]]:
+        '''
+        Находит преподавателей конкретной группы.
+
+        Args:
+            group_id (int): ID группы.
+
+        Returns:
+            List: Список преподавателей конкретной группы.
+        '''
+        group_teachers = []
+
+        users = get_group_users(group_id)
+        for user in users:
+            user_info = get_user_by_id(user["user_id"])
+            if user_info["role"] == "teacher":
+                group_teachers.append(user_info)
+
+        return group_teachers
 
     def init_test_story(self):
         self.ui.listWidget.clear()

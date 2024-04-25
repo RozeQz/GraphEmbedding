@@ -199,6 +199,9 @@
            <property name="text">
             <string>Преподаватель:</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
           </widget>
          </item>
          <item row="0" column="1">
@@ -361,6 +364,9 @@
              <property name="text">
               <string>Средний % правильных ответов в тесте:</string>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
             </widget>
            </item>
            <item row="2" column="0">
@@ -386,6 +392,20 @@
            </item>
            <item row="2" column="1">
             <widget class="QLabel" name="lbl_unique_tasks">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Прочитано тем:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="lbl_topics_read">
              <property name="text">
               <string>TextLabel</string>
              </property>
