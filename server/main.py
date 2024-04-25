@@ -13,6 +13,9 @@ from src.entities.results.controller import router as router_results
 from src.entities.tasks.controller import router as router_tasks
 from src.entities.tests.controller import router as router_tests
 from src.entities.tasks_tests.controller import router as router_tasks_tests
+from src.entities.topics.controller import router as router_topics
+from src.entities.users_topics.controller import router as router_users_topics
+
 
 Base.metadata.create_all(engine)
 
@@ -26,6 +29,8 @@ app.include_router(router=router_results)
 app.include_router(router=router_tasks)
 app.include_router(router=router_tests)
 app.include_router(router=router_tasks_tests)
+app.include_router(router=router_topics)
+app.include_router(router=router_users_topics)
 
 origins = [
     "http://localhost:3000",
