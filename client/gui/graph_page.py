@@ -3,6 +3,7 @@ import os
 import time
 import numpy as np
 import networkx as nx
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
@@ -20,6 +21,16 @@ from gui.mplcanvas import MplCanvas
 from src.algorithms.gamma_algorithm import GammaAlgorithm
 from src.algorithms.annealing_algorithm import AnnealingAlgorithm
 from utils.gui import highlight_label
+
+
+class NavigationToolbar(NavigationToolbar2QT):
+    '''
+    Пользовательский тулбар, унаследованный от NavigationToolbar2QT.
+
+    Отображает только кнопки Home, Back, Forward, Pan, Zoom и Save.
+    '''
+    toolitems = [t for t in NavigationToolbar2QT.toolitems if
+                 t[0] in ('Home', 'Back', 'Forward', 'Pan', 'Zoom', 'Save')]
 
 
 class GraphPage(QWidget):
@@ -75,6 +86,10 @@ class GraphPage(QWidget):
         # Добавление холста для рисования
         self.canvas = MplCanvas(self)
         self.canvas.axes.axis('off')
+        # Добавление тулбара на холст
+        self.toolbar = NavigationToolbar(self.canvas, self)
+        self.toolbar.setVisible(False)
+        self.graph_layout.addWidget(self.toolbar)
         self.graph_layout.addWidget(self.canvas)
         self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
@@ -139,6 +154,7 @@ class GraphPage(QWidget):
             nx.draw(G, pos=pos, ax=self.canvas.axes,
                     with_labels=True, node_color="#0C8CE9")
             self.canvas.draw()
+            self.toolbar.setVisible(True)
 
     def embed_graph(self):
         self.canvas.axes.cla()
