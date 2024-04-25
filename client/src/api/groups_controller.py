@@ -44,9 +44,9 @@ def get_group_users(group_id: int):
         return None
 
 
-def create_group(task: json):
+def create_group(group: json):
     url = origin + "/planared/groups/"
-    response = requests.post(url, json=task)
+    response = requests.post(url, json=group)
     if response.status_code == 200:
         return response.json()
     else:
@@ -54,9 +54,9 @@ def create_group(task: json):
         return None
 
 
-def create_user_group(task: json):
+def create_user_group(user_group: json):
     url = origin + "/planared/users_groups/"
-    response = requests.post(url, json=task)
+    response = requests.post(url, json=user_group)
     if response.status_code == 200:
         return response.json()
     else:

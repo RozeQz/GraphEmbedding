@@ -47,11 +47,13 @@ def get_results_by_test(test_id: int):
 
 def calc_average_percent(id: int, obj="user") -> float:
     '''
-    Считает средний процент правильных ответов пользователя или конкретного теста.
+    Считает средний процент правильных ответов пользователя или
+    конкретного теста.
 
     Args:
         id (int): ID пользователя или ID теста.
-        obj (str): Тип объекта. Если "user", то считается средний процент пользователя. Если "test", то считается средний процент теста.
+        obj (str): Тип объекта. Если "user", то считается средний
+        процент пользователя. Если "test", то считается средний процент теста.
     '''
     percent = 0
     url = origin + f"/planared/results?{obj}_id={id}"
@@ -68,9 +70,9 @@ def calc_average_percent(id: int, obj="user") -> float:
         return None
 
 
-def create_result(task: json):
+def create_result(result: json):
     url = origin + "/planared/results/"
-    response = requests.post(url, json=task)
+    response = requests.post(url, json=result)
     if response.status_code == 200:
         return response.json()
     else:

@@ -44,9 +44,9 @@ def get_topic_users(group_id: int):
         return None
 
 
-def create_topic(task: json):
+def create_topic(topic: json):
     url = origin + "/planared/topics/"
-    response = requests.post(url, json=task)
+    response = requests.post(url, json=topic)
     if response.status_code == 200:
         return response.json()
     else:
@@ -54,9 +54,19 @@ def create_topic(task: json):
         return None
 
 
-def create_user_topic(task: json):
+def create_user_topic(user_topic: json):
     url = origin + "/planared/users_topics/"
-    response = requests.post(url, json=task)
+    response = requests.post(url, json=user_topic)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error")
+        return None
+
+
+def delete_user_topic(topic_id: int):
+    url = origin + "/planared/users_topics/{topic_id}/"
+    response = requests.delete(url)
     if response.status_code == 200:
         return response.json()
     else:

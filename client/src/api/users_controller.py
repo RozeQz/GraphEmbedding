@@ -34,9 +34,9 @@ def get_user_data_by_id(data_id: int):
         return None
 
 
-def create_user(task: json):
+def create_user(user: json):
     url = origin + "/planared/users/"
-    response = requests.post(url, json=task)
+    response = requests.post(url, json=user)
     if response.status_code == 200:
         return response.json()
     else:
