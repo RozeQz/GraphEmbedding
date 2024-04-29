@@ -4,6 +4,7 @@ import time
 import numpy as np
 import networkx as nx
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from PyQt5.QtCore import Qt, QThreadPool, pyqtSignal, pyqtSlot, QRunnable, QObject
 from PyQt5.QtGui import QPixmap
@@ -224,13 +225,8 @@ class GraphPage(QWidget):
         if alogithm == 0:
             gr = GammaAlgorithm(self.graph)
             planar = gr.run()
-            if planar is not None:
-                print("Граф планарный.")
-                print(planar)
-                embed = gr.visualize()
-                embed.show()
-            else:
-                print("Граф не планарный.")
+            gr.visualize(canvas=self.canvas)
+            self.canvas.draw()
         # Метод отжига
         elif alogithm == 1:
             # Инициализация позиций

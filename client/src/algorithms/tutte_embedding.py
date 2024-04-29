@@ -2,13 +2,14 @@
 Реализация вложения Татта
 Tutte Embedding
 '''
+from collections import defaultdict
+from collections.abc import ValuesView
+
 import numpy as np
 from numpy.linalg import solve
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 import networkx as nx
-from collections import defaultdict
-from collections.abc import ValuesView
 
 from utils.algorithm import Algorithm
 from utils.graph import Graph
@@ -20,9 +21,10 @@ class TutteEmbedding(Algorithm):
     Реализация вложения Татта простого вершинно
     3-связного планарного графа.
     '''
-    def __init__(self, graph: Graph, outer_face: list):
+    def __init__(self, graph: Graph, outer_face: list, canvas=None):
         self.graph = graph
         self.outer_face = outer_face
+        self.canvas = canvas
 
     def run(self, delta: float = 0.05) -> Figure:
         '''
@@ -36,8 +38,10 @@ class TutteEmbedding(Algorithm):
                              self.embed_external_face()))
         print(positions)
         weights = defaultdict(lambda: 1)
-        vals = list(zip(TutteEmbedding.solve_for(0, self.graph, positions, weights),
-                        TutteEmbedding.solve_for(1, self.graph, positions, weights)))
+        vals = list(zip(TutteEmbedding.solve_for(0, self.graph,
+                                                 positions, weights),
+                        TutteEmbedding.solve_for(1, self.graph,
+                                                 positions, weights)))
 
         result = dict(zip(self.graph.keys(), vals))
 
@@ -45,21 +49,32 @@ class TutteEmbedding(Algorithm):
         print(result)
         self.annotate(result)
 
-        plt.axis('off')
-        return plt.gcf()
+        if self.canvas is None:
+            plt.axis('off')
+            return plt.gcf()
+        else:
+            self.canvas.axes.axis('off')
+            return self.canvas.figure
 
-    @staticmethod
-    def add_line(point1: Point, point2: Point) -> None:
+    def add_line(self, point1: Point, point2: Point) -> None:
         '''
         Рисует линию между двумя точками point1 и point2.
         '''
-        node_color="#0C8CE9"
+        node_color = "#0C8CE9"
         print("Line: " + str(point1) + "  " + str(point2))
-        plt.plot((point1.x, point2.x),
-                 (point1.y, point2.y),
-                 markerfacecolor=node_color, markeredgewidth=0,
-                 color='black', marker='o',
-                 linewidth=1, markersize=18)
+        if self.canvas is None:
+            plt.plot((point1.x, point2.x),
+                     (point1.y, point2.y),
+                     markerfacecolor=node_color, markeredgewidth=0,
+                     color='black', marker='o',
+                     linewidth=1, markersize=18)
+        else:
+            self.canvas.axes.plot((point1.x, point2.x),
+                                  (point1.y, point2.y),
+                                  markerfacecolor=node_color,
+                                  markeredgewidth=0,
+                                  color='black', marker='o',
+                                  linewidth=1, markersize=18)
 
     def embed_external_face(self) -> ValuesView:
         '''
@@ -72,23 +87,26 @@ class TutteEmbedding(Algorithm):
 
         return layout.values()
 
-    @staticmethod
-    def draw_lines(positions, inp, delta: float = 0.05):
+    def draw_lines(self, positions, inp, delta: float = 0.05):
         '''
         Рисует ребра между смежными вершинами.
-        Если существуют совпадающие ребра, то одна из вершин будет сдвинута на указанную дельту.
+        Если существуют совпадающие ребра, то одна из вершин будет
+        сдвинута на указанную дельту.
 
-        TODO: высчитывать позицию для сдвига чтобы гарантировать плоскую укладку.
+        TODO: высчитывать позицию для сдвига чтобы гарантировать
+        плоскую укладку.
         '''
         for key, value in positions.items():
             positions[key] = list(value)
         for vertex, neighbours in inp.items():
             point1 = Point(positions[vertex][0], positions[vertex][1],
                            label=vertex)
-            point2 = Point(positions[neighbours[0]][0], positions[neighbours[0]][1],
+            point2 = Point(positions[neighbours[0]][0],
+                           positions[neighbours[0]][1],
                            label=neighbours[0])
             for neighbour in neighbours:
-                point3 = Point(positions[neighbour][0], positions[neighbour][1],
+                point3 = Point(positions[neighbour][0],
+                               positions[neighbour][1],
                                label=neighbour)
                 if point2.label != point3.label:
                     if Point.isBetween(point1, point2, point3):
@@ -104,11 +122,10 @@ class TutteEmbedding(Algorithm):
                         point2.x += delta
                         point2.y += delta
                 point2 = point3
-                print("From {} to {}".format(vertex, neighbour))
-                TutteEmbedding.add_line(point1, point2)
+                print(f"From {vertex} to {neighbour}")
+                self.add_line(point1, point2)
 
-    @staticmethod
-    def annotate(positions: dict) -> None:
+    def annotate(self, positions: dict) -> None:
         '''
         Добавляет название вершин в граф.
 
@@ -117,10 +134,16 @@ class TutteEmbedding(Algorithm):
         а значение - координата точки на плоскости.
         '''
         for label, point in positions.items():
-            plt.gca().annotate(text=label,
-                               xy=point,
-                               va="center", ha="center",
-                               fontsize=12)
+            if self.canvas is None:
+                plt.gca().annotate(text=label,
+                                   xy=point,
+                                   va="center", ha="center",
+                                   fontsize=12)
+            else:
+                self.canvas.axes.annotate(text=label,
+                                          xy=point,
+                                          va="center", ha="center",
+                                          fontsize=12)
 
     @staticmethod
     def solve_for(dimension: int, inp: dict, given: dict, weights=None):

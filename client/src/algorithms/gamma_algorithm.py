@@ -1,11 +1,5 @@
-import copy
-import math
-
 from typing import List
-import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-import numpy as np
-import networkx as nx
 
 from utils.graph import Graph
 from utils.algorithm import Algorithm
@@ -16,8 +10,11 @@ class GammaAlgorithm(Algorithm):
     def __init__(self, graph: Graph):
         self.graph = graph
 
-    # DFS алгоритм для нахождения простого цикла
-    def dfs_cycle(self, result: list[int], used: list[int], parent: int, v: int) -> bool:
+    def dfs_cycle(self, result: list[int], used: list[int],
+                  parent: int, v: int) -> bool:
+        '''
+        DFS алгоритм для нахождения простого цикла
+        '''
         used[v] = 1
 
         for i in range(self.graph.size):
@@ -55,9 +52,12 @@ class GammaAlgorithm(Algorithm):
         else:
             return cycle[:]
 
-    # Поиск связных компонент графа G - G', дополненного ребрами из G,
-    # один из концов которых принадлежит связной компоненте, а другой G'
-    def dfs_segments(self, used: list[int], laid_vertexes: list[bool], result, v: int):
+    def dfs_segments(self, used: list[int], laid_vertexes: list[bool],
+                     result, v: int):
+        '''
+        Поиск связных компонент графа G - G', дополненного ребрами из G,
+        один из концов которых принадлежит связной компоненте, а другой G'
+        '''
         used[v] = 1
         for i in range(self.graph.size):
             if self.graph.matrix[v][i] == 1:
@@ -84,8 +84,11 @@ class GammaAlgorithm(Algorithm):
                 segments.append(res)
         return segments
 
-    # Поиск цепи в выбранном сегменте, используя DFS алгоритм
-    def dfs_chain(self, used: list[int], laid_vertexes: list[bool], chain: list[int], v: int):
+    def dfs_chain(self, used: list[int], laid_vertexes: list[bool],
+                  chain: list[int], v: int):
+        '''
+        Поиск цепи в выбранном сегменте, используя DFS алгоритм
+        '''
         used[v] = 1
         chain.append(v)
         for i in range(self.graph.size):
@@ -105,13 +108,16 @@ class GammaAlgorithm(Algorithm):
                     if self.graph.contains_edge(i, j):
                         in_graph = True
                 if in_graph:
-                    self.dfs_chain([0] * self.graph.size, laid_vertexes, result, i)
+                    self.dfs_chain([0] * self.graph.size, laid_vertexes,
+                                   result, i)
                     break
         return result
 
-    # Укладка цепи, описание матрицы смежности
     @staticmethod
     def lay_chain(result, chain: list[int], cyclic: bool):
+        '''
+        Укладка цепи, и обновление описания матрицы смежности
+        '''
         for i in range(len(chain) - 1):
             result[chain[i]][chain[i + 1]] = True
             result[chain[i + 1]][chain[i]] = True
@@ -119,8 +125,11 @@ class GammaAlgorithm(Algorithm):
             result[chain[0]][chain[-1]] = True
             result[chain[-1]][chain[0]] = True
 
-    # Проверка на то, что данный сегмент содержится в данной грани
-    def is_face_contains_segment(self, face: list[int], segment, laid_vertexes: list[bool]):
+    def is_face_contains_segment(self, face: list[int], segment,
+                                 laid_vertexes: list[bool]):
+        '''
+        Проверка на то, что данный сегмент содержится в данной грани
+        '''
         for i in range(self.graph.size):
             for j in range(self.graph.size):
                 if segment.contains_edge(i, j):
@@ -128,23 +137,31 @@ class GammaAlgorithm(Algorithm):
                         return False
         return True
 
-    # Считаем число граней, вмещающих данные сегменты
-    def calc_num_of_faces_contained_segments(self, int_faces, ext_face, segments, laid_vertexes, dest_faces):
+    def calc_num_of_faces_contained_segments(self, int_faces,
+                                             ext_face, segments,
+                                             laid_vertexes, dest_faces):
+        '''
+        Подсчет числа граней, вмещающих данные сегменты
+        '''
         count = [0] * len(segments)
         for i in range(len(segments)):
             for face in int_faces:
-                if self.is_face_contains_segment(face, segments[i], laid_vertexes):
+                if self.is_face_contains_segment(face, segments[i],
+                                                 laid_vertexes):
                     dest_faces[i] = face
                     count[i] += 1
-            if self.is_face_contains_segment(ext_face, segments[i], laid_vertexes):
+            if self.is_face_contains_segment(ext_face, segments[i],
+                                             laid_vertexes):
                 dest_faces[i] = ext_face
                 count[i] += 1
         return count
 
-    # Получить плоскую укладку графа
-    # Возвращаются все грани уложенного планарного графа
-    # Если это невозможно(граф не планарный), то None
     def run(self):
+        '''
+        Получить плоскую укладку графа.
+        Возвращаются все грани уложенного планарного графа
+        Если это невозможно (граф не планарный), то None
+        '''
         # Если граф одновершинный, то возвращаем две грани
         if self.graph.size == 1:
             faces = []
@@ -190,9 +207,14 @@ class GammaAlgorithm(Algorithm):
             if not segments:
                 break
 
-            # Массив граней, в которые будут уложены соответствующие сегменты с минимальным числом calcNumOfFacesContainedSegments()
+            # Массив граней, в которые будут уложены соответствующие сегменты
+            # с минимальным числом calcNumOfFacesContainedSegments()
             dest_faces = [None] * len(segments)
-            count = self.calc_num_of_faces_contained_segments(int_faces, ext_face, segments, laid_vertexes, dest_faces)
+            count = self.calc_num_of_faces_contained_segments(int_faces,
+                                                              ext_face,
+                                                              segments,
+                                                              laid_vertexes,
+                                                              dest_faces)
 
             # Ищем минимальное число calcNumOfFacesContainedSegments()
             mi = count.index(min(count))
@@ -205,7 +227,7 @@ class GammaAlgorithm(Algorithm):
                 # Укладка выбранного сегмента
 
                 # Выделяем цепь между двумя контактными вершинами
-                chain = GammaAlgorithm(segments[mi]).get_chain(laid_vertexes)   # Добавлено преобразование типа
+                chain = GammaAlgorithm(segments[mi]).get_chain(laid_vertexes)
                 # Целевая грань, куда будет уложен выбранный сегмент
                 face = dest_faces[mi]
 
@@ -227,18 +249,21 @@ class GammaAlgorithm(Algorithm):
 
                 assert contact_first != -1 and contact_second != -1
 
-                # Новые грани, порожденные разбиением грани face выбранным сегментом
+                # Новые грани, порожденные разбиением грани
+                # face выбранным сегментом
                 face_size = len(face)
                 face1 = []
                 face2 = []
 
-                # Находим обратную цепь(цепь, пробегаемая в обратном направлении)
+                # Находим обратную цепь(цепь, пробегаемая в
+                # обратном направлении)
                 reverse_chain = list(reversed(chain))
 
                 # Если целевая грань не внешняя
                 if face != ext_face:
                     # Укладываем прямую цепь в одну из порожденных граней,
-                    # а обратную в другую в зависимости от номеров контактных вершин
+                    # а обратную в другую в зависимости от
+                    # номеров контактных вершин
                     if contact_first < contact_second:
                         # Первая часть разделения
                         face1.extend(chain)
@@ -276,7 +301,8 @@ class GammaAlgorithm(Algorithm):
 
                 # Если целевая грань совпала с внешней
                 else:
-                    # Все то же самое, только одна из порожденных граней - новая внешняя грань
+                    # Все то же самое, только одна из
+                    # порожденных граней - новая внешняя грань
                     new_outer_face = []
                     if contact_first < contact_second:
                         # Первая часть разделения
@@ -316,7 +342,7 @@ class GammaAlgorithm(Algorithm):
 
         return Faces(int_faces, ext_face)
 
-    def visualize(self) -> Figure:
+    def visualize(self, canvas=None) -> Figure:
         '''
         Визуализирует гамма-алгоритм как вложение Татта.
 
@@ -331,7 +357,7 @@ class GammaAlgorithm(Algorithm):
         external_face = self.run().external
 
         graph = self.graph.adjacency_matrix_to_edge_list()
-        tutte = TutteEmbedding(graph, external_face)
+        tutte = TutteEmbedding(graph, external_face, canvas)
         return tutte.run(delta=0.05)
 
 
