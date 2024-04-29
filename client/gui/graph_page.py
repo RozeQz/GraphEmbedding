@@ -19,6 +19,7 @@ from gui.ui_graph_page import Ui_GraphPage
 from utils.graph import Graph
 
 from gui.mplcanvas import MplCanvas
+from gui.loading_screen import LoadingScreen
 
 from src.algorithms.gamma_algorithm import GammaAlgorithm
 from src.algorithms.annealing_algorithm import AnnealingAlgorithm
@@ -151,6 +152,8 @@ class GraphPage(QWidget):
         self.loading_message_box.setText("Процесс укладки запущен. Пожалуйста, подождите.")
         self.loading_message_box.setWindowFlags(Qt.WindowStaysOnTopHint)
 
+        self.loading_screen = LoadingScreen()
+
         # Связь кнопок
         self.ui.btn_file.clicked.connect(self.open_file)
         self.ui.btn_draw.clicked.connect(self.draw_graph)
@@ -269,11 +272,10 @@ class GraphPage(QWidget):
         self.threadpool.start(worker)
 
     def show_loading_message(self):
-        self.loading_message_box.show()
+        self.loading_screen.show()
 
     def close_loading_message(self):
-        if self.loading_message_box is not None:
-            self.loading_message_box.close()
+        self.loading_screen.close()
 
     def show_error_message(self, text):
         mbx = QMessageBox()
