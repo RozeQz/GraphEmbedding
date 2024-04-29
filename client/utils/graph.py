@@ -1,4 +1,5 @@
 import copy
+import random
 from typing import (List, Dict, Mapping, Callable)
 
 import networkx as nx
@@ -126,16 +127,18 @@ class Graph:
             print(e)
 
     @staticmethod
-    def generate_random_graph(n: int, p: float,
+    def generate_random_graph(min_n: int, max_n: int, p: float,
                               connected: bool = True) -> 'Graph':
         '''
         Генерирует рандомный граф, также известный как граф Эрдёша - Реньи.
 
         Args:
-            n (int): Количество вершин.
+            min_n (int): Минимальное количество вершин.
+            max_n (int): Максимальное количество вершин.
             p (float): Вероятность создания ребра.
             connected (bool): Должен ли быть граф связным.
         '''
+        n = random.choice(range(min_n, max_n + 1))
         G = nx.fast_gnp_random_graph(n, p)
         if connected:
             while not nx.is_connected(G):
@@ -143,20 +146,21 @@ class Graph:
         return Graph(nx.adjacency_matrix(G).toarray())
 
     @staticmethod
-    def generate_random_planar_graph(n: int, p: float,
+    def generate_random_planar_graph(min_n: int, max_n: int, p: float,
                                      connected: bool = True) -> 'Graph':
         '''
         Генерирует рандомный планарный граф.
 
         Args:
-            n (int): Количество вершин.
+            min_n (int): Минимальное количество вершин.
+            max_n (int): Максимальное количество вершин.
             p (float): Вероятность создания ребра.
             connected (bool): Должен ли быть граф связным.
         '''
-        graph = Graph.generate_random_graph(n, p, connected)
+        graph = Graph.generate_random_graph(min_n, max_n, p, connected)
         if graph.is_planar():
             return graph
-        return Graph.generate_random_planar_graph(n, p, connected)
+        return Graph.generate_random_planar_graph(min_n, max_n, p, connected)
 
     def is_planar(self):
         G = nx.Graph(np.array(self.matrix), nodetype=int)

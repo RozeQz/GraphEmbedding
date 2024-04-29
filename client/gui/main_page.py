@@ -1,8 +1,10 @@
+import copy
+
 import numpy as np
 import networkx as nx
 
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, QTimer
 from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtWidgets import (
     QPushButton,
@@ -91,15 +93,27 @@ class MainPage(QWidget):
         if event is not None:
             event.accept()
         self.canvas.axes.cla()
-        graph = Graph.generate_random_planar_graph(10, 0.55)
+        self.graph = Graph.generate_random_planar_graph(10, 10, 0.55)
         # graph = Graph.get_graph_from_file()
-        G = nx.Graph(np.array(graph.matrix))
-        pos = nx.spring_layout(G)
+        G = nx.Graph(np.array(self.graph.matrix))
+        pos = nx.spring_layout(G, seed=42)
+        self.pos_not_embed = copy.deepcopy(pos)     # Запоминаем изначальные позиции вершин
         nx.draw(G, pos=pos, ax=self.canvas.axes,
                 with_labels=True, node_color="#0C8CE9")
         self.canvas.draw()
 
-    def embed_graph(self, checked: bool):
+    def embed_graph(self, checked: bool) -> None:
+        '''
+        Укладывает / раскладывает граф, а точнее запускает анимацию
+        укладки / раскладки графа.
+
+        Меняет состояние кнопки: если кнопка нажата - анимация укладки,
+        если кнопка отжата - анимация раскладки.
+        '''
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(30)
+        self.timer.timeout.connect(self.next_frame)
+
         if checked:
             # Если кнопка нажата, анимируем нажатие
             self.btn_embed.setStyleSheet("QPushButton { background-color: rgb(10, 110, 233); }")
@@ -108,6 +122,14 @@ class MainPage(QWidget):
                                 self.btn_embed.y() + 3)
 
             # Дальше код с анимацией укладки графа
+            self.canvas.axes.cla()
+            G = nx.Graph(np.array(self.graph.matrix), nodetype=int)
+            pos = nx.planar_layout(G)
+            self.pos_embed = pos        # Запоминаем уложенные позиции вершин
+
+            self.frames = self.get_graph_frames(self.pos_not_embed, self.pos_embed, n=30)
+            self.current_frame_index = 0
+            self.direction = 1  # Прямое направление
         else:
             # Если кнопка отжата, анимируем отжатие
             self.btn_embed.setStyleSheet("QPushButton { background-color: rgb(12, 140, 233); }")
@@ -119,7 +141,68 @@ class MainPage(QWidget):
             self.btn_embed.move(self.btn_embed.x() - 3,
                                 self.btn_embed.y() - 3)
 
-            # Дальше код с анимацией возвращения исходного графа
+            self.frames = self.get_graph_frames(self.pos_not_embed, self.pos_embed, n=30)
+            self.current_frame_index = len(self.frames) - 1
+            self.direction = -1  # Обратное направление
+
+        self.timer.start()
+
+    def next_frame(self) -> None:
+        '''
+        Обновляет граф с учетом следующего фрейма.
+        Если фрейм был последним - останавливает таймер.
+        '''
+        frame = self.frames[self.current_frame_index]
+        self.update_plot(frame)
+        if 0 <= self.current_frame_index + self.direction < len(self.frames):
+            self.current_frame_index += self.direction
+        else:
+            self.timer.stop()
+
+    def update_plot(self, pos: dict) -> None:
+        '''
+        Обновляет граф с учетом новых позиций вершин.
+
+        Args:
+            pos (dict): Новые позиции вершин.
+
+        Returns: None
+        '''
+        self.canvas.axes.cla()
+        G = nx.Graph(np.array(self.graph.matrix), nodetype=int)
+        nx.draw(G, pos=pos, ax=self.canvas.axes,
+                with_labels=True, node_color="#0C8CE9")
+        self.canvas.draw()
+
+    def get_graph_frames(self, pos_not_embed: dict,
+                         pos_embed: dict, n: int = 10) -> list[dict]:
+        '''
+        Анимация укладки и раскладки графа.
+
+        Высчитывает разницу между позициями вершин и генерирует n фреймов
+        исходя из этой разницы.
+        Другими словами: интерполяция укладки и раскладки графа.
+
+        Args:
+            pos_not_embed (dict): Позиции вершин до укладки.
+            pos_embed (dict): Позиции вершин после укладки.
+            n (int, optional): Количество фреймов. Default = 10.
+
+        Returns:
+            list[dict]: Список фреймов (позиций вершин).
+        '''
+        frames = []
+        for i in range(1, n + 1):
+            frame = {}
+            for node in pos_not_embed:
+                x_not_embed, y_not_embed = pos_not_embed[node]
+                x_embed, y_embed = pos_embed[node]
+                # Интерполяция между позициями
+                x_frame = x_not_embed + (x_embed - x_not_embed) * i / n
+                y_frame = y_not_embed + (y_embed - y_not_embed) * i / n
+                frame[node] = (x_frame, y_frame)
+            frames.append(frame)
+        return frames
 
     def on_resize(self, event):
         event.accept()
