@@ -5,6 +5,7 @@ import numpy as np
 import networkx as nx
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 
+from PyQt5.QtCore import Qt, QThreadPool, pyqtSignal, pyqtSlot, QRunnable, QObject
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
     QVBoxLayout,
@@ -31,6 +32,53 @@ class NavigationToolbar(NavigationToolbar2QT):
     '''
     toolitems = [t for t in NavigationToolbar2QT.toolitems if
                  t[0] in ('Home', 'Back', 'Forward', 'Pan', 'Zoom', 'Save')]
+
+
+class WorkerSignals(QObject):
+    '''
+    Defines the signals available from a running worker thread.
+
+    Supported signals are:
+
+    finished
+        No data
+    '''
+    finished = pyqtSignal()
+
+
+class Worker(QRunnable):
+    '''
+    Worker thread
+
+    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+
+    :param callback: The function callback to run on this worker thread. Supplied args and
+                     kwargs will be passed through to the runner.
+    :type callback: function
+    :param args: Arguments to pass to the callback function
+    :param kwargs: Keywords to pass to the callback function
+
+    '''
+
+    def __init__(self, fn, *args, **kwargs):
+        super(Worker, self).__init__()
+
+        # Store constructor arguments (re-used for processing)
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = WorkerSignals()
+
+    @pyqtSlot()
+    def run(self):
+        '''
+        Initialise the runner function with passed args, kwargs.
+        '''
+        # Retrieve args/kwargs here; and fire processing using them
+        try:
+            self.fn(*self.args, **self.kwargs)
+        finally:
+            self.signals.finished.emit()  # Done
 
 
 class GraphPage(QWidget):
@@ -92,6 +140,15 @@ class GraphPage(QWidget):
         self.graph_layout.addWidget(self.toolbar)
         self.graph_layout.addWidget(self.canvas)
         self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.threadpool = QThreadPool()
+        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+
+        # Добавление окна загрузки
+        self.loading_message_box = QMessageBox()
+        self.loading_message_box.setWindowTitle("Информация")
+        self.loading_message_box.setText("Процесс укладки запущен. Пожалуйста, подождите.")
+        self.loading_message_box.setWindowFlags(Qt.WindowStaysOnTopHint)
 
         # Связь кнопок
         self.ui.btn_file.clicked.connect(self.open_file)
@@ -156,7 +213,7 @@ class GraphPage(QWidget):
             self.canvas.draw()
             self.toolbar.setVisible(True)
 
-    def embed_graph(self):
+    def get_embedding(self):
         self.canvas.axes.cla()
 
         alogithm = self.ui.cbx_algorithm.currentIndex()
@@ -203,6 +260,24 @@ class GraphPage(QWidget):
         self.ui.lbl_time.setText(f"Время работы: {res_msec:.2f} миллисекунд")
         self.ui.lbl_time.setVisible(True)
         self.ui.lbl_clock.setVisible(True)
+
+    def embed_graph(self):
+        # Создаем всплывающее окно
+        self.show_loading_message()
+
+        # Передаем функцию для выполнения
+        worker = Worker(self.get_embedding)
+        worker.signals.finished.connect(self.close_loading_message)
+
+        # Запускаем выполнение в потоке
+        self.threadpool.start(worker)
+
+    def show_loading_message(self):
+        self.loading_message_box.show()
+
+    def close_loading_message(self):
+        if self.loading_message_box is not None:
+            self.loading_message_box.close()
 
     def show_error_message(self, text):
         mbx = QMessageBox()
