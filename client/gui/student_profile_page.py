@@ -16,7 +16,10 @@ from src.api.results_controller import (
     calc_average_percent,
     get_result_by_id)
 from src.api.tests_controller import get_test_tasks
-from src.api.tasks_controller import get_task_by_id
+from src.api.tasks_controller import (
+    get_task_by_id,
+    get_all_tasks,
+    get_user_tasks)
 from src.api.groups_controller import get_group_users
 from src.api.users_controller import get_user_by_id, get_user_data_by_id
 from src.api.topics_controller import get_user_topics, get_all_topics
@@ -140,6 +143,10 @@ class StudentProfilePage(QWidget):
         all_topics = len(get_all_topics())
         user_topics = len(get_user_topics(self.parent.current_user.id))
         self.ui.lbl_topics_read.setText(f"{user_topics}/{all_topics}")
+
+        all_unique_tasks = len(get_all_tasks())
+        user_tasks = len(get_user_tasks(self.parent.current_user.id))
+        self.ui.lbl_unique_tasks.setText(f"{user_tasks}/{all_unique_tasks}")
 
     def find_group_teacher(self, group_id: int) -> List[Optional[str]]:
         '''

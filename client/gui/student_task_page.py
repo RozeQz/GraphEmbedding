@@ -1,3 +1,4 @@
+import itertools
 from typing import List
 import os
 
@@ -17,8 +18,13 @@ from PyQt5.QtWidgets import (
 from gui.ui_student_task_page import Ui_StudentTaskPage
 
 from src.education.task import Task
-from src.api.tasks_controller import get_all_tasks
+from src.api.tasks_controller import (
+    get_all_tasks,
+    get_tasks_by_type,
+    get_user_tasks,
+    create_user_task)
 from utils.gui import (
+    clearLayout,
     init_type_1,
     init_type_2,
     init_type_3,
@@ -49,10 +55,10 @@ class StudentTaskPage(QWidget):
             style = file.read()
             self.ui.label_2.setStyleSheet(style)
 
-        with open(self.path + "styles/radio/radio-blue.qss", 'r',
+        with open(self.path + "styles/checkbox/checkbox-blue.qss", 'r',
                   encoding="utf-8") as file:
             style = file.read()
-            self.ui.rdb_hide_solved.setStyleSheet(style)
+            self.ui.checkbox_hide_solved.setStyleSheet(style)
 
         with open(self.path + "styles/button/button-blue.qss", 'r',
                   encoding="utf-8") as file:
@@ -64,6 +70,22 @@ class StudentTaskPage(QWidget):
             combo_style = file.read()
             self.ui.cbx_sort.setStyleSheet(combo_style)
 
+        # Инициализация заданий
+        self.init_tasks()
+
+        self.ui.btn_search.clicked.connect(self.init_tasks)
+
+    def showEvent(self, event):
+        # Вызывается при открытии страницы
+        highlight_label(self.parent, self.parent.ui.lbl_tasks)
+
+    def init_tasks_layout(self):
+        '''
+        Инициализация макета для списка заданий.
+
+        Нужно, чтобы при применении фильтров, список можно
+        было очистить и перерисовать заново.
+        '''
         self.tasks_layout = QVBoxLayout()
 
         # Обертка для списка заданий
@@ -81,19 +103,13 @@ class StudentTaskPage(QWidget):
             style = file.read()
             scroll_area.setStyleSheet(style)
 
-        # Инициализация заданий
-        self.init_tasks()
-
-        # self.ui.btn_get_task.clicked.connect(self.get_task)
-        # self.ui.btn_add_task.clicked.connect(self.create_task)
-        # self.ui.btn_check.clicked.connect(self.check_answer)
-
-    def showEvent(self, event):
-        # Вызывается при открытии страницы
-        highlight_label(self.parent, self.parent.ui.lbl_tasks)
-
     def init_tasks(self):
-        tasks = get_all_tasks()
+        # Очистка макета списка заданий
+        clearLayout(self.ui.vbox_tasks)
+
+        self.init_tasks_layout()
+
+        tasks = self.get_filtered_tasks()
         for task in tasks:
             task = Task(number=task["id"],
                         question=task["question"],
@@ -105,10 +121,22 @@ class StudentTaskPage(QWidget):
 
             lbl_task_title = QLabel(f"{task.number}. {task.question}")
 
-            with open(self.path + "styles/label/label-main.qss", 'r',
-                      encoding="utf-8") as file:
-                style = file.read()
-                lbl_task_title.setStyleSheet(style)
+            solved_tasks = get_user_tasks(1)
+            if solved_tasks is None:
+                solved_tasks = []
+
+            solved_ids = [solved["task_id"] for solved in solved_tasks]
+
+            if task.number in solved_ids:
+                with open(self.path + "styles/label/label-correct.qss", 'r',
+                          encoding="utf-8") as file:
+                    style = file.read()
+                    lbl_task_title.setStyleSheet(style)
+            else:
+                with open(self.path + "styles/label/label-main.qss", 'r',
+                          encoding="utf-8") as file:
+                    style = file.read()
+                    lbl_task_title.setStyleSheet(style)
 
             task_layout.addWidget(lbl_task_title)
 
@@ -173,9 +201,25 @@ class StudentTaskPage(QWidget):
             # Добавляем все в главный макет со скроллбаром
             self.tasks_layout.addLayout(task_layout)
 
+            vertical_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum,
+                                          QSizePolicy.Expanding)
+            self.tasks_layout.addItem(vertical_spacer)
+
     def check_answer(self, answer_widget, task):
         self.show_result(check_answer(answer_widget, task)[0], answer_widget)
-        return check_answer(answer_widget, task)[0]
+
+        is_correct = check_answer(answer_widget, task)[0]
+
+        # Если задание решено правиильно
+        if is_correct:
+            # То обновляем базу данных
+            json = {
+                "user_id": 1,
+                "task_id": task.number
+            }
+            create_user_task(json)
+
+        return is_correct
 
     def show_result(self, result: bool, answer_widget):
         if result:
@@ -194,3 +238,51 @@ class StudentTaskPage(QWidget):
                 answer_widget.lbl_result.setStyleSheet(style)
             icon = QPixmap(self.path + "img/icons8-cross.svg")
             answer_widget.lbl_result_icon.setPixmap(icon)
+
+    def get_filtered_tasks(self) -> list:
+        '''
+        Получить список заданий с учётом фильтров.
+        '''
+        sorted_tasks = []
+
+        sort_type = self.ui.cbx_sort.currentIndex()
+
+        if sort_type == 0:
+            sorted_tasks = get_all_tasks()
+        elif sort_type == 1:
+            sorted_tasks = list(itertools.chain.from_iterable([
+                get_tasks_by_type(1),
+                get_tasks_by_type(2),
+                get_tasks_by_type(3),
+                get_tasks_by_type(4)
+            ]))
+
+        if self.ui.checkbox_hide_solved.isChecked():
+            sorted_tasks = self.hide_solved_tasks(sorted_tasks,
+                                                  user_id=1)
+
+        return sorted_tasks
+
+    def hide_solved_tasks(self, tasks: list, user_id: int) -> list:
+        '''
+        Удаляет из tasks те задания, которые уже решил пользователь user_id.
+
+        Args:
+            tasks (list): Список заданий.
+            user_id (int): ID пользователя.
+
+        Returns:
+            list: Список заданий, в котором отсутствуют уже решенные задания.
+        '''
+        solved_tasks = get_user_tasks(user_id)
+
+        if solved_tasks is None:
+            return tasks
+
+        # Список значений "task_id"
+        solved_ids = [solved["task_id"] for solved in solved_tasks]
+
+        filtered_tasks = [task for task in tasks
+                          if task["id"] not in solved_ids]
+
+        return filtered_tasks

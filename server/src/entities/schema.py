@@ -95,6 +95,19 @@ class Task(Base):
     options: Mapped[str] = mapped_column(nullable=False)
 
 
+class Users_Task(Base):
+    __tablename__ = "Users_Tasks"
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("Users.id"),
+        nullable=False
+    )
+    task_id: Mapped[int] = mapped_column(
+        ForeignKey("Tasks.id"),
+        nullable=False
+    )
+
+
 class Test(Base):
     __tablename__ = "Tests"
 

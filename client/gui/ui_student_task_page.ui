@@ -129,24 +129,18 @@
        </property>
        <item>
         <property name="text">
-         <string>Типу задания</string>
+         <string>Идентификатору задания</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Идентификатору задания</string>
+         <string>Типу задания</string>
         </property>
        </item>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="rdb_hide_solved">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QCheckBox" name="checkbox_hide_solved">
        <property name="cursor">
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
