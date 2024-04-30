@@ -188,7 +188,7 @@ class TestPage(QWidget):
         elif task.task_type == 2:
             init_type_2(self, self.ui.vbox_task, self.ui.lbl_question, task)
         elif task.task_type == 3:
-            init_type_3(self, self.ui.vbox_task, self.ui.lbl_question, task)
+            init_type_3(self, self.ui.vbox_task, self.ui.lbl_question)
         elif task.task_type == 4:
             init_type_4(self, self.ui.vbox_task, self.ui.lbl_question, task)
 

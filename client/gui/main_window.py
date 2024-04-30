@@ -5,6 +5,7 @@ from PyQt5.QtCore import QCoreApplication
 from gui.ui_main_window import Ui_MainWindow
 
 from gui.task_page import TaskPage
+from gui.student_task_page import StudentTaskPage
 from gui.profile_page import ProfilePage
 from gui.student_profile_page import StudentProfilePage
 from gui.main_page import MainPage
@@ -73,6 +74,7 @@ class MainWindow(QMainWindow):
         self.profile_page = ProfilePage(self)
         self.student_profile_page = StudentProfilePage(self)
         self.task_page = TaskPage(self)
+        self.student_task_page = StudentTaskPage(self)
         self.graph_page = GraphPage(self)
         self.test_start_page = TestStartPage(self)
         self.test_page = TestPage(self)
@@ -84,6 +86,7 @@ class MainWindow(QMainWindow):
 
         # Добавление страниц
         self.ui.stackedWidget.addWidget(self.task_page)
+        self.ui.stackedWidget.addWidget(self.student_task_page)
         self.ui.stackedWidget.addWidget(self.profile_page)
         self.ui.stackedWidget.addWidget(self.student_profile_page)
         self.ui.stackedWidget.addWidget(self.graph_page)
@@ -102,7 +105,7 @@ class MainWindow(QMainWindow):
 
     def show_task_page(self, event):
         event.accept()
-        self.ui.stackedWidget.setCurrentWidget(self.task_page)
+        self.ui.stackedWidget.setCurrentWidget(self.student_task_page)
 
     def show_profile_page(self, event):
         event.accept()

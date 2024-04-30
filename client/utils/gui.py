@@ -61,6 +61,15 @@ def show_layout_items(layout):
 
 
 def init_type_1(widget, question_layout, prev_widget, task):
+    '''
+    Инициализирует поле ответа на задание первого типа.
+
+    Args:
+        widget: Виджет, в котором происходит инициализация.
+        question_layout: Лейаут с вопросом.
+        prev_widget: Виджет, после которого должны идти варианты ответа.
+        task: Само задание.
+    '''
     options = task.options
 
     # Создаем новый layout
@@ -86,6 +95,15 @@ def init_type_1(widget, question_layout, prev_widget, task):
 
 
 def init_type_2(widget, question_layout, prev_widget, task):
+    '''
+    Инициализирует поле ответа на задание второго типа.
+
+    Args:
+        widget: Виджет, в котором происходит инициализация.
+        question_layout: Лейаут с вопросом.
+        prev_widget: Виджет, после которого должны идти варианты ответа.
+        task: Само задание.
+    '''
     options = task.options
 
     # Создаем новый layout
@@ -106,7 +124,16 @@ def init_type_2(widget, question_layout, prev_widget, task):
             checkbox.setStyleSheet(checkbox_style)
         checkbox.setCursor(QCursor(Qt.PointingHandCursor))
 
-def init_type_3(widget, question_layout, prev_widget, task):
+
+def init_type_3(widget, question_layout, prev_widget):
+    '''
+    Инициализирует поле ответа на задание третьего типа.
+
+    Args:
+        widget: Виджет, в котором происходит инициализация.
+        question_layout: Лейаут с вопросом.
+        prev_widget: Виджет, после которого должны идти варианты ответа.
+    '''
     # Создаем новый layout
     widget.options_layout = QVBoxLayout()
     widget.options_layout.setSpacing(6)
@@ -128,6 +155,15 @@ def init_type_3(widget, question_layout, prev_widget, task):
 
 
 def init_type_4(widget, question_layout, prev_widget, task):
+    '''
+    Инициализирует поле ответа на задание четвертого типа.
+
+    Args:
+        widget: Виджет, в котором происходит инициализация.
+        question_layout: Лейаут с вопросом.
+        prev_widget: Виджет, после которого должны идти варианты ответа.
+        task: Само задание.
+    '''
     options = task.options
 
     widget.order = options
@@ -228,7 +264,17 @@ def get_selected_options(options_layout) -> List[QCheckBox]:
     return checked_boxes
 
 
-def check_answer(widget, task):
+def check_answer(widget, task) -> tuple:
+    '''
+    Проверяет ответ на задание.
+
+    Args:
+        widget: Виджет с заданием.
+        task: Само задание.
+
+    Returns:
+        tuple: Результат проверки и ответ на задание
+    '''
     if task.task_type == 1:
         try:
             answer = widget.group_options.checkedButton().text()
