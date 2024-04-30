@@ -108,14 +108,14 @@ class TheoryPage(QWidget):
 
     def refresh_topic_status(self) -> list:
         topics = []
-        for row in get_user_topics(1):
+        for row in get_user_topics(self.parent.current_user.id):
             topics.append(row["topic_id"])
         return topics
 
     def change_topic_status(self):
         read_flag = False
         # Пока текущий пользователь это пользователь с id=1
-        for topic in get_user_topics(1):
+        for topic in get_user_topics(self.parent.current_user.id):
             if self.current_topic == topic["topic_id"]:
                 read_flag = True
                 delete_user_topic(int(topic["id"]))
@@ -123,7 +123,7 @@ class TheoryPage(QWidget):
         # Если топик не был прочитан, то читаем его
         if not read_flag:
             json = {
-                "user_id": 1,
+                "user_id": self.parent.current_user.id,
                 "topic_id": self.current_topic
             }
             create_user_topic(json)

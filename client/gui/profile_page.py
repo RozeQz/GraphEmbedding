@@ -16,7 +16,7 @@ class ProfilePage(QWidget):
 
         self.parent = parent
 
-        user = get_user_by_id(1)
+        user = get_user_by_id(self.parent.current_user.id)
         user_data = get_user_data_by_id(user["user_data_id"])
 
         self.current_user = User(user["id"],

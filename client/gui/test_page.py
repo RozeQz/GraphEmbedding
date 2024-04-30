@@ -161,7 +161,7 @@ class TestPage(QWidget):
 
         # Отправляем результат на сервер
         result = {
-            "user_id": 1,
+            "user_id": self.parent.current_user.id,
             "test_id": self.current_test.test_id,
             "points": self.current_test.test.points,
             "time_spent": self.current_test.test.time - self.current_test.remaining_time,

@@ -34,8 +34,8 @@ def get_user_topics(user_id: int):
         return None
 
 
-def get_topic_users(group_id: int):
-    url = origin + f"/planared/users_topics?group_id={group_id}"
+def get_topic_users(topic_id: int):
+    url = origin + f"/planared/users_topics?topic_id={topic_id}"
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
@@ -64,8 +64,8 @@ def create_user_topic(user_topic: json):
         return None
 
 
-def delete_user_topic(topic_id: int):
-    url = origin + f"/planared/users_topics/{topic_id}"
+def delete_user_topic(user_topic_id: int):
+    url = origin + f"/planared/users_topics/{user_topic_id}"
     response = requests.delete(url)
     if response.status_code == 200:
         return response.json()

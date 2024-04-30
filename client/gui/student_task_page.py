@@ -121,7 +121,7 @@ class StudentTaskPage(QWidget):
 
             lbl_task_title = QLabel(f"{task.number}. {task.question}")
 
-            solved_tasks = get_user_tasks(1)
+            solved_tasks = get_user_tasks(self.parent.current_user.id)
             if solved_tasks is None:
                 solved_tasks = []
 
@@ -214,7 +214,7 @@ class StudentTaskPage(QWidget):
         if is_correct:
             # То обновляем базу данных
             json = {
-                "user_id": 1,
+                "user_id": self.parent.current_user.id,
                 "task_id": task.number
             }
             create_user_task(json)
@@ -259,7 +259,7 @@ class StudentTaskPage(QWidget):
 
         if self.ui.checkbox_hide_solved.isChecked():
             sorted_tasks = self.hide_solved_tasks(sorted_tasks,
-                                                  user_id=1)
+                                                  self.parent.current_user.id)
 
         return sorted_tasks
 
