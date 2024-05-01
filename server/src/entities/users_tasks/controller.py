@@ -27,18 +27,12 @@ async def get_users_tasks(user_id: int = None,
     if user_id is not None:
         user_tasks = crud.get_user_tasks(session, user_id)
         if not user_tasks:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with {user_id=} not found",
-            )
+            return []
         return user_tasks
     if task_id is not None:
         task_users = crud.get_task_users(session, task_id)
         if not task_users:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Task with {task_id=} not found",
-            )
+            return []
         return task_users
     return crud.get_all(session)
 

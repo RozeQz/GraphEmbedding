@@ -6,8 +6,8 @@ from gui.ui_main_window import Ui_MainWindow
 
 from gui.task_page import TaskPage
 from gui.student_task_page import StudentTaskPage
-from gui.profile_page import ProfilePage
 from gui.student_profile_page import StudentProfilePage
+from gui.teacher_profile_page import TeacherProfilePage
 from gui.main_page import MainPage
 from gui.graph_page import GraphPage
 from gui.test_page import TestPage
@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         self.ui.lbl_profile.setFont(font)
 
         # Подключаем пользователя
-        user = get_user_by_id(1)
+        user = get_user_by_id(2)
         user_data = get_user_data_by_id(user["user_data_id"])
 
         self.current_user = User(user["id"],
@@ -71,8 +71,8 @@ class MainWindow(QMainWindow):
 
         # Создание страниц для отображения в stacked widget
         self.main_page = MainPage(self)
-        self.profile_page = ProfilePage(self)
         self.student_profile_page = StudentProfilePage(self)
+        self.teacher_profile_page = TeacherProfilePage(self)
         self.task_page = TaskPage(self)
         self.student_task_page = StudentTaskPage(self)
         self.graph_page = GraphPage(self)
@@ -87,8 +87,8 @@ class MainWindow(QMainWindow):
         # Добавление страниц
         self.ui.stackedWidget.addWidget(self.task_page)
         self.ui.stackedWidget.addWidget(self.student_task_page)
-        self.ui.stackedWidget.addWidget(self.profile_page)
         self.ui.stackedWidget.addWidget(self.student_profile_page)
+        self.ui.stackedWidget.addWidget(self.teacher_profile_page)
         self.ui.stackedWidget.addWidget(self.graph_page)
         self.ui.stackedWidget.addWidget(self.test_start_page)
         self.ui.stackedWidget.addWidget(self.test_page)
@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
         self.ui.lbl_tasks.mouseReleaseEvent = self.show_task_page
         self.ui.lbl_exit.mouseReleaseEvent = self.close
         self.ui.lbl_logo.mouseReleaseEvent = self.show_main_page
-        self.ui.lbl_profile.mouseReleaseEvent = self.show_student_profile_page
+        self.ui.lbl_profile.mouseReleaseEvent = self.show_profile_page
         self.ui.lbl_testing.mouseReleaseEvent = self.show_test_start_page
         self.ui.lbl_theory.mouseReleaseEvent = self.show_theory_page
 
@@ -109,11 +109,10 @@ class MainWindow(QMainWindow):
 
     def show_profile_page(self, event):
         event.accept()
-        self.ui.stackedWidget.setCurrentWidget(self.profile_page)
-
-    def show_student_profile_page(self, event):
-        event.accept()
-        self.ui.stackedWidget.setCurrentWidget(self.student_profile_page)
+        if self.current_user.role == "student":
+            self.ui.stackedWidget.setCurrentWidget(self.student_profile_page)
+        else:
+            self.ui.stackedWidget.setCurrentWidget(self.teacher_profile_page)
 
     def show_main_page(self, event):
         event.accept()

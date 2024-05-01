@@ -22,15 +22,15 @@ async def create_result(
             description="Получить результат по идентификатору")
 async def get_result(result_id: int,
                      session: Session = Depends(get_session)):
-    task = crud.get_one(session, result_id)
+    result = crud.get_one(session, result_id)
 
-    if not task:
+    if not result:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Result with {result_id=} not found",
         )
 
-    return task
+    return result
 
 
 @router.get("/",
