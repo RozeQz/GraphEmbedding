@@ -160,6 +160,7 @@ class TeacherProfilePage(QWidget):
         all_num_tests = 0
         all_percent = 0
         num_students = 0
+        num_students_with_tests = 0
         all_students = []
         for group in groups:
             students = self.find_group_students(group.id)
@@ -171,6 +172,7 @@ class TeacherProfilePage(QWidget):
                 all_num_tests += num_tests
 
                 if num_tests > 0:
+                    num_students_with_tests += 1
                     average_percent = calc_average_percent(student.id,
                                                            obj="user")
                     all_percent += average_percent
@@ -182,7 +184,7 @@ class TeacherProfilePage(QWidget):
         self.ui.lbl_num_tests.setText(f"{all_num_tests}")
 
         if all_num_tests > 0:
-            self.ui.lbl_avg_percent.setText(f"{(all_percent/num_students):.2f}%")
+            self.ui.lbl_avg_percent.setText(f"{(all_percent/num_students_with_tests):.2f}%")
 
             self.show_pie_chart(all_students)
             self.canvas.show()

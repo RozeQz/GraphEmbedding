@@ -13,3 +13,19 @@ QLineEdit:hover {
 QLineEdit:Focus {
     border: 2px solid rgb(12, 140, 233);
 }
+
+QPlainTextEdit {
+    font-size: 16px;
+    border-radius: 15px;
+    border: 2px solid rgb(217, 217, 217);
+    padding: 10px;
+}
+
+QPlainTextEdit:hover {
+    border: 2px solid rgb(12, 140, 233);
+}
+
+
+QPlainTextEdit:Focus {
+    border: 2px solid rgb(12, 140, 233);
+}

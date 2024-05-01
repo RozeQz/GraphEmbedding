@@ -60,11 +60,6 @@ class StudentTaskPage(QWidget):
             style = file.read()
             self.ui.checkbox_hide_solved.setStyleSheet(style)
 
-        with open(self.path + "styles/button/button-blue.qss", 'r',
-                  encoding="utf-8") as file:
-            style = file.read()
-            self.ui.btn_search.setStyleSheet(style)
-
         with open(self.path + "styles/combobox/cbx-main.qss", 'r',
                   encoding="utf-8") as file:
             combo_style = file.read()
@@ -73,7 +68,8 @@ class StudentTaskPage(QWidget):
         # Инициализация заданий
         self.init_tasks()
 
-        self.ui.btn_search.clicked.connect(self.init_tasks)
+        self.ui.cbx_sort.currentIndexChanged.connect(self.init_tasks)
+        self.ui.checkbox_hide_solved.stateChanged.connect(self.init_tasks)
 
     def showEvent(self, event):
         # Вызывается при открытии страницы
@@ -158,11 +154,11 @@ class StudentTaskPage(QWidget):
 
             # Добавение кнопки "Ответить"
             btn_check = QPushButton("Ответить")
-            btn_check.setMinimumWidth(200)
-            btn_check.setMaximumWidth(200)
+            btn_check.setMinimumWidth(150)
+            btn_check.setMaximumWidth(150)
             btn_check.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
-            with open(self.path + "styles/button/button-blue.qss", 'r',
+            with open(self.path + "styles/button/button-small-blue.qss", 'r',
                       encoding="utf-8") as file:
                 style = file.read()
                 btn_check.setStyleSheet(style)
@@ -188,20 +184,20 @@ class StudentTaskPage(QWidget):
             hbox_btn_and_results.addItem(horizontal_spacer)
 
             # Отступ между ответами и кнопкой
-            vertical_spacer = QSpacerItem(20, 13, QSizePolicy.Minimum,
+            vertical_spacer = QSpacerItem(20, 7, QSizePolicy.Minimum,
                                           QSizePolicy.Fixed)
             task_layout.addItem(vertical_spacer)
             task_layout.addLayout(hbox_btn_and_results)
 
             # Отступ между заданиями
-            vertical_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum,
+            vertical_spacer = QSpacerItem(20, 25, QSizePolicy.Minimum,
                                           QSizePolicy.Fixed)
             task_layout.addItem(vertical_spacer)
 
             # Добавляем все в главный макет со скроллбаром
             self.tasks_layout.addLayout(task_layout)
 
-            vertical_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum,
+            vertical_spacer = QSpacerItem(20, 30, QSizePolicy.Minimum,
                                           QSizePolicy.Expanding)
             self.tasks_layout.addItem(vertical_spacer)
 

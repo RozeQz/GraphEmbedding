@@ -63,7 +63,7 @@ class TeacherTaskPage(QWidget):
             self.ui.label_2.setStyleSheet(style)
             self.ui.lbl_type.setStyleSheet(style)
 
-        with open(self.path + "styles/button/button-blue.qss", 'r',
+        with open(self.path + "styles/button/button-green.qss", 'r',
                   encoding="utf-8") as file:
             style = file.read()
             self.ui.btn_add_task.setStyleSheet(style)
@@ -77,9 +77,9 @@ class TeacherTaskPage(QWidget):
         with open(self.path + "styles/edit/answer-edit.qss", 'r',
                   encoding="utf-8") as file:
             edt_style = file.read()
-            self.ui.edt_answer.setStyleSheet(edt_style)
-            self.ui.edt_options.setStyleSheet(edt_style)
-            self.ui.edt_task.setStyleSheet(edt_style)
+            self.ui.pte_answer.setStyleSheet(edt_style)
+            self.ui.pte_options.setStyleSheet(edt_style)
+            self.ui.pte_task.setStyleSheet(edt_style)
 
         # Инициализация заданий
         self.init_tasks()
@@ -92,10 +92,10 @@ class TeacherTaskPage(QWidget):
         highlight_label(self.parent, self.parent.ui.lbl_tasks)
 
     def create_task(self):
-        question = self.ui.edt_task.text()
-        answer = self.ui.edt_answer.text()
+        question = self.ui.pte_task.text()
+        answer = self.ui.pte_answer.text()
         task_type = self.ui.cbx_task_type.currentIndex() + 1
-        options = self.ui.edt_options.text()
+        options = self.ui.pte_options.text()
 
         task = {
             "question": question,
@@ -118,6 +118,8 @@ class TeacherTaskPage(QWidget):
 
         # Обертка для списка заданий
         self.tasks_wrapper = QWidget()
+        self.tasks_wrapper.setSizePolicy(QSizePolicy.Preferred,
+                                         QSizePolicy.Expanding)
         self.tasks_wrapper.setStyleSheet("background-color: #ffffff")
         self.tasks_wrapper.setLayout(self.tasks_layout)
 
@@ -174,11 +176,11 @@ class TeacherTaskPage(QWidget):
 
             # Добавение кнопки "Ответить"
             btn_check = QPushButton("Ответить")
-            btn_check.setMinimumWidth(200)
-            btn_check.setMaximumWidth(200)
+            btn_check.setMinimumWidth(150)
+            btn_check.setMaximumWidth(150)
             btn_check.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
-            with open(self.path + "styles/button/button-blue.qss", 'r',
+            with open(self.path + "styles/button/button-small-blue.qss", 'r',
                       encoding="utf-8") as file:
                 style = file.read()
                 btn_check.setStyleSheet(style)
@@ -204,20 +206,20 @@ class TeacherTaskPage(QWidget):
             hbox_btn_and_results.addItem(horizontal_spacer)
 
             # Отступ между ответами и кнопкой
-            vertical_spacer = QSpacerItem(20, 13, QSizePolicy.Minimum,
+            vertical_spacer = QSpacerItem(20, 7, QSizePolicy.Minimum,
                                           QSizePolicy.Fixed)
             task_layout.addItem(vertical_spacer)
             task_layout.addLayout(hbox_btn_and_results)
 
             # Отступ между заданиями
-            vertical_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum,
+            vertical_spacer = QSpacerItem(20, 25, QSizePolicy.Minimum,
                                           QSizePolicy.Fixed)
             task_layout.addItem(vertical_spacer)
 
             # Добавляем все в главный макет со скроллбаром
             self.tasks_layout.addLayout(task_layout)
 
-            vertical_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum,
+            vertical_spacer = QSpacerItem(20, 30, QSizePolicy.Minimum,
                                           QSizePolicy.Expanding)
             self.tasks_layout.addItem(vertical_spacer)
 
