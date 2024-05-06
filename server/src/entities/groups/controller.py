@@ -34,8 +34,19 @@ async def get_group(group_id: int,
     return group
 
 
-@router.get("/", description="Получить все группы")
-async def get_groups(session: Session = Depends(get_session)):
+@router.get("/",
+            description="Получить все группы \
+                         c учетом query параметров")
+async def get_groups(name: str = None,
+                     session: Session = Depends(get_session)):
+    if name is not None:
+        group = crud.get_by_name(session, name)
+        if not group:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Group with {name=} not found",
+            )
+        return group
     return crud.get_all(session)
 
 

@@ -13,6 +13,8 @@ from gui.graph_page import GraphPage
 from gui.test_page import TestPage
 from gui.test_start_page import TestStartPage
 from gui.theory_page import TheoryPage
+from gui.getstarted_page import GetStartedPage
+from gui.signup_page import SignUpPage
 
 from src.api.users_controller import get_user_by_id, get_user_data_by_id
 from src.education.user import User
@@ -79,6 +81,8 @@ class MainWindow(QMainWindow):
         self.test_start_page = TestStartPage(self)
         self.test_page = TestPage(self)
         self.theory_page = TheoryPage(self)
+        self.getstarted_page = GetStartedPage(self)
+        self.signup_page = SignUpPage(self)
 
         # Инициализация первой страницы
         self.ui.stackedWidget.addWidget(self.main_page)
@@ -93,6 +97,8 @@ class MainWindow(QMainWindow):
         self.ui.stackedWidget.addWidget(self.test_start_page)
         self.ui.stackedWidget.addWidget(self.test_page)
         self.ui.stackedWidget.addWidget(self.theory_page)
+        self.ui.stackedWidget.addWidget(self.getstarted_page)
+        self.ui.stackedWidget.addWidget(self.signup_page)
 
         # Обработка нажатия на кнопок
         self.ui.lbl_graph_emb.mouseReleaseEvent = self.show_graph_page
@@ -112,10 +118,11 @@ class MainWindow(QMainWindow):
 
     def show_profile_page(self, event):
         event.accept()
-        if self.current_user.role == "student":
-            self.ui.stackedWidget.setCurrentWidget(self.student_profile_page)
-        else:
-            self.ui.stackedWidget.setCurrentWidget(self.teacher_profile_page)
+        self.ui.stackedWidget.setCurrentWidget(self.getstarted_page)
+        # if self.current_user.role == "student":
+        #     self.ui.stackedWidget.setCurrentWidget(self.student_profile_page)
+        # else:
+        #     self.ui.stackedWidget.setCurrentWidget(self.teacher_profile_page)
 
     def show_main_page(self, event):
         event.accept()

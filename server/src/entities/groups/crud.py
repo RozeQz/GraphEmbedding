@@ -9,6 +9,10 @@ def get_one(session: Session, obj_id: int) -> Optional[Group]:
     return session.query(Group).where(Group.id == obj_id).first()
 
 
+def get_by_name(session: Session, name: str) -> Optional[Group]:
+    return session.query(Group).where(Group.name == name).first()
+
+
 def get_all(session: Session) -> List[Type[Group]]:
     return session.query(Group).all()
 

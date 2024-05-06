@@ -44,6 +44,36 @@ def get_user_data_by_id(data_id: int):
         return None
 
 
+def get_user_data_by_email(email: str):
+    url = origin + f"/planared/users_data?email={email}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error")
+        return None
+
+
+def get_user_by_login(login: str):
+    url = origin + f"/planared/users?login={login}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error")
+        return None
+
+
+def create_user_data(user: json):
+    url = origin + "/planared/users_data"
+    response = requests.post(url, json=user)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error")
+        return None
+
+
 def create_user(user: json):
     url = origin + "/planared/users"
     response = requests.post(url, json=user)

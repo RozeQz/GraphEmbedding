@@ -9,6 +9,10 @@ def get_one(session: Session, obj_id: int) -> Optional[UsersData]:
     return session.query(UsersData).where(UsersData.id == obj_id).first()
 
 
+def get_by_email(session: Session, email: str) -> Optional[UsersData]:
+    return session.query(UsersData).where(UsersData.email == email).first()
+
+
 def get_all(session: Session) -> List[Type[UsersData]]:
     return session.query(UsersData).all()
 

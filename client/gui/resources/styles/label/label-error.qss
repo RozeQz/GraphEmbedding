@@ -1,0 +1,11 @@
+QLabel {
+    font-size: 14pt;
+	font-weight: 60;
+	color: rgb(0, 0, 0);
+    text-align: left;
+	margin-left: 0;
+    padding: 5px, 10px, 5px, 10px;
+    background-color: rgb(255, 207, 201);
+    border-radius: 10px;
+    border: 1px solid rgb(255, 92, 74);
+}

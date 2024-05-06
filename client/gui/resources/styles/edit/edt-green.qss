@@ -1,0 +1,13 @@
+QLineEdit {
+    font-size: 16px;
+    border-radius: 15px;
+    border: 2px solid rgb(10, 207, 131);
+    padding: 10px;
+}
+
+QPlainTextEdit {
+    font-size: 16px;
+    border-radius: 15px;
+    border: 2px solid rgb(217, 217, 217);
+    padding: 10px;
+}

@@ -35,6 +35,7 @@ async def get_user(user_id: int, session: Session = Depends(get_session)):
 @router.get("/", description="Получить всех пользователей \
                               с учетом query параметров")
 async def get_users(role: str = None,
+                    login: str = None,
                     session: Session = Depends(get_session)):
     if role is not None:
         users = crud.get_users_by_role(session, role)
@@ -44,6 +45,14 @@ async def get_users(role: str = None,
                 detail=f"Users with {role=} not found",
             )
         return users
+    if login is not None:
+        user = crud.get_by_login(session, login)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with {login=} not found",
+            )
+        return user
     return crud.get_all(session)
 
 

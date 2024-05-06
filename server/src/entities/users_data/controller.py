@@ -27,30 +27,25 @@ async def get_user_data(user_id: int, session: Session = Depends(get_session)):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User's data with {user_id=} not found",
+            detail=f"Users data with {user_id=} not found",
         )
 
     return user
 
 
-@router.get("/", description="Получить данных всех пользователей")
-async def get_users_data(session: Session = Depends(get_session)):
+@router.get("/", description="Получить данные всех пользователей \
+                              с учетом query параметров")
+async def get_users_data(email: str = None,
+                         session: Session = Depends(get_session)):
+    if email is not None:
+        user = crud.get_by_email(session, email)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Users data with {email=} not found",
+            )
+        return user
     return crud.get_all(session)
-
-
-@router.get("/{fio}/",
-            description="Получить данные пользователя по ФИО")
-async def get_by_fio(fio: str, session: Session = Depends(get_session)):
-    firstname, lastname, midname = fio.split()
-    user = crud.get_by_fio(session, firstname, lastname, midname)
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User's data with {fio=} not found",
-        )
-
-    return user
 
 
 @router.put("/{user_id}/", description="Редактировать данные пользователя")
@@ -64,7 +59,7 @@ async def update_user_data(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User's data with {user_id=} not found",
+            detail=f"Users data with {user_id=} not found",
         )
 
     return crud.update(session, user, user_update)

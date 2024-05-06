@@ -24,6 +24,16 @@ def get_group_by_id(group_id: int):
         return None
 
 
+def get_group_by_name(name: str):
+    url = origin + f"/planared/groups?name={name}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error")
+        return None
+
+
 def get_user_groups(user_id: int):
     url = origin + f"/planared/users_groups?user_id={user_id}"
     response = requests.get(url)
