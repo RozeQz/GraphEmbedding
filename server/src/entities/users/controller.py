@@ -36,6 +36,7 @@ async def get_user(user_id: int, session: Session = Depends(get_session)):
                               с учетом query параметров")
 async def get_users(role: str = None,
                     login: str = None,
+                    user_data_id: int = None,
                     session: Session = Depends(get_session)):
     if role is not None:
         users = crud.get_users_by_role(session, role)
@@ -51,6 +52,14 @@ async def get_users(role: str = None,
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User with {login=} not found",
+            )
+        return user
+    if user_data_id is not None:
+        user = crud.get_by_user_data(session, user_data_id)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with {user_data_id=} not found",
             )
         return user
     return crud.get_all(session)

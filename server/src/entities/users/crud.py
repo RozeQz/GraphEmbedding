@@ -13,6 +13,10 @@ def get_by_login(session: Session, login: str) -> Optional[User]:
     return session.query(User).where(User.login == login).first()
 
 
+def get_by_user_data(session: Session, user_data_id: str) -> Optional[User]:
+    return session.query(User).where(User.user_data_id == user_data_id).first()
+
+
 def get_all(session: Session) -> List[Type[User]]:
     return session.query(User).all()
 

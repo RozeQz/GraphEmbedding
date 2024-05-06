@@ -10,6 +10,8 @@ from utils.validator import validate_email, validate_password
 from src.api.users_controller import create_user, create_user_data, get_user_data_by_email, get_user_by_login
 from src.api.groups_controller import get_group_by_name, create_group, create_user_group
 
+from src.education.user import User
+
 
 class SignUpPage(QWidget):
     def __init__(self, parent=None):
@@ -252,4 +254,13 @@ class SignUpPage(QWidget):
             }
             create_user_group(users_group)
 
-        self.parent.ui.stackedWidget.setCurrentWidget(self.parent.profile_page)
+        current_user = User(user_id, role,
+                            user_data["firstname"],
+                            user_data["lastname"],
+                            user_data["midname"])
+        self.parent.init_current_user(current_user)
+
+        if role == "student":
+            self.parent.ui.stackedWidget.setCurrentWidget(self.parent.student_profile_page)
+        else:
+            self.parent.ui.stackedWidget.setCurrentWidget(self.parent.teacher_profile_page)

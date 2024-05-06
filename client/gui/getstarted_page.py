@@ -36,10 +36,14 @@ class GetStartedPage(QWidget):
             self.ui.lbl_signup.setStyleSheet(style)
 
         self.ui.btn_login.clicked.connect(self.login)
+        self.ui.lbl_signup.mouseReleaseEvent = self.signup
 
     def showEvent(self, event):
         # Вызывается при открытии страницы
         highlight_label(self.parent, self.parent.ui.lbl_logo)
 
     def login(self):
+        self.parent.ui.stackedWidget.setCurrentWidget(self.parent.login_page)
+
+    def signup(self, event):
         self.parent.ui.stackedWidget.setCurrentWidget(self.parent.signup_page)

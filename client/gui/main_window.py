@@ -15,8 +15,8 @@ from gui.test_start_page import TestStartPage
 from gui.theory_page import TheoryPage
 from gui.getstarted_page import GetStartedPage
 from gui.signup_page import SignUpPage
+from gui.login_page import LoginPage
 
-from src.api.users_controller import get_user_by_id, get_user_data_by_id
 from src.education.user import User
 
 import os
@@ -61,44 +61,25 @@ class MainWindow(QMainWindow):
         font = QFont(families[0])
         self.ui.lbl_profile.setFont(font)
 
-        # Подключаем пользователя
-        user = get_user_by_id(2)
-        user_data = get_user_data_by_id(user["user_data_id"])
-
-        self.current_user = User(user["id"],
-                                 user["role"],
-                                 user_data["firstname"],
-                                 user_data["lastname"],
-                                 user_data["midname"])
+        # Пока нет пользователя
+        self.current_user = None
 
         # Создание страниц для отображения в stacked widget
         self.main_page = MainPage(self)
-        self.student_profile_page = StudentProfilePage(self)
-        self.teacher_profile_page = TeacherProfilePage(self)
-        self.student_task_page = StudentTaskPage(self)
-        self.teacher_task_page = TeacherTaskPage(self)
         self.graph_page = GraphPage(self)
-        self.test_start_page = TestStartPage(self)
-        self.test_page = TestPage(self)
-        self.theory_page = TheoryPage(self)
         self.getstarted_page = GetStartedPage(self)
         self.signup_page = SignUpPage(self)
+        self.login_page = LoginPage(self)
 
         # Инициализация первой страницы
         self.ui.stackedWidget.addWidget(self.main_page)
         self.ui.stackedWidget.setCurrentWidget(self.main_page)
 
         # Добавление страниц
-        self.ui.stackedWidget.addWidget(self.student_task_page)
-        self.ui.stackedWidget.addWidget(self.teacher_task_page)
-        self.ui.stackedWidget.addWidget(self.student_profile_page)
-        self.ui.stackedWidget.addWidget(self.teacher_profile_page)
         self.ui.stackedWidget.addWidget(self.graph_page)
-        self.ui.stackedWidget.addWidget(self.test_start_page)
-        self.ui.stackedWidget.addWidget(self.test_page)
-        self.ui.stackedWidget.addWidget(self.theory_page)
         self.ui.stackedWidget.addWidget(self.getstarted_page)
         self.ui.stackedWidget.addWidget(self.signup_page)
+        self.ui.stackedWidget.addWidget(self.login_page)
 
         # Обработка нажатия на кнопок
         self.ui.lbl_graph_emb.mouseReleaseEvent = self.show_graph_page
@@ -109,20 +90,47 @@ class MainWindow(QMainWindow):
         self.ui.lbl_testing.mouseReleaseEvent = self.show_test_start_page
         self.ui.lbl_theory.mouseReleaseEvent = self.show_theory_page
 
+    def init_current_user(self, user: User) -> None:
+        '''
+        Инициализация текущего пользователя.
+        '''
+        self.current_user = user
+
+        self.student_profile_page = StudentProfilePage(self)
+        self.teacher_profile_page = TeacherProfilePage(self)
+        self.student_task_page = StudentTaskPage(self)
+        self.teacher_task_page = TeacherTaskPage(self)
+        self.test_start_page = TestStartPage(self)
+        self.test_page = TestPage(self)
+        self.theory_page = TheoryPage(self)
+
+        self.ui.stackedWidget.addWidget(self.student_task_page)
+        self.ui.stackedWidget.addWidget(self.teacher_task_page)
+        self.ui.stackedWidget.addWidget(self.student_profile_page)
+        self.ui.stackedWidget.addWidget(self.teacher_profile_page)
+        self.ui.stackedWidget.addWidget(self.test_start_page)
+        self.ui.stackedWidget.addWidget(self.test_page)
+        self.ui.stackedWidget.addWidget(self.theory_page)
+
     def show_task_page(self, event):
         event.accept()
-        if self.current_user.role == "student":
-            self.ui.stackedWidget.setCurrentWidget(self.student_task_page)
+        if self.current_user is None:
+            self.ui.stackedWidget.setCurrentWidget(self.getstarted_page)
         else:
-            self.ui.stackedWidget.setCurrentWidget(self.teacher_task_page)
+            if self.current_user.role == "student":
+                self.ui.stackedWidget.setCurrentWidget(self.student_task_page)
+            else:
+                self.ui.stackedWidget.setCurrentWidget(self.teacher_task_page)
 
     def show_profile_page(self, event):
         event.accept()
-        self.ui.stackedWidget.setCurrentWidget(self.getstarted_page)
-        # if self.current_user.role == "student":
-        #     self.ui.stackedWidget.setCurrentWidget(self.student_profile_page)
-        # else:
-        #     self.ui.stackedWidget.setCurrentWidget(self.teacher_profile_page)
+        if self.current_user is None:
+            self.ui.stackedWidget.setCurrentWidget(self.getstarted_page)
+        else:
+            if self.current_user.role == "student":
+                self.ui.stackedWidget.setCurrentWidget(self.student_profile_page)
+            else:
+                self.ui.stackedWidget.setCurrentWidget(self.teacher_profile_page)
 
     def show_main_page(self, event):
         event.accept()
@@ -134,11 +142,17 @@ class MainWindow(QMainWindow):
 
     def show_test_start_page(self, event):
         event.accept()
-        self.ui.stackedWidget.setCurrentWidget(self.test_start_page)
+        if self.current_user is None:
+            self.ui.stackedWidget.setCurrentWidget(self.getstarted_page)
+        else:
+            self.ui.stackedWidget.setCurrentWidget(self.test_start_page)
 
     def show_theory_page(self, event):
         event.accept()
-        self.ui.stackedWidget.setCurrentWidget(self.theory_page)
+        if self.current_user is None:
+            self.ui.stackedWidget.setCurrentWidget(self.getstarted_page)
+        else:
+            self.ui.stackedWidget.setCurrentWidget(self.theory_page)
 
     def on_resize(self, event):
         event.accept()
