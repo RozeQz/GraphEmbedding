@@ -37,6 +37,7 @@ class LoginPage(QWidget):
             style = file.read()
             self.ui.label.setStyleSheet(style)
             self.ui.label_2.setStyleSheet(style)
+            self.ui.label_3.setStyleSheet(style)
 
         with open(self.path + "styles/label/label-error.qss", 'r',
                   encoding="utf-8") as file:
@@ -54,6 +55,11 @@ class LoginPage(QWidget):
             self.ui.edt_email_or_login.setStyleSheet(style)
             self.ui.edt_password.setStyleSheet(style)
 
+        with open(self.path + "styles/label/label-main-blue.qss", 'r',
+                  encoding="utf-8") as file:
+            style = file.read()
+            self.ui.lbl_signup.setStyleSheet(style)
+
         # Скрываем пароль
         self.ui.edt_password.setEchoMode(QLineEdit.Password)
 
@@ -61,10 +67,14 @@ class LoginPage(QWidget):
 
         # Обработка событий
         self.ui.btn_login.clicked.connect(self.login)
+        self.ui.lbl_signup.mouseReleaseEvent = self.signup
 
     def showEvent(self, event):
         # Вызывается при открытии страницы
         highlight_label(self.parent, self.parent.ui.lbl_logo)
+
+    def signup(self, event):
+        self.parent.ui.stackedWidget.setCurrentWidget(self.parent.signup_page)
 
     def login(self):
         email = get_user_data_by_email(self.ui.edt_email_or_login.text())

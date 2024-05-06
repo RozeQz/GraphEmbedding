@@ -40,6 +40,7 @@ class SignUpPage(QWidget):
             self.ui.label_5.setStyleSheet(style)
             self.ui.label_6.setStyleSheet(style)
             self.ui.label_7.setStyleSheet(style)
+            self.ui.label_9.setStyleSheet(style)
             self.ui.lbl_fixed_group.setStyleSheet(style)
 
         with open(self.path + "styles/label/label-error.qss", 'r',
@@ -68,6 +69,11 @@ class SignUpPage(QWidget):
             style = file.read()
             self.ui.cbx_role.setStyleSheet(style)
 
+        with open(self.path + "styles/label/label-main-blue.qss", 'r',
+                  encoding="utf-8") as file:
+            style = file.read()
+            self.ui.lbl_login.setStyleSheet(style)
+
         # Скрываем пароль
         self.ui.edt_password.setEchoMode(QLineEdit.Password)
 
@@ -86,6 +92,10 @@ class SignUpPage(QWidget):
         self.ui.edt_surname.editingFinished.connect(self.check_surname)
         self.ui.edt_login.editingFinished.connect(self.check_login)
         self.ui.cbx_role.currentIndexChanged.connect(self.change_form)
+        self.ui.lbl_login.mouseReleaseEvent = self.login
+
+    def login(self, event):
+        self.parent.ui.stackedWidget.setCurrentWidget(self.parent.login_page)
 
     def check_login(self) -> bool:
         if self.ui.edt_login.text() != '':
