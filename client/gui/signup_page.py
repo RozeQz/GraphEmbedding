@@ -85,6 +85,7 @@ class SignUpPage(QWidget):
         self.ui.edt_name.editingFinished.connect(self.check_name)
         self.ui.edt_surname.editingFinished.connect(self.check_surname)
         self.ui.edt_login.editingFinished.connect(self.check_login)
+        self.ui.cbx_role.currentIndexChanged.connect(self.change_form)
 
     def check_login(self) -> bool:
         if self.ui.edt_login.text() != '':
@@ -209,6 +210,14 @@ class SignUpPage(QWidget):
             return False
         return True
 
+    def change_form(self):
+        if self.ui.cbx_role.currentText() == "Студент":
+            self.ui.lbl_fixed_group.setText("Группа:")
+            self.ui.edt_group.setPlaceholderText("ИУ6-71Б")
+        else:
+            self.ui.lbl_fixed_group.setText("Группы:")
+            self.ui.edt_group.setPlaceholderText("ИУ6-71Б, ИУ6-72Б (указывайте через запятую)")
+
     def showEvent(self, event):
         # Вызывается при открытии страницы
         highlight_label(self.parent, self.parent.ui.lbl_logo)
@@ -240,7 +249,7 @@ class SignUpPage(QWidget):
         }
         user_id = create_user(user)["id"]
 
-        group_names = [group.strip() for group in self.ui.edt_group.text().split(",")]
+        group_names = [group.strip().upper() for group in self.ui.edt_group.text().split(",")]
         for group_name in group_names:
             group = get_group_by_name(group_name)
             if group is None:

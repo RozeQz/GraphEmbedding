@@ -354,4 +354,5 @@ class TeacherProfilePage(QWidget):
         self.refresh()
 
     def logout(self):
-        print("Logout")
+        self.parent.current_user = None
+        self.parent.ui.stackedWidget.setCurrentWidget(self.parent.getstarted_page)
