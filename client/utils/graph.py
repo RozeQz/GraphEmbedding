@@ -1,14 +1,21 @@
 import copy
 import random
-from typing import (List, Dict, Mapping, Callable)
+from typing import (List, Dict, Callable)
+import enum
 
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 
 
+class OrientationEnum(str, enum.Enum):
+    UNDIRECRED = "undirected"
+    DIRECRED = "directed"
+
+
 class Graph:
-    def __init__(self, m, orientation="undirected"):
+    def __init__(self, m,
+                 orientation: OrientationEnum = OrientationEnum.UNDIRECRED):
         if isinstance(m, int):
             self.size = m
             self.matrix = [[0] * m for _ in range(m)]
@@ -162,7 +169,7 @@ class Graph:
             return graph
         return Graph.generate_random_planar_graph(min_n, max_n, p, connected)
 
-    def is_planar(self):
+    def is_planar(self) -> bool:
         G = nx.Graph(np.array(self.matrix), nodetype=int)
         return nx.is_planar(G)
 

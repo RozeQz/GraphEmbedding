@@ -1,7 +1,6 @@
 from typing import List
 import random
 
-from src.education.database import DataBase
 from src.education.task import Task
 from src.education.testing import Testing
 
@@ -41,7 +40,7 @@ class TaskManager():
         except ValueError:
             return random.choices(tasks, k=num_tasks)
 
-    def create_test(self, tasks: List[Task], time: float = 3600) -> Testing:
+    def create_test(self, tasks: List[Task], time: float = 1800) -> Testing:
         '''
         Создает тест из заданных заданий.
 
@@ -54,7 +53,7 @@ class TaskManager():
         '''
         return Testing(tasks, time)
 
-    def create_classic_tests(self, time: float = 3600):
+    def create_classic_test(self, time: float = 1800):
         '''
         Создает классический тест: по 2 задания каждого типа.
 

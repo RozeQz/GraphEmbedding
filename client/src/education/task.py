@@ -1,6 +1,7 @@
 import textdistance
 
 
+# TODO: Добавить 5-ый тип задания
 class Task():
     def __init__(self, number, question, correct_answer, task_type,
                  options=None):
@@ -15,6 +16,8 @@ class Task():
             self.options = options.split(';')
         else:
             self.options = []
+        # если task_type = 5:
+        # поменять значения атрибутов
 
     def __str__(self):
         text = (

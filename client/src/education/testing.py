@@ -3,22 +3,6 @@ from typing import List
 from src.education.task import Task
 
 
-class StopTestingException(Exception):
-    '''
-    Вызывается, когда тестирование завершается.
-    '''
-    def __init__(self, *args):
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
-
-    def __str__(self):
-        if self.message:
-            return f'StopTestingException: {self.message}'
-        return 'StopTestingException has been raised'
-
-
 class Testing():
     '''
     Класс для тестирования знаний пользователя.
@@ -30,9 +14,9 @@ class Testing():
         current_task_index (int): Используется при итерировании по заданиям.
 
     Raises:
-        StopTestingException: Когда тестирование завершается.
+        StopIteration: Когда тестирование завершается.
     '''
-    def __init__(self, tasks: List[Task], time: float = 3600):
+    def __init__(self, tasks: List[Task], time: float = 1800):
         '''
         Инициализирует объект класса Testing, предназначенный для тестирования
         знаний пользователя.

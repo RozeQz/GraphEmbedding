@@ -170,6 +170,9 @@ class GammaAlgorithm(Algorithm):
             faces.append(list(outer_face))
             return Faces(faces, outer_face)
 
+        # TODO: Если граф - дерево, то его укладка тривиальна
+        # if networkx.is_tree(g):
+
         # Первый шаг алгоритма:
         # Инициализация: выбираем простой цикл в исходном графе
 

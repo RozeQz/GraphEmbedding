@@ -84,9 +84,12 @@ class AnnealingAlgorithm(Algorithm):
             old_crossings = self.count_crossings()
             self.pos[i], self.pos[j] = self.pos[i].change_position(), self.pos[j].change_position()
             new_crossings = self.count_crossings()
-            if new_crossings < old_crossings or math.exp((old_crossings-new_crossings)/temperature) > random.random():
-                continue
-            self.pos[i], self.pos[j] = temp1, temp2
+            # Второе условие помогает избежать застревания в локальном
+            # оптимуме и дает возможность алгоритму исследовать
+            # пространство состояний
+            if new_crossings > old_crossings or \
+               math.exp((old_crossings-new_crossings)/temperature) < random.random():
+                self.pos[i], self.pos[j] = temp1, temp2
             temperature *= 1 - COOLING_RATE
             print(temperature)
         return AnnealingAlgorithm.from_pos_to_layout(self.pos)

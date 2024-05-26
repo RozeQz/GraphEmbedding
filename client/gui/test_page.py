@@ -104,7 +104,7 @@ class TestPage(QWidget):
         highlight_label(self.parent, self.parent.ui.lbl_testing)
 
     def init_test(self, test_name=None):
-        self.current_test.test = self.tm.create_classic_tests()
+        self.current_test.test = self.tm.create_classic_test()
 
         if test_name is not None:
             test_id = create_test({"name": test_name})["id"]

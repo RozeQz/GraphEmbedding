@@ -104,6 +104,7 @@ class GraphPage(QWidget):
                   encoding="utf-8") as file:
             button_style = file.read()
             self.ui.btn_file.setStyleSheet(button_style)
+            self.ui.btn_generate.setStyleSheet(button_style)
             self.ui.btn_draw.setStyleSheet(button_style)
             self.ui.btn_embed.setStyleSheet(button_style)
 
@@ -124,6 +125,7 @@ class GraphPage(QWidget):
         self.ui.lbl_time.setVisible(False)
         self.ui.lbl_graph_info.setVisible(False)
         self.ui.lbl_file_name.setVisible(False)
+        self.ui.lbl_plug.setVisible(False)
 
         # Изначально некоторые кнопки недоступны
         self.ui.btn_draw.setEnabled(False)
@@ -174,6 +176,7 @@ class GraphPage(QWidget):
             print("Выбранный файл:", self.file_name)
             self.ui.lbl_file_name.setText(file_base_name)
             self.ui.lbl_file_name.setVisible(True)
+            self.ui.lbl_plug.setVisible(True)
 
             # Добавление информации о графе
             self.add_graph_info()
@@ -194,7 +197,7 @@ class GraphPage(QWidget):
                 self.ui.btn_embed.setEnabled(False)
 
             text = f"<html><head/><body><p>Количество вершин: {num_vertices}</p>" + \
-                f"<p>Количество ребер: {num_edges}</p>" + \
+                f"<p>Количество ребер: {int(num_edges/2)}</p>" + \
                 f"{is_planar_str}</p></body></html>"
 
             self.ui.lbl_graph_info.setText(text)
@@ -227,7 +230,6 @@ class GraphPage(QWidget):
         # Гамма-алгоритм
         if alogithm == 0:
             gr = GammaAlgorithm(self.graph)
-            planar = gr.run()
             gr.visualize(canvas=self.canvas)
             self.canvas.draw()
         # Метод отжига
