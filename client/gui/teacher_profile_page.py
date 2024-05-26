@@ -46,6 +46,12 @@ class TeacherProfilePage(QWidget):
             button_style = file.read()
             self.ui.btn_logout.setStyleSheet(button_style)
 
+        with open(path + "styles/combobox/cbx-main.qss", 'r',
+                  encoding="utf-8") as file:
+            style = file.read()
+            self.ui.cbx_group.setStyleSheet(style)
+            self.ui.cbx_student.setStyleSheet(style)
+
         with open(path + "styles/label/label-main.qss", 'r',
                   encoding="utf-8") as file:
             label_style = file.read()
@@ -282,17 +288,35 @@ class TeacherProfilePage(QWidget):
         '''
         self.ui.listWidget.clear()
 
+        tests = []
+
         for i, student in enumerate(students):
-            for j, result in enumerate(get_results_by_user(student.id)):
-                result_id = result['id']
-                num_tasks = len(get_test_tasks(result['test_id']))
-                time = format_date(result['created_at'])
-                points = format_number(result["points"])
-                text = f"{i+j+1}.\t №{result_id}\t" +\
-                       f"{student.lastname} {student.firstname[0]}.\t" +\
-                       f"Результат: {points}/{num_tasks}\t{time}"
-                item = QListWidgetItem(text)
-                self.ui.listWidget.insertItem(0, item)
+            for result in get_results_by_user(student.id):
+                test_item = {
+                    'result_id': result['id'],
+                    'num_tasks': len(get_test_tasks(result['test_id'])),
+                    'time': format_date(result['created_at']),
+                    'points': format_number(result["points"]),
+                    'student': student
+                }
+                tests.append(test_item)
+
+        # Сортируем список тестов по result_id
+        tests.sort(key=lambda test: test['result_id'])
+
+        for i, test in enumerate(tests):
+            result_id = test['result_id']
+            num_tasks = test['num_tasks']
+            time = test['time']
+            points = test['points']
+            student = test['student']
+
+            text = f"{i+1:<6}№{result_id:<}\t" +\
+                   f"{student.lastname:<} {student.firstname[0]:<}.     \t" +\
+                   f"Результат: {points}/{num_tasks:<5} {time:<}"
+
+            item = QListWidgetItem(text)
+            self.ui.listWidget.insertItem(0, item)
 
     def msg_print_results(self, item):
         options = QFileDialog.Options()
