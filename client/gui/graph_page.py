@@ -91,7 +91,7 @@ class GraphPage(QWidget):
 
         self.parent = parent
 
-        self.graph = None
+        self._graph = None
 
         # Путь к ассетам
         path = os.getcwd() + "/client/gui/resources/"
@@ -160,6 +160,20 @@ class GraphPage(QWidget):
         self.ui.btn_file.clicked.connect(self.open_file)
         self.ui.btn_draw.clicked.connect(self.draw_graph)
         self.ui.btn_embed.clicked.connect(self.embed_graph)
+        self.ui.btn_generate.clicked.connect(self.generate_graph)
+
+    @property
+    def graph(self):
+        return self._graph
+
+    @graph.setter
+    def graph(self, value):
+        '''
+        Используется для автоматического вызова метода
+        add_graph_info() при изменении self.graph.
+        '''
+        self._graph = value
+        self.add_graph_info()
 
     def showEvent(self, event):
         # Вызывается при открытии страницы
@@ -179,33 +193,42 @@ class GraphPage(QWidget):
             self.ui.lbl_plug.setVisible(True)
 
             # Добавление информации о графе
-            self.add_graph_info()
+            self.init_graph_with_file()
+
+    def generate_graph(self):
+        '''
+        Инициализация случайного графа.
+        '''
+        self.graph = Graph.generate_random_planar_graph(10, 10, 0.55)
+
+    def init_graph_with_file(self):
+        '''
+        Инициализация графа через файл.
+        '''
+        try:
+            self.graph = Graph.get_graph_from_file(filename=self.file_name)
+        except ValueError:
+            self.show_error_message("Некорректный файл")
 
     def add_graph_info(self):
         self.ui.lbl_graph_info.setVisible(True)
 
-        try:
-            self.graph = Graph.get_graph_from_file(filename=self.file_name)
+        num_vertices = self.graph.size
+        num_edges = self.graph.count_edges()
+        if self.graph.is_planar():
+            is_planar_str = "<p style='color: green;'>Граф планарный"
+            self.ui.btn_embed.setEnabled(True)
+        else:
+            is_planar_str = "<p style='color: red;'>Граф не планарный"
+            self.ui.btn_embed.setEnabled(False)
 
-            num_vertices = self.graph.size
-            num_edges = self.graph.count_edges()
-            if self.graph.is_planar():
-                is_planar_str = "<p style='color: green;'>Граф планарный"
-                self.ui.btn_embed.setEnabled(True)
-            else:
-                is_planar_str = "<p style='color: red;'>Граф не планарный"
-                self.ui.btn_embed.setEnabled(False)
+        text = f"<html><head/><body><p>Количество вершин: {num_vertices}</p>" + \
+            f"<p>Количество ребер: {int(num_edges/2)}</p>" + \
+            f"{is_planar_str}</p></body></html>"
 
-            text = f"<html><head/><body><p>Количество вершин: {num_vertices}</p>" + \
-                f"<p>Количество ребер: {int(num_edges/2)}</p>" + \
-                f"{is_planar_str}</p></body></html>"
+        self.ui.lbl_graph_info.setText(text)
 
-            self.ui.lbl_graph_info.setText(text)
-
-            self.ui.btn_draw.setEnabled(True)
-
-        except ValueError:
-            self.show_error_message("Некорректный файл")
+        self.ui.btn_draw.setEnabled(True)
 
     def draw_graph(self):
         if self.graph is None:
